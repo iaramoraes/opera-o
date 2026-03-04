@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seazone — Dashboard de Suporte Operacional</title>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+  </style>
+</head>
+<body>
+  <div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#64748b;">Carregando...</div></div>
+  <script>
+    const { useState, useMemo } = React;
+    const {
+      BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+      PieChart, Pie, Cell, ResponsiveContainer
+    } = Recharts;
+  </script>
+  <script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const TICKETS = [{
+  "Data": "01/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "SKL's",
+  "Solicitante": "Isabella Bino",
+  "Responsável": "David Soares",
+  "Cargo Responsável": "Analista de Operações de Franquias",
+  "Categoria do Problema": "Divergência taxa de limpeza",
+  "Urgência": "Média",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-01 08:55",
+  "Hora Resolução": "2026-03-01 14:30"
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "EII0304",
+  "Solicitante": "Talyssa Pimentel",
+  "Responsável": "Laira Capra",
+  "Cargo Responsável": "Analista de Operações de Franquias",
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Média",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-02 09:07",
+  "Hora Resolução": "2026-03-02 16:27"
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "VEC121",
+  "Solicitante": "Talyssa Pimentel",
+  "Responsável": "Vivih Aguilera",
+  "Cargo Responsável": "Gerente de Franquias",
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Média",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-02 09:12",
+  "Hora Resolução": "2026-03-02 19:44"
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "NWT0820",
+  "Solicitante": "Nicolas Lerione",
+  "Responsável": "Vivih Aguilera",
+  "Cargo Responsável": "Gerente de Franquias",
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Pendente",
+  "Hora Abertura": "2026-03-02 09:25",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "VII0107",
+  "Solicitante": "Nicolas Lerione",
+  "Responsável": "Vivih Aguilera",
+  "Cargo Responsável": "Gerente de Franquias",
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Pendente",
+  "Hora Abertura": "2026-03-02 10:13",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "Franquia PH",
+  "Solicitante": "Paulinha Sacramento",
+  "Responsável": "Ariana Martins",
+  "Cargo Responsável": "Coord. BackOffice - Franquias",
+  "Categoria do Problema": "Outros",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-02 10:10",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "JBV",
+  "Solicitante": "Talyssa Pimentel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 10:04",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "CAL0105",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 13:10",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "LIV0904",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 13:15",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "SPN0102",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 13:18",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "ZNB0903",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 13:25",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "CTE0007",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": "Yas",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Churn / distrato",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-02 09:55",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "BSF0806",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": "Julyana Cardoso",
+  "Cargo Responsável": "Coord. CS Proprietários",
+  "Categoria do Problema": "Churn / distrato",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-02 10:12",
+  "Hora Resolução": "2026-03-02 18:57"
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "JDN0502",
+  "Solicitante": "Raquel Szabo",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Média",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-02 10:13",
+  "Hora Resolução": "2026-03-02 15:16"
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "DRB0205",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": "Gabriele Figueiredo",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-02 10:14",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "JDN0208",
+  "Solicitante": "Mari Umpierre",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 10:21",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "JDN0516",
+  "Solicitante": "Mari Umpierre",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 10:22",
+  "Hora Resolução": null
+}, {
+  "Data": "02/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "SMT0503",
+  "Solicitante": "Mari Umpierre",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-02 10:23",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "OLN1702",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 08:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "ISM0619",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "SMT0503",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "MMD0405",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 11:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "CMS0202",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Divergência de valores",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 12:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "NLUG0001",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": "Paula Sacramento",
+  "Cargo Responsável": "Analista de Suporte",
+  "Categoria do Problema": "Danos de hóspedes",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "ALC0714",
+  "Solicitante": "Kethrin",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-03 09:30",
+  "Hora Resolução": "2026-03-03 17:00"
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "VIC0401",
+  "Solicitante": "Kethrin",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Divergência taxa de limpeza",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "GGR0702",
+  "Solicitante": "Julyana Cardoso",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Danos de hóspedes",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 11:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "SBH0233",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Pendente",
+  "Hora Abertura": "2026-03-03 14:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "THG0006",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "SBH0233",
+  "Solicitante": "Charles Maciel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "BFJ0506",
+  "Solicitante": "Charles Maciel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 10:30",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "SAA0907",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 11:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "DAL221",
+  "Solicitante": "Mel",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "EFR203",
+  "Solicitante": "Mel",
+  "Responsável": "Yas",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Renovação de enxoval / mobília",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 11:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "BME0001",
+  "Solicitante": "Luana Ornelas",
+  "Responsável": "Gabriele Figueiredo",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "JSR112",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": "Julyana Cardoso",
+  "Cargo Responsável": "Coord. CS Proprietários",
+  "Categoria do Problema": "Outros",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 14:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-obras",
+  "Imóvel": "Formulário",
+  "Solicitante": "Daisi Marsaro",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Problemas com sistemas",
+  "Urgência": "Alta",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-implantação",
+  "Imóvel": "NLUH0008",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "FRC0001",
+  "Solicitante": "Mel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-03 10:00",
+  "Hora Resolução": "2026-03-03 16:00"
+}, {
+  "Data": "03/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "RVS0107",
+  "Solicitante": null,
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-03 09:00",
+  "Hora Resolução": "2026-03-03 12:00"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "EKT002",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 16:53",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "VLP0222",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 16:53",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "ESP0301",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 16:33",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-franquias",
+  "Imóvel": "SES0707",
+  "Solicitante": "Weslley Bertoldo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Falta de retorno de franquia",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 16:20",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-fornecedores",
+  "Imóvel": "—",
+  "Solicitante": "Isabella Bino",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 09:17",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-fornecedores",
+  "Imóvel": "—",
+  "Solicitante": "Raquel Szabo",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 15:00",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-fornecedores",
+  "Imóvel": "—",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Baixa",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 13:39",
+  "Hora Resolução": "2026-03-04 14:30"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-avaliações-de-hóspedes",
+  "Imóvel": "DNAG2007",
+  "Solicitante": "Vivih Aguilera",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Avaliações negativas",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 15:41",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-avaliações-de-hóspedes",
+  "Imóvel": "CNU202",
+  "Solicitante": "Vivih Aguilera",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Avaliações negativas",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 09:27",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "DNAG2007",
+  "Solicitante": "Vivih Aguilera",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Cancelado",
+  "Hora Abertura": "2026-03-04 15:44",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "NWT0104",
+  "Solicitante": "Luana Ornelas",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 13:38",
+  "Hora Resolução": "2026-03-04 16:00"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "TMR0104",
+  "Solicitante": "Talyssa Pimentel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 09:46",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "SMT0503",
+  "Solicitante": "Mari Umpierre",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Média",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 09:42",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-anuncios",
+  "Imóvel": "ROB203",
+  "Solicitante": "Luana Ornelas",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 09:18",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "QUI0090",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 13:48",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "OLN1702",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 14:18",
+  "Hora Resolução": "2026-03-04 15:30"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "TDF0302",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Realocação / cancelamento",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 14:59",
+  "Hora Resolução": "2026-03-04 16:00"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "GMB0414",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 15:01",
+  "Hora Resolução": "2026-03-04 15:45"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-atendimento",
+  "Imóvel": "FFS1508",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Baixa",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 14:49",
+  "Hora Resolução": "2026-03-04 15:30"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-gestão-de-contas",
+  "Imóvel": "ELF",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Manutenção e infraestrutura",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 09:00",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "IPS0701",
+  "Solicitante": "Luana Ornelas",
+  "Responsável": "Gabriele Figueiredo",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Média",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 09:00",
+  "Hora Resolução": "2026-03-04 16:19"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "VTD0513",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 16:39",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "FRE2112",
+  "Solicitante": "Mel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 14:00",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-cs-proprietários",
+  "Imóvel": "—",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": "Yasmim Marques",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Churn / distrato",
+  "Urgência": "Alta",
+  "Status": "Resolvido",
+  "Hora Abertura": "2026-03-04 16:55",
+  "Hora Resolução": "2026-03-04 16:55"
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-implantação",
+  "Imóvel": "VTD0617",
+  "Solicitante": "Larissa Pereira",
+  "Responsável": "Larissa Pereira",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Média",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 15:38",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-implantação",
+  "Imóvel": "HCY2310",
+  "Solicitante": "Daniele Rocha",
+  "Responsável": "Charles Maciel",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 15:16",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-implantação",
+  "Imóvel": "VVA0490",
+  "Solicitante": "Júlia Fontolan",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Implantação (fotos, anúncios)",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 13:07",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-obras",
+  "Imóvel": "Ingleses Spot",
+  "Solicitante": "Jeane Rocha",
+  "Responsável": "Camila Fernanda",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Jurídico / contratos",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 09:03",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-upsell",
+  "Imóvel": "BHY1704",
+  "Solicitante": "Gabriel Cruvinel",
+  "Responsável": null,
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Outros",
+  "Urgência": "Baixa",
+  "Status": "Aberto",
+  "Hora Abertura": "2026-03-04 09:50",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-cs-investimentos",
+  "Imóvel": "—",
+  "Solicitante": "Sarah Sartori",
+  "Responsável": "Jeane Rocha",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Jurídico / contratos",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 09:03",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-rm",
+  "Imóvel": "PRN0003",
+  "Solicitante": "Tiago Clemente",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 16:15",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-rm",
+  "Imóvel": "UPP0703/UPP0704",
+  "Solicitante": "Mari Umpierre",
+  "Responsável": "Daniele Rocha",
+  "Cargo Responsável": null,
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Alta",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 16:07",
+  "Hora Resolução": null
+}, {
+  "Data": "04/03/2026",
+  "Canal": "suporte-rm",
+  "Imóvel": "FEL0502",
+  "Solicitante": "Yasmim Marques",
+  "Responsável": "Kethrin",
+  "Cargo Responsável": "Analista Revenue Management",
+  "Categoria do Problema": "Precificação / Revenue Management",
+  "Urgência": "Muito alta - Crise!",
+  "Status": "Em andamento",
+  "Hora Abertura": "2026-03-04 16:01",
+  "Hora Resolução": null
+}];
+const RESUMO = [{
+  "Data": "01/03/2026",
+  "Total Tickets": 1,
+  "Resolvidos": 1,
+  "Pendentes": 0
+}, {
+  "Data": "02/03/2026",
+  "Total Tickets": 17,
+  "Resolvidos": 4,
+  "Pendentes": 7
+}, {
+  "Data": "03/03/2026",
+  "Total Tickets": 22,
+  "Resolvidos": 4,
+  "Pendentes": 10
+}, {
+  "Data": "04/03/2026",
+  "Total Tickets": 33,
+  "Resolvidos": 8,
+  "Pendentes": 25
+}];
+
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const STATUS_CONFIG = {
+  "Resolvido": {
+    color: "#22c55e",
+    bg: "bg-green-100",
+    text: "text-green-700"
+  },
+  "Em andamento": {
+    color: "#f59e0b",
+    bg: "bg-amber-100",
+    text: "text-amber-700"
+  },
+  "Aberto": {
+    color: "#ef4444",
+    bg: "bg-red-100",
+    text: "text-red-700"
+  },
+  "Pendente": {
+    color: "#f97316",
+    bg: "bg-orange-100",
+    text: "text-orange-700"
+  },
+  "Cancelado": {
+    color: "#94a3b8",
+    bg: "bg-slate-100",
+    text: "text-slate-600"
+  }
+};
+const URGENCY_CONFIG = {
+  "Muito alta - Crise!": {
+    color: "#dc2626",
+    label: "🚨 Crise"
+  },
+  "Alta": {
+    color: "#f97316",
+    label: "🔴 Alta"
+  },
+  "Média": {
+    color: "#f59e0b",
+    label: "🟡 Média"
+  },
+  "Baixa": {
+    color: "#22c55e",
+    label: "🟢 Baixa"
+  }
+};
+const CANAL_SHORT = c => c.replace("suporte-", "").replace("cs-", "CS ").replace("avaliações-de-hóspedes", "avaliações").replace("gestão-de-contas", "gestão contas").replace("cs-investimentos", "CS invest.");
+const CHART_COLORS = ["#3b82f6", "#8b5cf6", "#06b6d4", "#f59e0b", "#ec4899", "#22c55e", "#f97316", "#a855f7", "#14b8a6", "#6366f1", "#ef4444", "#84cc16"];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const isOpen = t => !["Resolvido", "Cancelado"].includes(t["Status"]);
+
+// ── COMPONENTS ────────────────────────────────────────────────────────────────
+const KpiCard = ({
+  label,
+  value,
+  sub,
+  color = "text-slate-800",
+  bg = "bg-white",
+  icon
+}) => /*#__PURE__*/React.createElement("div", {
+  className: `${bg} rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-1`
+}, /*#__PURE__*/React.createElement("div", {
+  className: "flex items-center justify-between"
+}, /*#__PURE__*/React.createElement("span", {
+  className: "text-xs font-medium text-slate-500 uppercase tracking-wide"
+}, label), /*#__PURE__*/React.createElement("span", {
+  className: "text-lg"
+}, icon)), /*#__PURE__*/React.createElement("span", {
+  className: `text-3xl font-bold ${color}`
+}, value), sub && /*#__PURE__*/React.createElement("span", {
+  className: "text-xs text-slate-400"
+}, sub));
+const Badge = ({
+  status
+}) => {
+  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG["Aberto"];
+  return /*#__PURE__*/React.createElement("span", {
+    className: `px-2 py-0.5 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`
+  }, status);
+};
+const UrgBadge = ({
+  urg
+}) => {
+  const cfg = URGENCY_CONFIG[urg] || {};
+  return /*#__PURE__*/React.createElement("span", {
+    className: "text-xs font-medium",
+    style: {
+      color: cfg.color
+    }
+  }, cfg.label || urg);
+};
+
+// ── MAIN APP ──────────────────────────────────────────────────────────────────
+function App() {
+  const [activeTab, setActiveTab] = useState("visao-geral");
+  const [filterStatus, setFilterStatus] = useState("Todos");
+  const [filterCanal, setFilterCanal] = useState("Todos");
+  const [filterData, setFilterData] = useState("Todos");
+  const [search, setSearch] = useState("");
+
+  // ── Derived data ──
+  const total = TICKETS.length;
+  const resolvidos = TICKETS.filter(t => t["Status"] === "Resolvido").length;
+  const backlog = TICKETS.filter(isOpen).length;
+  const crise = TICKETS.filter(t => t["Urgência"] === "Muito alta - Crise!" && isOpen(t)).length;
+  const semResp = TICKETS.filter(t => !t["Responsável"] && isOpen(t)).length;
+  const taxaRes = Math.round(resolvidos / total * 100);
+  const statusData = useMemo(() => {
+    const cnt = {};
+    TICKETS.forEach(t => {
+      cnt[t["Status"]] = (cnt[t["Status"]] || 0) + 1;
+    });
+    return Object.entries(cnt).map(([name, value]) => ({
+      name,
+      value,
+      color: STATUS_CONFIG[name]?.color || "#94a3b8"
+    }));
+  }, []);
+  const canalData = useMemo(() => {
+    const cnt = {};
+    TICKETS.forEach(t => {
+      const c = CANAL_SHORT(t["Canal"]);
+      cnt[c] = (cnt[c] || 0) + 1;
+    });
+    return Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([name, total]) => {
+      const res = TICKETS.filter(t => CANAL_SHORT(t["Canal"]) === name && t["Status"] === "Resolvido").length;
+      return {
+        name,
+        total,
+        resolvido: res,
+        pendente: total - res
+      };
+    });
+  }, []);
+  const catData = useMemo(() => {
+    const cnt = {};
+    TICKETS.forEach(t => {
+      const c = t["Categoria do Problema"];
+      cnt[c] = (cnt[c] || 0) + 1;
+    });
+    return Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([name, value]) => ({
+      name,
+      value
+    }));
+  }, []);
+  const trendData = useMemo(() => RESUMO.map(r => ({
+    data: r["Data"].slice(0, 5),
+    Total: r["Total Tickets"],
+    Resolvidos: r["Resolvidos"],
+    Pendentes: r["Pendentes"]
+  })), []);
+  const respData = useMemo(() => {
+    const cnt = {};
+    TICKETS.forEach(t => {
+      const r = t["Responsável"] || "⚠️ Sem responsável";
+      if (!cnt[r]) cnt[r] = {
+        total: 0,
+        open: 0
+      };
+      cnt[r].total++;
+      if (isOpen(t)) cnt[r].open++;
+    });
+    return Object.entries(cnt).sort((a, b) => b[1].total - a[1].total).slice(0, 12).map(([name, v]) => ({
+      name,
+      total: v.total,
+      abertos: v.open,
+      resolvidos: v.total - v.open
+    }));
+  }, []);
+  const urgData = useMemo(() => {
+    const cnt = {};
+    TICKETS.forEach(t => {
+      cnt[t["Urgência"]] = (cnt[t["Urgência"]] || 0) + 1;
+    });
+    const order = ["Muito alta - Crise!", "Alta", "Média", "Baixa"];
+    return order.filter(k => cnt[k]).map(k => ({
+      name: URGENCY_CONFIG[k]?.label || k,
+      value: cnt[k],
+      color: URGENCY_CONFIG[k]?.color
+    }));
+  }, []);
+
+  // filtered tickets for table
+  const datas = ["Todos", ...Array.from(new Set(TICKETS.map(t => t["Data"]))).sort()];
+  const canais = ["Todos", ...Array.from(new Set(TICKETS.map(t => t["Canal"]))).sort()];
+  const filteredTickets = useMemo(() => TICKETS.filter(t => {
+    if (filterStatus !== "Todos" && t["Status"] !== filterStatus) return false;
+    if (filterCanal !== "Todos" && t["Canal"] !== filterCanal) return false;
+    if (filterData !== "Todos" && t["Data"] !== filterData) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return (t["Imóvel"] || "").toLowerCase().includes(q) || (t["Responsável"] || "").toLowerCase().includes(q) || (t["Solicitante"] || "").toLowerCase().includes(q) || (t["Categoria do Problema"] || "").toLowerCase().includes(q);
+    }
+    return true;
+  }), [filterStatus, filterCanal, filterData, search]);
+  const tabs = [{
+    id: "visao-geral",
+    label: "📊 Visão Geral"
+  }, {
+    id: "canais",
+    label: "📡 Canais"
+  }, {
+    id: "categorias",
+    label: "🏷️ Categorias"
+  }, {
+    id: "responsaveis",
+    label: "👤 Responsáveis"
+  }, {
+    id: "chamados",
+    label: "📋 Chamados"
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "min-h-screen bg-slate-50 text-slate-800"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+    className: "text-xl font-bold text-slate-900"
+  }, "\uD83C\uDFD6\uFE0F Seazone \u2014 Suporte Operacional"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-slate-500 mt-0.5"
+  }, "Dashboard de Monitoramento \xB7 Atualizado em 04/03/2026")), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-1"
+  }, crise > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse"
+  }, "\uD83D\uDEA8 ", crise, " em crise"), semResp > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full"
+  }, "\u26A0\uFE0F ", semResp, " sem respons\xE1vel"))), /*#__PURE__*/React.createElement("div", {
+    className: "bg-white border-b border-slate-200 px-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-0"
+  }, tabs.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setActiveTab(t.id),
+    className: `px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? "border-blue-600 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-700"}`
+  }, t.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "p-6 max-w-7xl mx-auto"
+  }, activeTab === "visao-geral" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-2 gap-3 sm:grid-cols-5"
+  }, /*#__PURE__*/React.createElement(KpiCard, {
+    icon: "\uD83D\uDCC1",
+    label: "Total acumulado",
+    value: total,
+    sub: "01\u201304/03"
+  }), /*#__PURE__*/React.createElement(KpiCard, {
+    icon: "\u2705",
+    label: "Resolvidos",
+    value: resolvidos,
+    color: "text-green-600",
+    bg: "bg-green-50",
+    sub: `${taxaRes}% de resolução`
+  }), /*#__PURE__*/React.createElement(KpiCard, {
+    icon: "\uD83D\uDD04",
+    label: "Em aberto",
+    value: backlog,
+    color: "text-amber-600",
+    bg: "bg-amber-50",
+    sub: "pendentes + andamento"
+  }), /*#__PURE__*/React.createElement(KpiCard, {
+    icon: "\uD83D\uDEA8",
+    label: "Em crise",
+    value: crise,
+    color: "text-red-600",
+    bg: "bg-red-50",
+    sub: "urg\xEAncia m\xE1xima"
+  }), /*#__PURE__*/React.createElement(KpiCard, {
+    icon: "\u26A0\uFE0F",
+    label: "Sem respons\xE1vel",
+    value: semResp,
+    color: "text-orange-600",
+    bg: "bg-orange-50",
+    sub: "precisam de aten\xE7\xE3o"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 gap-6 lg:grid-cols-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700 mb-4"
+  }, "\uD83D\uDCC8 Tend\xEAncia Di\xE1ria de Chamados"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
+    width: "100%",
+    height: 220
+  }, /*#__PURE__*/React.createElement(BarChart, {
+    data: trendData,
+    barCategoryGap: "30%"
+  }, /*#__PURE__*/React.createElement(CartesianGrid, {
+    strokeDasharray: "3 3",
+    stroke: "#f1f5f9"
+  }), /*#__PURE__*/React.createElement(XAxis, {
+    dataKey: "data",
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(YAxis, {
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(Tooltip, {
+    contentStyle: {
+      fontSize: 12,
+      borderRadius: 8
+    }
+  }), /*#__PURE__*/React.createElement(Legend, {
+    wrapperStyle: {
+      fontSize: 12
+    }
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "Total",
+    fill: "#3b82f6",
+    radius: [4, 4, 0, 0],
+    name: "Total"
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "Resolvidos",
+    fill: "#22c55e",
+    radius: [4, 4, 0, 0],
+    name: "Resolvidos"
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "Pendentes",
+    fill: "#f97316",
+    radius: [4, 4, 0, 0],
+    name: "Pendentes"
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-5 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700 mb-4"
+  }, "\uD83D\uDD35 Status dos Chamados"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
+    width: "100%",
+    height: 180
+  }, /*#__PURE__*/React.createElement(PieChart, null, /*#__PURE__*/React.createElement(Pie, {
+    data: statusData,
+    cx: "50%",
+    cy: "50%",
+    outerRadius: 75,
+    dataKey: "value",
+    label: ({
+      name,
+      value
+    }) => `${value}`,
+    labelLine: false
+  }, statusData.map((entry, i) => /*#__PURE__*/React.createElement(Cell, {
+    key: i,
+    fill: entry.color
+  }))), /*#__PURE__*/React.createElement(Tooltip, {
+    contentStyle: {
+      fontSize: 12,
+      borderRadius: 8
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "mt-2 space-y-1"
+  }, statusData.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.name,
+    className: "flex items-center justify-between text-xs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-1.5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-2.5 h-2.5 rounded-full",
+    style: {
+      background: s.color
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "text-slate-600"
+  }, s.name)), /*#__PURE__*/React.createElement("span", {
+    className: "font-semibold text-slate-800"
+  }, s.value)))))), /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-5 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700 mb-4"
+  }, "\u26A1 Distribui\xE7\xE3o por Urg\xEAncia"), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-2 gap-3 sm:grid-cols-4"
+  }, urgData.map(u => /*#__PURE__*/React.createElement("div", {
+    key: u.name,
+    className: "rounded-xl p-4 text-center",
+    style: {
+      background: u.color + "18",
+      border: `1.5px solid ${u.color}40`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-2xl font-bold",
+    style: {
+      color: u.color
+    }
+  }, u.value), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs mt-1 font-medium text-slate-600"
+  }, u.name)))))), activeTab === "canais" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-5 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700 mb-4"
+  }, "\uD83D\uDCE1 Chamados por Canal"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
+    width: "100%",
+    height: 320
+  }, /*#__PURE__*/React.createElement(BarChart, {
+    data: canalData,
+    layout: "vertical",
+    margin: {
+      left: 20,
+      right: 30
+    }
+  }, /*#__PURE__*/React.createElement(CartesianGrid, {
+    strokeDasharray: "3 3",
+    stroke: "#f1f5f9",
+    horizontal: false
+  }), /*#__PURE__*/React.createElement(XAxis, {
+    type: "number",
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(YAxis, {
+    type: "category",
+    dataKey: "name",
+    width: 120,
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(Tooltip, {
+    contentStyle: {
+      fontSize: 12,
+      borderRadius: 8
+    }
+  }), /*#__PURE__*/React.createElement(Legend, {
+    wrapperStyle: {
+      fontSize: 12
+    }
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "resolvido",
+    stackId: "a",
+    fill: "#22c55e",
+    name: "Resolvido",
+    radius: [0, 0, 0, 0]
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "pendente",
+    stackId: "a",
+    fill: "#f97316",
+    name: "Pendente/Aberto",
+    radius: [0, 4, 4, 0]
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-2 gap-3 sm:grid-cols-4"
+  }, canalData.map((c, i) => /*#__PURE__*/React.createElement("div", {
+    key: c.name,
+    className: "bg-white rounded-xl p-4 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-xs text-slate-500 font-medium mb-1"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "text-2xl font-bold text-slate-800"
+  }, c.total), /*#__PURE__*/React.createElement("div", {
+    className: "mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-full bg-green-500 rounded-full",
+    style: {
+      width: `${Math.round(c.resolvido / c.total * 100)}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs text-slate-400 mt-1"
+  }, Math.round(c.resolvido / c.total * 100), "% resolvido"))))), activeTab === "categorias" && /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-4"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700"
+  }, "\uD83C\uDFF7\uFE0F Chamados por Categoria"), catData.map((c, i) => /*#__PURE__*/React.createElement("div", {
+    key: c.name,
+    className: "flex items-center gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-48 text-xs text-slate-600 text-right shrink-0"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "flex-1 h-6 bg-slate-100 rounded-full overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-full rounded-full flex items-center pl-2 text-white text-xs font-semibold transition-all",
+    style: {
+      width: `${Math.round(c.value / catData[0].value * 100)}%`,
+      background: CHART_COLORS[i % CHART_COLORS.length]
+    }
+  }, c.value > 0 ? c.value : "")), /*#__PURE__*/React.createElement("span", {
+    className: "text-xs font-bold text-slate-700 w-6"
+  }, c.value)))), activeTab === "responsaveis" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-5 shadow-sm border border-slate-100"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "text-sm font-semibold text-slate-700 mb-4"
+  }, "\uD83D\uDC64 Carga por Respons\xE1vel"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
+    width: "100%",
+    height: 300
+  }, /*#__PURE__*/React.createElement(BarChart, {
+    data: respData,
+    layout: "vertical",
+    margin: {
+      left: 20,
+      right: 30
+    }
+  }, /*#__PURE__*/React.createElement(CartesianGrid, {
+    strokeDasharray: "3 3",
+    stroke: "#f1f5f9",
+    horizontal: false
+  }), /*#__PURE__*/React.createElement(XAxis, {
+    type: "number",
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(YAxis, {
+    type: "category",
+    dataKey: "name",
+    width: 140,
+    tick: {
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(Tooltip, {
+    contentStyle: {
+      fontSize: 12,
+      borderRadius: 8
+    }
+  }), /*#__PURE__*/React.createElement(Legend, {
+    wrapperStyle: {
+      fontSize: 12
+    }
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "resolvidos",
+    stackId: "a",
+    fill: "#22c55e",
+    name: "Resolvidos"
+  }), /*#__PURE__*/React.createElement(Bar, {
+    dataKey: "abertos",
+    stackId: "a",
+    fill: "#f97316",
+    name: "Abertos/Pendentes",
+    radius: [0, 4, 4, 0]
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-2"
+  }, respData.map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.name,
+    className: `flex items-center gap-4 rounded-xl px-4 py-3 border ${r.name.includes("⚠️") ? "bg-orange-50 border-orange-200" : "bg-white border-slate-100"} shadow-sm`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex-1 min-w-0"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-sm font-semibold text-slate-800 truncate"
+  }, r.name)), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-4 text-xs font-medium shrink-0"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-green-600"
+  }, "\u2705 ", r.resolvidos), /*#__PURE__*/React.createElement("span", {
+    className: "text-orange-600"
+  }, "\u23F3 ", r.abertos), /*#__PURE__*/React.createElement("span", {
+    className: "text-slate-700 font-bold"
+  }, "Total ", r.total)))))), activeTab === "chamados" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-wrap gap-3 items-end"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "text-xs text-slate-500 font-medium"
+  }, "Buscar"), /*#__PURE__*/React.createElement("input", {
+    value: search,
+    onChange: e => setSearch(e.target.value),
+    placeholder: "Im\xF3vel, respons\xE1vel, categoria...",
+    className: "border border-slate-200 rounded-lg px-3 py-1.5 text-sm w-56 focus:outline-none focus:ring-2 focus:ring-blue-300"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "text-xs text-slate-500 font-medium"
+  }, "Status"), /*#__PURE__*/React.createElement("select", {
+    value: filterStatus,
+    onChange: e => setFilterStatus(e.target.value),
+    className: "border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+  }, ["Todos", "Aberto", "Em andamento", "Pendente", "Resolvido", "Cancelado"].map(s => /*#__PURE__*/React.createElement("option", {
+    key: s
+  }, s)))), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "text-xs text-slate-500 font-medium"
+  }, "Canal"), /*#__PURE__*/React.createElement("select", {
+    value: filterCanal,
+    onChange: e => setFilterCanal(e.target.value),
+    className: "border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+  }, canais.map(c => /*#__PURE__*/React.createElement("option", {
+    key: c
+  }, c)))), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "text-xs text-slate-500 font-medium"
+  }, "Data"), /*#__PURE__*/React.createElement("select", {
+    value: filterData,
+    onChange: e => setFilterData(e.target.value),
+    className: "border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+  }, datas.map(d => /*#__PURE__*/React.createElement("option", {
+    key: d
+  }, d)))), /*#__PURE__*/React.createElement("span", {
+    className: "text-xs text-slate-400 self-end pb-2"
+  }, filteredTickets.length, " chamados")), /*#__PURE__*/React.createElement("div", {
+    className: "bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "overflow-x-auto"
+  }, /*#__PURE__*/React.createElement("table", {
+    className: "w-full text-sm"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+    className: "bg-slate-50 border-b border-slate-100"
+  }, /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Data"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Canal"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Im\xF3vel"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Categoria"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Urg\xEAncia"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Respons\xE1vel"), /*#__PURE__*/React.createElement("th", {
+    className: "px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide"
+  }, "Status"))), /*#__PURE__*/React.createElement("tbody", null, filteredTickets.map((t, i) => /*#__PURE__*/React.createElement("tr", {
+    key: i,
+    className: `border-b border-slate-50 hover:bg-slate-50 transition-colors ${t["Urgência"] === "Muito alta - Crise!" && isOpen(t) ? "bg-red-50 hover:bg-red-100" : ""}`
+  }, /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5 text-xs text-slate-500"
+  }, t["Data"].slice(0, 5)), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5 text-xs text-blue-700 font-medium"
+  }, CANAL_SHORT(t["Canal"])), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5 text-xs font-mono text-slate-700"
+  }, t["Imóvel"] || "—"), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5 text-xs text-slate-600"
+  }, t["Categoria do Problema"]), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5"
+  }, /*#__PURE__*/React.createElement(UrgBadge, {
+    urg: t["Urgência"]
+  })), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5 text-xs text-slate-600"
+  }, t["Responsável"] || /*#__PURE__*/React.createElement("span", {
+    className: "text-orange-500 font-medium"
+  }, "\u26A0\uFE0F Sem resp.")), /*#__PURE__*/React.createElement("td", {
+    className: "px-4 py-2.5"
+  }, /*#__PURE__*/React.createElement(Badge, {
+    status: t["Status"]
+  })))))), filteredTickets.length === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "text-center py-10 text-slate-400 text-sm"
+  }, "Nenhum chamado encontrado com os filtros selecionados."))))));
+}
+
+    ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+  </script>
+</body>
+</html>
