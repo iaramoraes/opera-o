@@ -126,18 +126,19 @@ p  { font-size: var(--text-p);   font-weight: var(--font-weight-bold);   letter-
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
 
-/* ── Date filter ── */
+/* ── Date filter — Bluezone: todos botões = pill (9999px) ── */
 .date-btn {
   border: 1.5px solid var(--bz-border);
-  border-radius: var(--bz-radius-sm);
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing);
   cursor: pointer;
   background: var(--bz-white);
   color: var(--bz-neutral-3);
   transition: all .15s;
-  font-family: inherit;
+  font-family: var(--font-family);
 }
 .date-btn:hover {
   border-color: var(--bz-primary);
@@ -248,14 +249,26 @@ tbody td {
 tbody tr:hover td { background: var(--bz-surface); }
 tbody tr.row-crise td { background: #FFF5F5; }
 
-/* ── Badge ── */
+/* ── Badge — Bluezone: pill ── */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing);
+  white-space: nowrap;
+}
+/* Status badges inline */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing);
   white-space: nowrap;
 }
 
@@ -278,15 +291,17 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(0,82,204,.12);
 }
 
-/* ── Alert badges header ── */
+/* ── Alert badges header — Bluezone: pill ── */
 .alert-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing);
+  font-family: var(--font-family);
 }
 .alert-crise { background: var(--bz-danger-bg); color: var(--bz-danger); border: 1.5px solid var(--bz-danger-mid); }
 .alert-resp  { background: var(--bz-warning-bg); color: var(--bz-warning); border: 1.5px solid var(--bz-warning-mid); }
@@ -342,7 +357,7 @@ input:focus, select:focus {
       <span style="font-size:20px">🏖️</span>
       <h1 style="font-size:17px;font-weight:800;color:var(--bz-neutral);letter-spacing:-.02em">Seazone <span style="color:var(--bz-neutral-3);font-weight:400">— Suporte Operacional</span></h1>
     </div>
-    <p style="font-size:11px;color:var(--bz-neutral-4);margin-top:2px">Dashboard de Monitoramento · Atualizado em 04/03/2026 às 23:49</p>
+    <p style="font-size:11px;color:var(--bz-neutral-4);margin-top:2px">Dashboard de Monitoramento · Atualizado em 04/03/2026 às 23:51</p>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
     <span id="badge-crise" class="alert-badge pulse" style="display:none"></span>
@@ -502,26 +517,27 @@ const ALL       = [{"Data": "01/03/2026", "Canal": "suporte-franquias", "Imóvel
 const DATES     = ["01/03/2026", "02/03/2026", "03/03/2026", "04/03/2026"];
 const CANAIS_ALL= ["suporte-anuncios", "suporte-atendimento", "suporte-avaliações-de-hóspedes", "suporte-cs-investimentos", "suporte-cs-proprietários", "suporte-fornecedores", "suporte-franquias", "suporte-gestão-de-contas", "suporte-implantação", "suporte-obras", "suporte-rm", "suporte-upsell"];
 
-// ─── Bluezone tokens ─────────────────────────────────────────────────────────
+// ─── Bluezone tokens — lidos dos CSS custom properties ───────────────────────
+const _css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const T = {
-  primary:     '#0052CC',
-  primaryBg:   '#E6EEFF',
-  success:     '#006644',
-  successBg:   '#E3FCEF',
-  successMid:  '#36B37E',
-  warning:     '#974F0C',
-  warningBg:   '#FFF7D6',
-  warningMid:  '#F6A623',
-  danger:      '#BF2600',
-  dangerBg:    '#FFEBE6',
-  dangerMid:   '#FF7452',
-  neutral:     '#253858',
-  neutral2:    '#42526E',
-  neutral3:    '#6B778C',
-  neutral4:    '#97A0AF',
-  neutral5:    '#DFE1E6',
-  neutral6:    '#F4F5F7',
-  white:       '#FFFFFF',
+  primary:    _css('--bz-primary'),
+  primaryBg:  _css('--bz-primary-light'),
+  success:    _css('--bz-success'),
+  successBg:  _css('--bz-success-bg'),
+  successMid: _css('--bz-success-mid'),
+  warning:    _css('--bz-warning'),
+  warningBg:  _css('--bz-warning-bg'),
+  warningMid: _css('--bz-warning-mid'),
+  danger:     _css('--bz-danger'),
+  dangerBg:   _css('--bz-danger-bg'),
+  dangerMid:  _css('--bz-danger-mid'),
+  neutral:    _css('--bz-neutral'),
+  neutral2:   _css('--bz-neutral-2'),
+  neutral3:   _css('--bz-neutral-3'),
+  neutral4:   _css('--bz-neutral-4'),
+  neutral5:   _css('--bz-neutral-5'),
+  neutral6:   _css('--bz-neutral-6'),
+  white:      _css('--bz-white'),
 };
 
 const CHART_COLORS = [
@@ -837,7 +853,7 @@ function renderChamados() {
       <td><span style="font-size:11px;font-weight:700;color:${uc.color}">${uc.label||t.Urgência}</span></td>
       <td style="font-size:12px">${t.Responsável||`<span style="color:${T.danger};font-weight:700">⚠️ Sem resp.</span>`}</td>
       <td>${slaHtml}</td>
-      <td><span style="background:${sc.bg};color:${sc.fg};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">${t.Status}</span></td>
+      <td><span style="background:${sc.bg};color:${sc.fg};padding:3px 10px;border-radius:9999px;font-size:var(--text-sm);font-weight:var(--font-weight-bold);letter-spacing:var(--letter-spacing)">${t.Status}</span></td>
     </tr>`;
   }).join('');
 }
