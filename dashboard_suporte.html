@@ -1,468 +1,562 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard de Suporte — Seazone</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seazone — Suporte Operacional</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; }
-  body { font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; }
-  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06); padding: 1.25rem; }
-  .kpi-card { text-align: center; padding: 1.5rem 1rem; }
-  .kpi-val { font-size: 2.25rem; font-weight: 700; line-height: 1; }
-  .kpi-lbl { font-size: .8rem; color: #64748b; margin-top: .35rem; font-weight: 500; }
-  .tab-btn { padding: .45rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: .85rem; cursor: pointer; border: none; transition: all .15s; white-space: nowrap; }
-  .tab-btn.active  { background: #3b82f6; color: #fff; box-shadow: 0 2px 6px rgba(59,130,246,.35); }
-  .tab-btn:not(.active) { background: #e2e8f0; color: #64748b; }
-  .tab-btn:not(.active):hover { background: #cbd5e1; }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-  .date-btn { padding: .3rem .75rem; border-radius: 6px; font-size: .78rem; font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all .15s; }
-  .date-btn.active  { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-  .date-btn:not(.active) { background: #fff; color: #475569; border-color: #e2e8f0; }
-  .date-btn:not(.active):hover { border-color: #3b82f6; color: #3b82f6; }
-  table { border-collapse: collapse; width: 100%; font-size: .82rem; }
-  thead th { background: #f8fafc; font-weight: 700; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: #64748b; padding: .6rem 1rem; text-align: left; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 1; }
-  tbody td { padding: .5rem 1rem; border-bottom: 1px solid #f1f5f9; color: #374151; vertical-align: middle; }
-  tbody tr:hover td { background: #f8fafc; }
-  .badge { display: inline-flex; align-items: center; padding: .18rem .6rem; border-radius: 99px; font-size: .72rem; font-weight: 700; line-height: 1.3; white-space: nowrap; }
-  .b-green  { background: #dcfce7; color: #16a34a; }
-  .b-yellow { background: #fef9c3; color: #b45309; }
-  .b-red    { background: #fee2e2; color: #dc2626; }
-  .b-orange { background: #ffedd5; color: #ea580c; }
-  .b-gray   { background: #f1f5f9; color: #64748b; }
-  .b-blue   { background: #dbeafe; color: #1d4ed8; }
-  .search-input { border: 1.5px solid #e2e8f0; border-radius: 8px; padding: .45rem .85rem; font-size: .85rem; outline: none; transition: border .15s; }
-  .search-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.12); }
-  .section-title { font-weight: 700; font-size: 1rem; color: #1e293b; margin-bottom: 1rem; }
-  .chart-wrap { position: relative; }
-  .no-data { text-align: center; padding: 3rem; color: #94a3b8; font-size: .9rem; }
-  @media (max-width: 640px) { .kpi-val { font-size: 1.75rem; } }
+*{box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif}
+.tab-ul button{border-bottom:2px solid transparent;transition:.15s}
+.tab-ul button.active{border-color:#2563eb;color:#2563eb}
+.tab-ul button:not(.active){color:#64748b}
+.tab-ul button:not(.active):hover{color:#374151}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.date-btn{border:1.5px solid #e2e8f0;border-radius:6px;padding:.25rem .65rem;font-size:.75rem;font-weight:600;cursor:pointer;background:#fff;color:#475569;transition:.15s}
+.date-btn.active{background:#2563eb;border-color:#2563eb;color:#fff}
+.date-btn:not(.active):hover{border-color:#2563eb;color:#2563eb}
+.kpi-card{border-radius:16px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.06)}
+.ch-wrap{position:relative}
+table{border-collapse:collapse;width:100%}
+thead th{background:#f8fafc;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#64748b;padding:.55rem 1rem;text-align:left;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+tbody td{padding:.45rem 1rem;border-bottom:1px solid #f8fafc;font-size:.82rem;color:#374151}
+tbody tr:hover td{background:#f8fafc}
+.badge{display:inline-flex;align-items:center;padding:.15rem .55rem;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap}
+input,select{border:1.5px solid #e2e8f0;border-radius:8px;padding:.4rem .75rem;font-size:.82rem;outline:none;background:#fff}
+input:focus,select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
+.bar-label{width:200px;text-align:right;font-size:.75rem;color:#475569;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:24px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;display:flex;align-items:center;padding-left:.5rem;color:#fff;font-size:.72rem;font-weight:700;min-width:28px;transition:width .4s}
 </style>
 </head>
-<body class="p-3 md:p-6">
-<div class="max-w-7xl mx-auto space-y-5">
+<body class="bg-slate-50 min-h-screen text-slate-800">
 
-  <!-- ── Header ── -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-    <div>
-      <h1 class="text-2xl font-bold text-gray-900 tracking-tight">📊 Dashboard de Suporte</h1>
-      <p class="text-sm text-gray-500 mt-0.5">Seazone Operations &nbsp;·&nbsp; Atualizado em 04/03/2026 21:59</p>
-    </div>
-    <a href="https://iaramoraes.github.io/opera-o/dashboard_suporte.html"
-       target="_blank" class="text-xs text-blue-500 hover:underline self-start sm:self-auto">
-      🔗 Link público
-    </a>
+<!-- ── Header ── -->
+<div class="bg-white border-b border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-10">
+  <div>
+    <h1 class="text-lg md:text-xl font-bold text-slate-900">🏖️ Seazone — Suporte Operacional</h1>
+    <p class="text-xs text-slate-400 mt-0.5">Dashboard de Monitoramento · Atualizado em 04/03/2026 às 22:07</p>
+  </div>
+  <div class="flex gap-1.5 flex-wrap justify-end">
+    <span id="badge-crise" class="pulse hidden bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full"></span>
+    <span id="badge-resp" class="hidden bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-full"></span>
+  </div>
+</div>
+
+<!-- ── Tabs ── -->
+<div class="bg-white border-b border-slate-200 px-4 md:px-6">
+  <div class="tab-ul flex gap-0 overflow-x-auto">
+    <button class="tab-ul-btn active px-3 md:px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="geral">📊 Visão Geral</button>
+    <button class="tab-ul-btn px-3 md:px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="canais">📡 Canais</button>
+    <button class="tab-ul-btn px-3 md:px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="categorias">🏷️ Categorias</button>
+    <button class="tab-ul-btn px-3 md:px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="responsaveis">👤 Responsáveis</button>
+    <button class="tab-ul-btn px-3 md:px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="chamados">📋 Chamados</button>
+  </div>
+</div>
+
+<div class="p-4 md:p-6 max-w-7xl mx-auto space-y-5">
+
+  <!-- ── Filtro de data ── -->
+  <div class="bg-white rounded-2xl px-4 py-3 shadow-sm border border-slate-100 flex items-center gap-3 flex-wrap">
+    <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest whitespace-nowrap">🗓 Período:</span>
+    <div id="date-btns" class="flex gap-1.5 flex-wrap"></div>
   </div>
 
-  <!-- ── Filtro de datas ── -->
-  <div class="card">
-    <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Filtrar por data</p>
-    <div id="date-filters" class="flex flex-wrap gap-2"></div>
-  </div>
-
-  <!-- ── KPIs ── -->
-  <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-    <div class="card kpi-card">
-      <div class="kpi-val text-blue-600" id="kpi-total">—</div>
-      <div class="kpi-lbl">Total de chamados</div>
-    </div>
-    <div class="card kpi-card">
-      <div class="kpi-val text-emerald-500" id="kpi-resolvidos">—</div>
-      <div class="kpi-lbl">Resolvidos</div>
-    </div>
-    <div class="card kpi-card">
-      <div class="kpi-val text-amber-500" id="kpi-andamento">—</div>
-      <div class="kpi-lbl">Em andamento</div>
-    </div>
-    <div class="card kpi-card">
-      <div class="kpi-val text-red-500" id="kpi-backlog">—</div>
-      <div class="kpi-lbl">Backlog ativo</div>
-    </div>
-    <div class="card kpi-card">
-      <div class="kpi-val text-violet-500" id="kpi-sla">—</div>
-      <div class="kpi-lbl">SLA médio (h)</div>
-    </div>
-  </div>
-
-  <!-- ── Tabs ── -->
-  <div class="flex gap-2 flex-wrap">
-    <button class="tab-btn active" data-tab="geral">Visão Geral</button>
-    <button class="tab-btn" data-tab="canais">Canais</button>
-    <button class="tab-btn" data-tab="categorias">Categorias</button>
-    <button class="tab-btn" data-tab="responsaveis">Responsáveis</button>
-    <button class="tab-btn" data-tab="chamados">Chamados</button>
-  </div>
-
-  <!-- ── Aba: Visão Geral ── -->
-  <div id="tab-geral" class="tab-pane active space-y-4">
-    <div class="card">
-      <p class="section-title">Chamados por dia</p>
-      <div class="chart-wrap"><canvas id="chartTrend" height="70"></canvas></div>
-    </div>
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="card">
-        <p class="section-title">Distribuição por status</p>
-        <div class="chart-wrap" style="max-height:220px"><canvas id="chartStatus"></canvas></div>
+  <!-- ── VISÃO GERAL ── -->
+  <div id="tab-geral" class="tab-pane active space-y-5">
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div class="kpi-card bg-white">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total acumulado</span>
+          <span class="text-lg">📁</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-800" id="kpi-total">—</div>
+        <div class="text-xs text-slate-400 mt-0.5" id="kpi-total-sub"></div>
       </div>
-      <div class="card">
-        <p class="section-title">Distribuição por urgência</p>
-        <div class="chart-wrap" style="max-height:220px"><canvas id="chartUrg"></canvas></div>
+      <div class="kpi-card bg-green-50">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Resolvidos</span>
+          <span class="text-lg">✅</span>
+        </div>
+        <div class="text-3xl font-bold text-green-600" id="kpi-res">—</div>
+        <div class="text-xs text-slate-400 mt-0.5" id="kpi-res-sub"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- ── Aba: Canais ── -->
-  <div id="tab-canais" class="tab-pane">
-    <div class="card">
-      <p class="section-title">Chamados por canal</p>
-      <div class="chart-wrap"><canvas id="chartCanais" height="75"></canvas></div>
-    </div>
-  </div>
-
-  <!-- ── Aba: Categorias ── -->
-  <div id="tab-categorias" class="tab-pane space-y-4">
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="card">
-        <p class="section-title">Distribuição por categoria</p>
-        <div class="chart-wrap" style="max-height:280px"><canvas id="chartCat"></canvas></div>
+      <div class="kpi-card bg-amber-50">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Em aberto</span>
+          <span class="text-lg">🔄</span>
+        </div>
+        <div class="text-3xl font-bold text-amber-600" id="kpi-aberto">—</div>
+        <div class="text-xs text-slate-400 mt-0.5">pendentes + andamento</div>
       </div>
-      <div class="card overflow-auto" style="max-height:360px">
-        <p class="section-title">Ranking de categorias</p>
-        <table>
-          <thead><tr><th>#</th><th>Categoria</th><th>Qtd</th><th>%</th></tr></thead>
-          <tbody id="tb-categorias"></tbody>
-        </table>
+      <div class="kpi-card bg-red-50">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Em crise</span>
+          <span class="text-lg">🚨</span>
+        </div>
+        <div class="text-3xl font-bold text-red-600" id="kpi-crise">—</div>
+        <div class="text-xs text-slate-400 mt-0.5">urgência máxima</div>
+      </div>
+      <div class="kpi-card bg-orange-50">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Sem responsável</span>
+          <span class="text-lg">⚠️</span>
+        </div>
+        <div class="text-3xl font-bold text-orange-600" id="kpi-sem-resp">—</div>
+        <div class="text-xs text-slate-400 mt-0.5">precisam de atenção</div>
       </div>
     </div>
-  </div>
 
-  <!-- ── Aba: Responsáveis ── -->
-  <div id="tab-responsaveis" class="tab-pane space-y-4">
-    <div class="card">
-      <p class="section-title">Top 10 responsáveis por volume</p>
-      <div class="chart-wrap"><canvas id="chartResp" height="80"></canvas></div>
-    </div>
-    <div class="card overflow-auto">
-      <p class="section-title">Carga por responsável</p>
-      <table>
-        <thead><tr><th>Responsável</th><th>Cargo</th><th>Total</th><th>Resolvidos</th><th>Pendentes</th></tr></thead>
-        <tbody id="tb-resp"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ── Aba: Chamados ── -->
-  <div id="tab-chamados" class="tab-pane">
-    <div class="card">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <p class="section-title mb-0">Todos os chamados &nbsp;<span id="count-chamados" class="text-sm font-normal text-gray-400"></span></p>
-        <input class="search-input" id="search-chamados" placeholder="🔍 Buscar por canal, imóvel, categoria…" oninput="renderChamados()">
+    <!-- Trend + Status -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div class="lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <h2 class="text-sm font-semibold text-slate-700 mb-4">📈 Tendência Diária de Chamados</h2>
+        <div class="ch-wrap"><canvas id="chartTrend" height="90"></canvas></div>
       </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <h2 class="text-sm font-semibold text-slate-700 mb-3">🔵 Status dos Chamados</h2>
+        <div class="ch-wrap" style="max-height:170px"><canvas id="chartStatus"></canvas></div>
+        <div class="mt-3 space-y-1.5" id="status-legend"></div>
+      </div>
+    </div>
+
+    <!-- Urgência -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <h2 class="text-sm font-semibold text-slate-700 mb-4">⚡ Distribuição por Urgência</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="urg-cards"></div>
+    </div>
+  </div>
+
+  <!-- ── CANAIS ── -->
+  <div id="tab-canais" class="tab-pane space-y-5">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <h2 class="text-sm font-semibold text-slate-700 mb-4">📡 Chamados por Canal</h2>
+      <div class="ch-wrap"><canvas id="chartCanais" height="90"></canvas></div>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="canal-cards"></div>
+  </div>
+
+  <!-- ── CATEGORIAS ── -->
+  <div id="tab-categorias" class="tab-pane">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <h2 class="text-sm font-semibold text-slate-700 mb-5">🏷️ Chamados por Categoria</h2>
+      <div id="cat-bars"></div>
+    </div>
+  </div>
+
+  <!-- ── RESPONSÁVEIS ── -->
+  <div id="tab-responsaveis" class="tab-pane space-y-5">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <h2 class="text-sm font-semibold text-slate-700 mb-4">👤 Carga por Responsável</h2>
+      <div class="ch-wrap"><canvas id="chartResp" height="90"></canvas></div>
+    </div>
+    <div class="space-y-2" id="resp-list"></div>
+  </div>
+
+  <!-- ── CHAMADOS ── -->
+  <div id="tab-chamados" class="tab-pane space-y-4">
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-wrap gap-3 items-end">
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-medium text-slate-500">Buscar</label>
+        <input id="f-search" placeholder="Imóvel, responsável, categoria..." class="w-52">
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-medium text-slate-500">Status</label>
+        <select id="f-status">
+          <option>Todos</option>
+          <option>Aberto</option><option>Em andamento</option>
+          <option>Pendente</option><option>Resolvido</option><option>Cancelado</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-medium text-slate-500">Canal</label>
+        <select id="f-canal"><option>Todos</option></select>
+      </div>
+      <span class="text-xs text-slate-400 pb-1.5" id="f-count"></span>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
       <div style="overflow-x:auto;max-height:520px;overflow-y:auto">
         <table>
           <thead>
             <tr>
               <th>Data</th><th>Canal</th><th>Imóvel</th><th>Categoria</th>
-              <th>Urgência</th><th>Status</th><th>Responsável</th><th>SLA (h)</th><th>Observações</th>
+              <th>Urgência</th><th>Responsável</th><th>Status</th>
             </tr>
           </thead>
           <tbody id="tb-chamados"></tbody>
         </table>
-        <div id="no-chamados" class="no-data" style="display:none">Nenhum chamado encontrado.</div>
+        <div id="tb-empty" style="display:none" class="text-center py-10 text-slate-400 text-sm">
+          Nenhum chamado encontrado com os filtros selecionados.
+        </div>
       </div>
     </div>
   </div>
 
-</div><!-- /max-w -->
+</div><!-- /container -->
 
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// Dados
-// ─────────────────────────────────────────────────────────────────────────────
-const ALL_TICKETS = [{"data": "01/03/2026", "canal": "suporte-franquias", "imovel": "SKL's", "solicitante": "Isabella Bino", "responsavel": "David Soares", "cargo": "Analista de Operações de Franquias", "categoria": "Divergência taxa de limpeza", "urgencia": "Média", "status": "Resolvido", "sla": 5.6, "obs": "Padronização GOP validada com franquia"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "EII0304", "solicitante": "Talyssa Pimentel", "responsavel": "Laira Capra", "cargo": "Analista de Operações de Franquias", "categoria": "Manutenção e infraestrutura", "urgencia": "Média", "status": "Resolvido", "sla": 7.3, "obs": "Piscina em manutenção sem previsão"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "VEC121", "solicitante": "Talyssa Pimentel", "responsavel": "Vivih Aguilera", "cargo": "Gerente de Franquias", "categoria": "Manutenção e infraestrutura", "urgencia": "Média", "status": "Resolvido", "sla": 10.5, "obs": "Obra no vizinho longe do término"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "NWT0820", "solicitante": "Nicolas Lerione", "responsavel": "Vivih Aguilera", "cargo": "Gerente de Franquias", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Pendente", "sla": null, "obs": "Retomada de contato com franquia"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "VII0107", "solicitante": "Nicolas Lerione", "responsavel": "Vivih Aguilera", "cargo": "Gerente de Franquias", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Pendente", "sla": null, "obs": "Adequações do imóvel"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "Franquia PH", "solicitante": "Paulinha Sacramento", "responsavel": "Ariana Martins", "cargo": "Coord. BackOffice - Franquias", "categoria": "Outros", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Franquia quer entender recebimento de novos imóveis"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "JBV", "solicitante": "Talyssa Pimentel", "responsavel": "—", "cargo": "—", "categoria": "Manutenção e infraestrutura", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Sauna em manutenção + obras na frente do prédio"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "CAL0105", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "—"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "LIV0904", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "—"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "SPN0102", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "—"}, {"data": "02/03/2026", "canal": "suporte-franquias", "imovel": "ZNB0903", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "—"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "CTE0007", "solicitante": "Larissa Pereira", "responsavel": "Yas", "cargo": "—", "categoria": "Churn / distrato", "urgencia": "Muito alta - Crise!", "status": "Em andamento", "sla": null, "obs": "Prop solicitou distrato por precificação baixa em janeiro"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "BSF0806", "solicitante": "Júlia Fontolan", "responsavel": "Julyana Cardoso", "cargo": "Coord. CS Proprietários", "categoria": "Churn / distrato", "urgencia": "Alta", "status": "Resolvido", "sla": 8.8, "obs": "Churn REVERTIDO! Prop decidiu manter parceria"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "JDN0502", "solicitante": "Raquel Szabo", "responsavel": "Kethrin", "cargo": "Analista Revenue Management", "categoria": "Precificação / Revenue Management", "urgencia": "Média", "status": "Resolvido", "sla": 5.0, "obs": "Análise de desempenho realizada no Pipe 11"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "DRB0205", "solicitante": "Júlia Fontolan", "responsavel": "Gabriele Figueiredo", "cargo": "—", "categoria": "Outros", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Prop com erros em GC, suporte aberto"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "JDN0208", "solicitante": "Mari Umpierre", "responsavel": "—", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Prop insatisfeito com precificação e taxas OTAs"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "JDN0516", "solicitante": "Mari Umpierre", "responsavel": "—", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Prop insatisfeito com preços baixos"}, {"data": "02/03/2026", "canal": "suporte-cs-proprietários", "imovel": "SMT0503", "solicitante": "Mari Umpierre", "responsavel": "—", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Prop insatisfeito com precificação"}, {"data": "03/03/2026", "canal": "suporte-atendimento", "imovel": "OLN1702", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Muito alta - Crise!", "status": "Em andamento", "sla": null, "obs": "CRÍTICO: Sem luz por incêndio, hóspede realocada NOE1410"}, {"data": "03/03/2026", "canal": "suporte-atendimento", "imovel": "ISM0619", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Manutenção do prop impedindo hóspedes 09-12/03"}, {"data": "03/03/2026", "canal": "suporte-atendimento", "imovel": "SMT0503", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Chuveiro vazando, sofá sujo, maçaneta quebrada → realocado SMT0505"}, {"data": "03/03/2026", "canal": "suporte-atendimento", "imovel": "MMD0405", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Prop com problemas de saúde precisa usar imóvel"}, {"data": "03/03/2026", "canal": "suporte-atendimento", "imovel": "CMS0202", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Divergência de valores", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Desconto de R$2.221,90 contestado pelo prop"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "NLUG0001", "solicitante": "Júlia Fontolan", "responsavel": "Paula Sacramento", "cargo": "Analista de Suporte", "categoria": "Danos de hóspedes", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Sofá manchado após saída de hóspede"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "CTS0203", "solicitante": "Mel", "responsavel": "—", "cargo": "—", "categoria": "Churn / distrato", "urgencia": "Alta", "status": "Resolvido", "sla": 5.5, "obs": "Imóvel desbloqueado para março após processo churn"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "EBA0401", "solicitante": "Mel", "responsavel": "—", "cargo": "—", "categoria": "Manutenção e infraestrutura", "urgencia": "Alta", "status": "Resolvido", "sla": 5.5, "obs": "Bloqueio por descarga resolvido"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "VIC0401", "solicitante": "Kethrin", "responsavel": "—", "cargo": "—", "categoria": "Divergência taxa de limpeza", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Taxa R$480 vs R$256 concorrência, prop insatisfeito"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "GGR0702", "solicitante": "Julyana Cardoso", "responsavel": "—", "cargo": "—", "categoria": "Danos de hóspedes", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "Multa R$2.169,36 por uso de piscina"}, {"data": "03/03/2026", "canal": "suporte-franquias", "imovel": "SBH0233", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Pendente", "sla": null, "obs": "—"}, {"data": "03/03/2026", "canal": "suporte-anuncios", "imovel": "THG0006", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Muito alta - Crise!", "status": "Aberto", "sla": null, "obs": "URGENTE: Endereço errado impedindo recepção de hóspedes"}, {"data": "03/03/2026", "canal": "suporte-anuncios", "imovel": "SBH0233", "solicitante": "Charles Maciel", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Inclusão de fotos profissionais"}, {"data": "03/03/2026", "canal": "suporte-anuncios", "imovel": "BFJ0506", "solicitante": "Charles Maciel", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Inclusão de fotos profissionais"}, {"data": "03/03/2026", "canal": "suporte-anuncios", "imovel": "SAA0907", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Recriação por nota ruim"}, {"data": "03/03/2026", "canal": "suporte-cs-proprietários", "imovel": "DAL221", "solicitante": "Mel", "responsavel": "Kethrin", "cargo": "Analista Revenue Management", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Prop insatisfeito com precificação e taxa de limpeza"}, {"data": "03/03/2026", "canal": "suporte-cs-proprietários", "imovel": "EFR203", "solicitante": "Mel", "responsavel": "Yas", "cargo": "—", "categoria": "Renovação de enxoval / mobília", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Renovação de enxoval com Sandd"}, {"data": "03/03/2026", "canal": "suporte-cs-proprietários", "imovel": "BME0001", "solicitante": "Luana Ornelas", "responsavel": "Gabriele Figueiredo", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Reunião sobre precificação e cálculo de repasses"}, {"data": "03/03/2026", "canal": "suporte-cs-proprietários", "imovel": "JSR112", "solicitante": "Larissa Pereira", "responsavel": "Julyana Cardoso", "cargo": "Coord. CS Proprietários", "categoria": "Outros", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Prop confuso sobre valores na Wallet"}, {"data": "03/03/2026", "canal": "suporte-obras", "imovel": "Formulário", "solicitante": "Daisi Marsaro", "responsavel": "—", "cargo": "—", "categoria": "Problemas com sistemas", "urgencia": "Alta", "status": "Aberto", "sla": null, "obs": "BUG: Campos desaparecendo no formulário de obras"}, {"data": "03/03/2026", "canal": "suporte-implantação", "imovel": "NLUH0008", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Em andamento", "sla": null, "obs": "Fotos amadoras de AC e churrasqueira"}, {"data": "03/03/2026", "canal": "suporte-implantação", "imovel": "Pin errado", "solicitante": "—", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Média", "status": "Resolvido", "sla": 2.0, "obs": "Pin de localização incorreto corrigido"}, {"data": "04/03/2026", "canal": "suporte-franquias", "imovel": "EKT002", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Retomada contato com franquia"}, {"data": "04/03/2026", "canal": "suporte-franquias", "imovel": "VLP0222", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Prop afirma ter comprado enxoval sem evidência"}, {"data": "04/03/2026", "canal": "suporte-franquias", "imovel": "ESP0301", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Manutenção e infraestrutura", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Vistoria realizada, aguardando próximos passos"}, {"data": "04/03/2026", "canal": "suporte-franquias", "imovel": "SES0707", "solicitante": "Weslley Bertoldo", "responsavel": "—", "cargo": "—", "categoria": "Falta de retorno de franquia", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Retomada contato com franquia"}, {"data": "04/03/2026", "canal": "suporte-fornecedores", "imovel": "—", "solicitante": "Isabella Bino", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Pesquisa de fornecedor sem resposta"}, {"data": "04/03/2026", "canal": "suporte-fornecedores", "imovel": "—", "solicitante": "Raquel Szabo", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Aguardando novo link planilha fornecedores"}, {"data": "04/03/2026", "canal": "suporte-fornecedores", "imovel": "—", "solicitante": "Júlia Fontolan", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Baixa", "status": "Resolvido", "sla": 0.8, "obs": "Imóvel inativo NF enxoval - resolvido"}, {"data": "04/03/2026", "canal": "suporte-avaliações-de-hóspedes", "imovel": "DNAG2007", "solicitante": "Vivih Aguilera", "responsavel": "—", "cargo": "—", "categoria": "Avaliações negativas", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Responder avaliação negativa Charlie no Airbnb"}, {"data": "04/03/2026", "canal": "suporte-avaliações-de-hóspedes", "imovel": "CNU202", "solicitante": "Vivih Aguilera", "responsavel": "—", "cargo": "—", "categoria": "Avaliações negativas", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Responder avaliação Vanessa Santos"}, {"data": "04/03/2026", "canal": "suporte-anuncios", "imovel": "DNAG2007", "solicitante": "Vivih Aguilera", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Cancelado", "sla": null, "obs": "Alterar foto capa piscina - cancelado por restrição plataforma"}, {"data": "04/03/2026", "canal": "suporte-anuncios", "imovel": "NWT0104", "solicitante": "Luana Ornelas", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Resolvido", "sla": 2.4, "obs": "Listagem imóveis pet-friendly - resolvido"}, {"data": "04/03/2026", "canal": "suporte-anuncios", "imovel": "TMR0104", "solicitante": "Talyssa Pimentel", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Edição imagens piscina esverdeada - fotos editadas 16:45"}, {"data": "04/03/2026", "canal": "suporte-anuncios", "imovel": "SMT0503", "solicitante": "Mari Umpierre", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Média", "status": "Aberto", "sla": null, "obs": "Recriação de anúncio por nota ruim"}, {"data": "04/03/2026", "canal": "suporte-anuncios", "imovel": "ROB203", "solicitante": "Luana Ornelas", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Verificar distância praia no anúncio"}, {"data": "04/03/2026", "canal": "suporte-atendimento", "imovel": "QUI0090", "solicitante": "Larissa Pereira", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Realocação/cancelamento por infiltração"}, {"data": "04/03/2026", "canal": "suporte-atendimento", "imovel": "OLN1702", "solicitante": "Larissa Pereira", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Muito alta - Crise!", "status": "Resolvido", "sla": 1.2, "obs": "Falta de luz - hóspede realocada para SNC0411"}, {"data": "04/03/2026", "canal": "suporte-atendimento", "imovel": "TDF0302", "solicitante": "Larissa Pereira", "responsavel": "—", "cargo": "—", "categoria": "Realocação / cancelamento", "urgencia": "Alta", "status": "Resolvido", "sla": 1.0, "obs": "Cancelamento discordância precificação - realocado REB0802"}, {"data": "04/03/2026", "canal": "suporte-atendimento", "imovel": "GMB0414", "solicitante": "Larissa Pereira", "responsavel": "—", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Resolvido", "sla": 0.7, "obs": "Cancelamento precificação baixa - cancelado"}, {"data": "04/03/2026", "canal": "suporte-atendimento", "imovel": "FFS1508", "solicitante": "Larissa Pereira", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Baixa", "status": "Resolvido", "sla": 0.7, "obs": "Solicitação reserva interna visita franquias - resolvida"}, {"data": "04/03/2026", "canal": "suporte-gestão-de-contas", "imovel": "ELF", "solicitante": "Júlia Fontolan", "responsavel": "—", "cargo": "—", "categoria": "Manutenção e infraestrutura", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Boleto condomínio em atraso - sendo tratado"}, {"data": "04/03/2026", "canal": "suporte-cs-proprietários", "imovel": "IPS0701", "solicitante": "Luana Ornelas", "responsavel": "Gabriele Figueiredo", "cargo": "—", "categoria": "Outros", "urgencia": "Média", "status": "Resolvido", "sla": 7.3, "obs": "Dúvida pós-distrato - resolvida por Gabriele"}, {"data": "04/03/2026", "canal": "suporte-cs-proprietários", "imovel": "VTD0513", "solicitante": "Larissa Pereira", "responsavel": "Kethrin", "cargo": "Analista Revenue Management", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Análise de ocupação VTD - Kethrin responsável"}, {"data": "04/03/2026", "canal": "suporte-cs-proprietários", "imovel": "FRE2112", "solicitante": "Mel", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Proprietário solicitou contato CS - alta urgência"}, {"data": "04/03/2026", "canal": "suporte-cs-proprietários", "imovel": "—", "solicitante": "Larissa Pereira", "responsavel": "Yasmim Marques", "cargo": "—", "categoria": "Churn / distrato", "urgencia": "Alta", "status": "Resolvido", "sla": 0.0, "obs": "Churn revertido - Yasmim Marques"}, {"data": "04/03/2026", "canal": "suporte-implantação", "imovel": "VTD0617", "solicitante": "Larissa Pereira", "responsavel": "Larissa Pereira", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Média", "status": "Em andamento", "sla": null, "obs": "Fotos profissionais solicitadas - orientações específicas não contempladas"}, {"data": "04/03/2026", "canal": "suporte-implantação", "imovel": "HCY2310", "solicitante": "Daniele Rocha", "responsavel": "Charles Maciel", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Previsão fotos profissionais solicitada"}, {"data": "04/03/2026", "canal": "suporte-implantação", "imovel": "VVA0490", "solicitante": "Júlia Fontolan", "responsavel": "—", "cargo": "—", "categoria": "Implantação (fotos, anúncios)", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Proprietária quer usar fotógrafo próprio - solução pendente"}, {"data": "04/03/2026", "canal": "suporte-obras", "imovel": "Ingleses Spot", "solicitante": "Jeane Rocha", "responsavel": "Camila Fernanda", "cargo": "—", "categoria": "Jurídico / contratos", "urgencia": "Muito alta - Crise!", "status": "Em andamento", "sla": null, "obs": "Advogado investidor exige reunião + pré-ação sobre prestação de contas"}, {"data": "04/03/2026", "canal": "suporte-upsell", "imovel": "BHY1704", "solicitante": "Gabriel Cruvinel", "responsavel": "—", "cargo": "—", "categoria": "Outros", "urgencia": "Baixa", "status": "Aberto", "sla": null, "obs": "Adesão Safe - Cristiano Matheus - plano Essencial"}, {"data": "04/03/2026", "canal": "suporte-cs-investimentos", "imovel": "—", "solicitante": "Sarah Sartori", "responsavel": "Jeane Rocha", "cargo": "—", "categoria": "Jurídico / contratos", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Correção documento Plantas Cotadas - envio para todos investidores"}, {"data": "04/03/2026", "canal": "suporte-rm", "imovel": "PRN0003", "solicitante": "Tiago Clemente", "responsavel": "Kethrin", "cargo": "Analista Revenue Management", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Revisão preço - 50% abaixo mercado, recomendação aumento 15-20%"}, {"data": "04/03/2026", "canal": "suporte-rm", "imovel": "UPP0703/UPP0704", "solicitante": "Mari Umpierre", "responsavel": "Daniele Rocha", "cargo": "—", "categoria": "Precificação / Revenue Management", "urgencia": "Alta", "status": "Em andamento", "sla": null, "obs": "Novos imóveis UPP sem reservas, diárias altas - revisão precificação"}, {"data": "04/03/2026", "canal": "suporte-rm", "imovel": "FEL0502", "solicitante": "Yasmim Marques", "responsavel": "Kethrin", "cargo": "Analista Revenue Management", "categoria": "Precificação / Revenue Management", "urgencia": "Muito alta - Crise!", "status": "Em andamento", "sla": null, "obs": "URGENTE: Prop crítico, preço mínimo R$425 repasse - aplicar imediatamente"}];
-const ALL_DATES   = ["01/03/2026", "02/03/2026", "03/03/2026", "04/03/2026"];
+// ─── Dados ────────────────────────────────────────────────────────────────────
+const ALL  = [{"Data": "01/03/2026", "Canal": "suporte-franquias", "Imóvel": "SKL's", "Solicitante": "Isabella Bino", "Responsável": "David Soares", "Cargo": "Analista de Operações de Franquias", "Categoria": "Divergência taxa de limpeza", "Urgência": "Média", "Status": "Resolvido", "SLA": 5.6}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "EII0304", "Solicitante": "Talyssa Pimentel", "Responsável": "Laira Capra", "Cargo": "Analista de Operações de Franquias", "Categoria": "Manutenção e infraestrutura", "Urgência": "Média", "Status": "Resolvido", "SLA": 7.3}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "VEC121", "Solicitante": "Talyssa Pimentel", "Responsável": "Vivih Aguilera", "Cargo": "Gerente de Franquias", "Categoria": "Manutenção e infraestrutura", "Urgência": "Média", "Status": "Resolvido", "SLA": 10.5}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "NWT0820", "Solicitante": "Nicolas Lerione", "Responsável": "Vivih Aguilera", "Cargo": "Gerente de Franquias", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Pendente", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "VII0107", "Solicitante": "Nicolas Lerione", "Responsável": "Vivih Aguilera", "Cargo": "Gerente de Franquias", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Pendente", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "Franquia PH", "Solicitante": "Paulinha Sacramento", "Responsável": "Ariana Martins", "Cargo": "Coord. BackOffice - Franquias", "Categoria": "Outros", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "JBV", "Solicitante": "Talyssa Pimentel", "Responsável": "", "Cargo": "", "Categoria": "Manutenção e infraestrutura", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "CAL0105", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "LIV0904", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "SPN0102", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-franquias", "Imóvel": "ZNB0903", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "CTE0007", "Solicitante": "Larissa Pereira", "Responsável": "Yas", "Cargo": "", "Categoria": "Churn / distrato", "Urgência": "Muito alta - Crise!", "Status": "Em andamento", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "BSF0806", "Solicitante": "Júlia Fontolan", "Responsável": "Julyana Cardoso", "Cargo": "Coord. CS Proprietários", "Categoria": "Churn / distrato", "Urgência": "Alta", "Status": "Resolvido", "SLA": 8.8}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "JDN0502", "Solicitante": "Raquel Szabo", "Responsável": "Kethrin", "Cargo": "Analista Revenue Management", "Categoria": "Precificação / Revenue Management", "Urgência": "Média", "Status": "Resolvido", "SLA": 5.0}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "DRB0205", "Solicitante": "Júlia Fontolan", "Responsável": "Gabriele Figueiredo", "Cargo": "", "Categoria": "Outros", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "JDN0208", "Solicitante": "Mari Umpierre", "Responsável": "", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "JDN0516", "Solicitante": "Mari Umpierre", "Responsável": "", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "02/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "SMT0503", "Solicitante": "Mari Umpierre", "Responsável": "", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-atendimento", "Imóvel": "OLN1702", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Muito alta - Crise!", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-atendimento", "Imóvel": "ISM0619", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-atendimento", "Imóvel": "SMT0503", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-atendimento", "Imóvel": "MMD0405", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-atendimento", "Imóvel": "CMS0202", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Divergência de valores", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "NLUG0001", "Solicitante": "Júlia Fontolan", "Responsável": "Paula Sacramento", "Cargo": "Analista de Suporte", "Categoria": "Danos de hóspedes", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "CTS0203", "Solicitante": "Mel", "Responsável": "", "Cargo": "", "Categoria": "Churn / distrato", "Urgência": "Alta", "Status": "Resolvido", "SLA": 5.5}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "EBA0401", "Solicitante": "Mel", "Responsável": "", "Cargo": "", "Categoria": "Manutenção e infraestrutura", "Urgência": "Alta", "Status": "Resolvido", "SLA": 5.5}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "VIC0401", "Solicitante": "Kethrin", "Responsável": "", "Cargo": "", "Categoria": "Divergência taxa de limpeza", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "GGR0702", "Solicitante": "Julyana Cardoso", "Responsável": "", "Cargo": "", "Categoria": "Danos de hóspedes", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-franquias", "Imóvel": "SBH0233", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Pendente", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-anuncios", "Imóvel": "THG0006", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Muito alta - Crise!", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-anuncios", "Imóvel": "SBH0233", "Solicitante": "Charles Maciel", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-anuncios", "Imóvel": "BFJ0506", "Solicitante": "Charles Maciel", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-anuncios", "Imóvel": "SAA0907", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "DAL221", "Solicitante": "Mel", "Responsável": "Kethrin", "Cargo": "Analista Revenue Management", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "EFR203", "Solicitante": "Mel", "Responsável": "Yas", "Cargo": "", "Categoria": "Renovação de enxoval / mobília", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "BME0001", "Solicitante": "Luana Ornelas", "Responsável": "Gabriele Figueiredo", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "JSR112", "Solicitante": "Larissa Pereira", "Responsável": "Julyana Cardoso", "Cargo": "Coord. CS Proprietários", "Categoria": "Outros", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-obras", "Imóvel": "Formulário", "Solicitante": "Daisi Marsaro", "Responsável": "", "Cargo": "", "Categoria": "Problemas com sistemas", "Urgência": "Alta", "Status": "Aberto", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-implantação", "Imóvel": "NLUH0008", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Em andamento", "SLA": null}, {"Data": "03/03/2026", "Canal": "suporte-implantação", "Imóvel": "Pin errado", "Solicitante": "—", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Média", "Status": "Resolvido", "SLA": 2.0}, {"Data": "04/03/2026", "Canal": "suporte-franquias", "Imóvel": "EKT002", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-franquias", "Imóvel": "VLP0222", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-franquias", "Imóvel": "ESP0301", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Manutenção e infraestrutura", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-franquias", "Imóvel": "SES0707", "Solicitante": "Weslley Bertoldo", "Responsável": "", "Cargo": "", "Categoria": "Falta de retorno de franquia", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-fornecedores", "Imóvel": "—", "Solicitante": "Isabella Bino", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-fornecedores", "Imóvel": "—", "Solicitante": "Raquel Szabo", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-fornecedores", "Imóvel": "—", "Solicitante": "Júlia Fontolan", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Baixa", "Status": "Resolvido", "SLA": 0.8}, {"Data": "04/03/2026", "Canal": "suporte-avaliações-de-hóspedes", "Imóvel": "DNAG2007", "Solicitante": "Vivih Aguilera", "Responsável": "", "Cargo": "", "Categoria": "Avaliações negativas", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-avaliações-de-hóspedes", "Imóvel": "CNU202", "Solicitante": "Vivih Aguilera", "Responsável": "", "Cargo": "", "Categoria": "Avaliações negativas", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-anuncios", "Imóvel": "DNAG2007", "Solicitante": "Vivih Aguilera", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Cancelado", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-anuncios", "Imóvel": "NWT0104", "Solicitante": "Luana Ornelas", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Resolvido", "SLA": 2.4}, {"Data": "04/03/2026", "Canal": "suporte-anuncios", "Imóvel": "TMR0104", "Solicitante": "Talyssa Pimentel", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-anuncios", "Imóvel": "SMT0503", "Solicitante": "Mari Umpierre", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Média", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-anuncios", "Imóvel": "ROB203", "Solicitante": "Luana Ornelas", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-atendimento", "Imóvel": "QUI0090", "Solicitante": "Larissa Pereira", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-atendimento", "Imóvel": "OLN1702", "Solicitante": "Larissa Pereira", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Muito alta - Crise!", "Status": "Resolvido", "SLA": 1.2}, {"Data": "04/03/2026", "Canal": "suporte-atendimento", "Imóvel": "TDF0302", "Solicitante": "Larissa Pereira", "Responsável": "", "Cargo": "", "Categoria": "Realocação / cancelamento", "Urgência": "Alta", "Status": "Resolvido", "SLA": 1.0}, {"Data": "04/03/2026", "Canal": "suporte-atendimento", "Imóvel": "GMB0414", "Solicitante": "Larissa Pereira", "Responsável": "", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Resolvido", "SLA": 0.7}, {"Data": "04/03/2026", "Canal": "suporte-atendimento", "Imóvel": "FFS1508", "Solicitante": "Larissa Pereira", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Baixa", "Status": "Resolvido", "SLA": 0.7}, {"Data": "04/03/2026", "Canal": "suporte-gestão-de-contas", "Imóvel": "ELF", "Solicitante": "Júlia Fontolan", "Responsável": "", "Cargo": "", "Categoria": "Manutenção e infraestrutura", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "IPS0701", "Solicitante": "Luana Ornelas", "Responsável": "Gabriele Figueiredo", "Cargo": "", "Categoria": "Outros", "Urgência": "Média", "Status": "Resolvido", "SLA": 7.3}, {"Data": "04/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "VTD0513", "Solicitante": "Larissa Pereira", "Responsável": "Kethrin", "Cargo": "Analista Revenue Management", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "FRE2112", "Solicitante": "Mel", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-cs-proprietários", "Imóvel": "—", "Solicitante": "Larissa Pereira", "Responsável": "Yasmim Marques", "Cargo": "", "Categoria": "Churn / distrato", "Urgência": "Alta", "Status": "Resolvido", "SLA": 0.0}, {"Data": "04/03/2026", "Canal": "suporte-implantação", "Imóvel": "VTD0617", "Solicitante": "Larissa Pereira", "Responsável": "Larissa Pereira", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Média", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-implantação", "Imóvel": "HCY2310", "Solicitante": "Daniele Rocha", "Responsável": "Charles Maciel", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-implantação", "Imóvel": "VVA0490", "Solicitante": "Júlia Fontolan", "Responsável": "", "Cargo": "", "Categoria": "Implantação (fotos, anúncios)", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-obras", "Imóvel": "Ingleses Spot", "Solicitante": "Jeane Rocha", "Responsável": "Camila Fernanda", "Cargo": "", "Categoria": "Jurídico / contratos", "Urgência": "Muito alta - Crise!", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-upsell", "Imóvel": "BHY1704", "Solicitante": "Gabriel Cruvinel", "Responsável": "", "Cargo": "", "Categoria": "Outros", "Urgência": "Baixa", "Status": "Aberto", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-cs-investimentos", "Imóvel": "—", "Solicitante": "Sarah Sartori", "Responsável": "Jeane Rocha", "Cargo": "", "Categoria": "Jurídico / contratos", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-rm", "Imóvel": "PRN0003", "Solicitante": "Tiago Clemente", "Responsável": "Kethrin", "Cargo": "Analista Revenue Management", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-rm", "Imóvel": "UPP0703/UPP0704", "Solicitante": "Mari Umpierre", "Responsável": "Daniele Rocha", "Cargo": "", "Categoria": "Precificação / Revenue Management", "Urgência": "Alta", "Status": "Em andamento", "SLA": null}, {"Data": "04/03/2026", "Canal": "suporte-rm", "Imóvel": "FEL0502", "Solicitante": "Yasmim Marques", "Responsável": "Kethrin", "Cargo": "Analista Revenue Management", "Categoria": "Precificação / Revenue Management", "Urgência": "Muito alta - Crise!", "Status": "Em andamento", "SLA": null}];
+const DATES= ["01/03/2026", "02/03/2026", "03/03/2026", "04/03/2026"];
+const CANAIS_ALL = ["suporte-anuncios", "suporte-atendimento", "suporte-avaliações-de-hóspedes", "suporte-cs-investimentos", "suporte-cs-proprietários", "suporte-fornecedores", "suporte-franquias", "suporte-gestão-de-contas", "suporte-implantação", "suporte-obras", "suporte-rm", "suporte-upsell"];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Estado
-// ─────────────────────────────────────────────────────────────────────────────
-let selectedDate = 'all';
+// ─── Cores / config ───────────────────────────────────────────────────────────
+const STATUS_CFG = {
+  "Resolvido":    {color:"#22c55e", bg:"#dcfce7", fg:"#16a34a"},
+  "Em andamento": {color:"#f59e0b", bg:"#fef9c3", fg:"#b45309"},
+  "Aberto":       {color:"#ef4444", bg:"#fee2e2", fg:"#dc2626"},
+  "Pendente":     {color:"#f97316", bg:"#ffedd5", fg:"#ea580c"},
+  "Cancelado":    {color:"#94a3b8", bg:"#f1f5f9", fg:"#64748b"},
+};
+const URG_CFG = {
+  "Muito alta - Crise!": {color:"#dc2626", label:"🚨 Crise"},
+  "Alta":                {color:"#f97316", label:"🔴 Alta"},
+  "Média":               {color:"#f59e0b", label:"🟡 Média"},
+  "Baixa":               {color:"#22c55e", label:"🟢 Baixa"},
+};
+const COLORS = ["#3b82f6","#8b5cf6","#06b6d4","#f59e0b","#ec4899","#22c55e",
+                "#f97316","#a855f7","#14b8a6","#6366f1","#ef4444","#84cc16"];
+const cShort = c => c.replace(/^suporte-/,"")
+  .replace("cs-proprietários","CS prop.")
+  .replace("cs-investimentos","CS invest.")
+  .replace("cs-proprietarios","CS prop.")
+  .replace("gestão-de-contas","gestão contas")
+  .replace("avaliações-de-hóspedes","avaliações");
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Filtros
-// ─────────────────────────────────────────────────────────────────────────────
-function getFiltered() {
-  if (selectedDate === 'all') return ALL_TICKETS;
-  return ALL_TICKETS.filter(t => t.data === selectedDate);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Cores
-// ─────────────────────────────────────────────────────────────────────────────
-const PALETTE = [
-  '#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6',
-  '#ec4899','#14b8a6','#f97316','#6366f1','#22c55e',
-  '#eab308','#f87171','#a855f7','#0ea5e9','#84cc16'
-];
-function palette(n) { return PALETTE.slice(0, n).concat(PALETTE.slice(0, Math.max(0, n - PALETTE.length))); }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Chart instances
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Estado ───────────────────────────────────────────────────────────────────
+let selDate = "all";
 const charts = {};
-function mkChart(id, config) {
-  if (charts[id]) charts[id].destroy();
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  charts[id] = new Chart(ctx, config);
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const isOpen = t => !["Resolvido","Cancelado"].includes(t.Status);
+function filtered() {
+  return selDate === "all" ? ALL : ALL.filter(t => t.Data === selDate);
+}
+function groupBy(arr, key) {
+  const m = {};
+  arr.forEach(t => { const v = t[key]||"—"; m[v]=(m[v]||0)+1; });
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Métricas
-// ─────────────────────────────────────────────────────────────────────────────
-function computeMetrics(tickets) {
-  const total = tickets.length;
-  const resolvidos  = tickets.filter(t => /resolvido|✅/i.test(t.status)).length;
-  const em_andamento= tickets.filter(t => /andamento|👀/i.test(t.status)).length;
-  const backlog = total - resolvidos;
+// ─── Render KPIs ─────────────────────────────────────────────────────────────
+function renderKPIs(T) {
+  const total   = T.length;
+  const res     = T.filter(t=>t.Status==="Resolvido").length;
+  const aberto  = T.filter(isOpen).length;
+  const crise   = T.filter(t=>t.Urgência==="Muito alta - Crise!" && isOpen(t)).length;
+  const semResp = T.filter(t=>!t.Responsável && isOpen(t)).length;
+  const taxa    = total ? Math.round(res/total*100) : 0;
+  const dRange  = selDate==="all"
+    ? (DATES.length ? DATES[0].slice(0,5)+"–"+DATES.at(-1).slice(0,5) : "")
+    : selDate.slice(0,5);
 
-  const slas = tickets.map(t => t.sla).filter(s => s !== null && s > 0);
-  const sla_medio = slas.length ? (slas.reduce((a,b)=>a+b,0)/slas.length).toFixed(1) : '—';
+  document.getElementById("kpi-total").textContent   = total;
+  document.getElementById("kpi-total-sub").textContent = dRange;
+  document.getElementById("kpi-res").textContent     = res;
+  document.getElementById("kpi-res-sub").textContent = taxa+"% de resolução";
+  document.getElementById("kpi-aberto").textContent  = aberto;
+  document.getElementById("kpi-crise").textContent   = crise;
+  document.getElementById("kpi-sem-resp").textContent= semResp;
 
-  // Agrupamentos
-  function group(key) {
-    const m = {};
-    tickets.forEach(t => { const v = t[key] || '—'; m[v] = (m[v]||0)+1; });
-    return Object.entries(m).sort((a,b)=>b[1]-a[1]);
-  }
-
-  return { total, resolvidos, em_andamento, backlog, sla_medio,
-            canais: group('canal'), categorias: group('categoria'),
-            responsaveis: group('responsavel'), urgencias: group('urgencia'),
-            statuses: group('status') };
+  // badges no header
+  const bc = document.getElementById("badge-crise");
+  const br = document.getElementById("badge-resp");
+  if (crise>0) { bc.textContent="🚨 "+crise+" em crise"; bc.classList.remove("hidden"); }
+  else bc.classList.add("hidden");
+  if (semResp>0) { br.textContent="⚠️ "+semResp+" sem responsável"; br.classList.remove("hidden"); }
+  else br.classList.add("hidden");
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// KPIs
-// ─────────────────────────────────────────────────────────────────────────────
-function updateKPIs(m) {
-  document.getElementById('kpi-total').textContent     = m.total;
-  document.getElementById('kpi-resolvidos').textContent= m.resolvidos;
-  document.getElementById('kpi-andamento').textContent = m.em_andamento;
-  document.getElementById('kpi-backlog').textContent   = m.backlog;
-  document.getElementById('kpi-sla').textContent       = m.sla_medio;
-}
+// ─── Trend chart ─────────────────────────────────────────────────────────────
+function renderTrend() {
+  const labels = DATES.map(d=>d.slice(0,5));
+  const total  = DATES.map(d=>ALL.filter(t=>t.Data===d).length);
+  const resol  = DATES.map(d=>ALL.filter(t=>t.Data===d&&t.Status==="Resolvido").length);
+  const pend   = DATES.map(d=>ALL.filter(t=>t.Data===d&&isOpen(t)).length);
+  const alpha  = DATES.map(d=> selDate==="all"||d===selDate ? 1 : 0.3);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Gráficos
-// ─────────────────────────────────────────────────────────────────────────────
-function updateCharts(m, tickets) {
-
-  // Trend (sempre usa todos os tickets, highlight a data selecionada)
-  const trendLabels = ALL_DATES;
-  const trendVals = ALL_DATES.map(d => ALL_TICKETS.filter(t=>t.data===d).length);
-  const trendColors = trendLabels.map(d =>
-    selectedDate === 'all' || d === selectedDate ? '#3b82f6' : '#bfdbfe'
-  );
-  mkChart('chartTrend', {
-    type:'bar',
-    data:{
-      labels:trendLabels,
-      datasets:[{ label:'Chamados', data:trendVals, backgroundColor:trendColors, borderRadius:6, borderSkipped:false }]
+  if (charts.trend) charts.trend.destroy();
+  charts.trend = new Chart(document.getElementById("chartTrend"), {
+    type:"bar",
+    data:{ labels,
+      datasets:[
+        {label:"Total",    data:total, backgroundColor:DATES.map((_,i)=>`rgba(59,130,246,${alpha[i]})`),  borderRadius:4, borderSkipped:false},
+        {label:"Resolvidos",data:resol,backgroundColor:DATES.map((_,i)=>`rgba(34,197,94,${alpha[i]})`),   borderRadius:4, borderSkipped:false},
+        {label:"Pendentes",data:pend,  backgroundColor:DATES.map((_,i)=>`rgba(249,115,22,${alpha[i]})`),  borderRadius:4, borderSkipped:false},
+      ]
     },
-    options:{ responsive:true, plugins:{ legend:{display:false} },
-               scales:{ y:{ beginAtZero:true, ticks:{precision:0}, grid:{color:'#f1f5f9'} },
-                         x:{ grid:{display:false} } } }
-  });
-
-  // Status (doughnut)
-  const stL = m.statuses.map(x=>x[0]), stV = m.statuses.map(x=>x[1]);
-  mkChart('chartStatus', {
-    type:'doughnut',
-    data:{ labels:stL, datasets:[{ data:stV, backgroundColor:palette(stL.length), borderWidth:2, borderColor:'#fff' }] },
-    options:{ responsive:true, maintainAspectRatio:true,
-               plugins:{ legend:{ position:'bottom', labels:{ font:{size:11}, boxWidth:12 } } } }
-  });
-
-  // Urgência (doughnut)
-  const urgL = m.urgencias.map(x=>x[0]), urgV = m.urgencias.map(x=>x[1]);
-  const urgColors = urgL.map(l => {
-    const ll = l.toLowerCase();
-    if (ll==='crise') return '#ef4444';
-    if (ll==='alta')  return '#f97316';
-    if (ll==='média'||ll==='media') return '#f59e0b';
-    return '#94a3b8';
-  });
-  mkChart('chartUrg', {
-    type:'doughnut',
-    data:{ labels:urgL, datasets:[{ data:urgV, backgroundColor:urgColors, borderWidth:2, borderColor:'#fff' }] },
-    options:{ responsive:true, maintainAspectRatio:true,
-               plugins:{ legend:{ position:'bottom', labels:{ font:{size:11}, boxWidth:12 } } } }
-  });
-
-  // Canais (bar)
-  const cL = m.canais.map(x=>x[0]), cV = m.canais.map(x=>x[1]);
-  mkChart('chartCanais', {
-    type:'bar',
-    data:{ labels:cL, datasets:[{ label:'Chamados', data:cV, backgroundColor:palette(cL.length), borderRadius:6, borderSkipped:false }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} },
-               scales:{ y:{ beginAtZero:true, ticks:{precision:0}, grid:{color:'#f1f5f9'} },
-                         x:{ grid:{display:false}, ticks:{font:{size:11}} } } }
-  });
-
-  // Categorias (pie)
-  const kL = m.categorias.map(x=>x[0]), kV = m.categorias.map(x=>x[1]);
-  mkChart('chartCat', {
-    type:'pie',
-    data:{ labels:kL, datasets:[{ data:kV, backgroundColor:palette(kL.length), borderWidth:2, borderColor:'#fff' }] },
-    options:{ responsive:true, maintainAspectRatio:false,
-               plugins:{ legend:{ position:'right', labels:{ font:{size:11}, boxWidth:12 } } } }
-  });
-
-  // Responsáveis (horizontal bar, top 10)
-  const top10 = m.responsaveis.slice(0,10);
-  const rL = top10.map(x=>x[0]), rV = top10.map(x=>x[1]);
-  mkChart('chartResp', {
-    type:'bar',
-    data:{ labels:rL, datasets:[{ label:'Chamados', data:rV, backgroundColor:palette(rL.length), borderRadius:6, borderSkipped:false }] },
-    options:{ indexAxis:'y', responsive:true, plugins:{ legend:{display:false} },
-               scales:{ x:{ beginAtZero:true, ticks:{precision:0}, grid:{color:'#f1f5f9'} },
-                         y:{ grid:{display:false}, ticks:{font:{size:11}} } } }
+    options:{responsive:true,
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},
+      scales:{
+        y:{beginAtZero:true,ticks:{precision:0},grid:{color:"#f1f5f9"}},
+        x:{grid:{display:false}}
+      }
+    }
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tabelas
-// ─────────────────────────────────────────────────────────────────────────────
-function updateTbCat(m) {
-  const total = m.total || 1;
-  document.getElementById('tb-categorias').innerHTML =
-    m.categorias.map((x,i) =>
-      `<tr><td class="text-gray-400 font-mono text-xs">${i+1}</td><td>${x[0]}</td>
-       <td class="font-semibold">${x[1]}</td>
-       <td class="text-gray-400">${Math.round(x[1]/total*100)}%</td></tr>`
-    ).join('');
-}
-
-function updateTbResp(tickets) {
-  const byResp = {};
-  tickets.forEach(t => {
-    const r = t.responsavel || '—';
-    if (!byResp[r]) byResp[r] = { cargo: t.cargo, total:0, res:0, pend:0 };
-    byResp[r].total++;
-    if (/resolvido|✅/i.test(t.status)) byResp[r].res++;
-    else byResp[r].pend++;
-    if (t.cargo && t.cargo !== '—') byResp[r].cargo = t.cargo;
+// ─── Status pie ───────────────────────────────────────────────────────────────
+function renderStatus(T) {
+  const g = groupBy(T,"Status");
+  const labels=g.map(x=>x[0]), vals=g.map(x=>x[1]);
+  const cols = labels.map(l=>(STATUS_CFG[l]||{color:"#94a3b8"}).color);
+  if (charts.status) charts.status.destroy();
+  charts.status = new Chart(document.getElementById("chartStatus"),{
+    type:"pie",
+    data:{labels, datasets:[{data:vals,backgroundColor:cols,borderWidth:2,borderColor:"#fff"}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw}` } } }
+    }
   });
-  const rows = Object.entries(byResp).sort((a,b)=>b[1].total-a[1].total);
-  document.getElementById('tb-resp').innerHTML = rows.map(([r,d]) =>
-    `<tr>
-       <td class="font-medium">${r === '—' ? '<span class="text-red-400">Sem responsável ⚠️</span>' : r}</td>
-       <td class="text-gray-400 text-xs">${d.cargo}</td>
-       <td class="font-semibold text-blue-600">${d.total}</td>
-       <td><span class="badge b-green">${d.res}</span></td>
-       <td><span class="badge b-red">${d.pend}</span></td>
-     </tr>`
-  ).join('');
+  const leg = document.getElementById("status-legend");
+  leg.innerHTML = g.map(([n,v])=>{
+    const c=(STATUS_CFG[n]||{color:"#94a3b8"}).color;
+    return `<div class="flex items-center justify-between text-xs">
+      <div class="flex items-center gap-1.5">
+        <div style="width:10px;height:10px;border-radius:50%;background:${c}"></div>
+        <span class="text-slate-600">${n}</span>
+      </div>
+      <span class="font-semibold text-slate-800">${v}</span>
+    </div>`;
+  }).join("");
 }
 
-function statusBadge(s) {
-  const sl = s.toLowerCase();
-  if (sl.includes('resolvido')||s.includes('✅')) return `<span class="badge b-green">${s}</span>`;
-  if (sl.includes('andamento')||s.includes('👀')) return `<span class="badge b-yellow">${s}</span>`;
-  if (sl.includes('cancelado')||s.includes('❌')) return `<span class="badge b-gray">${s}</span>`;
-  return `<span class="badge b-red">${s}</span>`;
-}
-function urgBadge(u) {
-  const ul = u.toLowerCase();
-  if (ul==='crise') return `<span class="badge b-red">${u}</span>`;
-  if (ul==='alta')  return `<span class="badge b-orange">${u}</span>`;
-  if (ul.includes('dia')||ul.includes('edia')) return `<span class="badge b-yellow">${u}</span>`;
-  return `<span class="badge b-gray">${u}</span>`;
+// ─── Urgência cards ───────────────────────────────────────────────────────────
+function renderUrg(T) {
+  const URG_ORDER = ["Muito alta - Crise!","Alta","Média","Baixa"];
+  const cnt = {};
+  T.forEach(t=>{ cnt[t.Urgência]=(cnt[t.Urgência]||0)+1; });
+  document.getElementById("urg-cards").innerHTML = URG_ORDER
+    .filter(k=>cnt[k])
+    .map(k=>{
+      const c=URG_CFG[k]||{color:"#94a3b8",label:k};
+      return `<div style="background:${c.color}18;border:1.5px solid ${c.color}40;border-radius:12px;padding:1rem;text-align:center">
+        <div style="font-size:1.75rem;font-weight:700;color:${c.color}">${cnt[k]}</div>
+        <div style="font-size:.75rem;font-weight:500;color:#475569;margin-top:.25rem">${c.label}</div>
+      </div>`;
+    }).join("");
 }
 
+// ─── Canais chart + cards ─────────────────────────────────────────────────────
+function renderCanais(T) {
+  const byCanal = {};
+  T.forEach(t=>{
+    const c=cShort(t.Canal);
+    if(!byCanal[c]) byCanal[c]={total:0,res:0};
+    byCanal[c].total++;
+    if(t.Status==="Resolvido") byCanal[c].res++;
+  });
+  const entries = Object.entries(byCanal).sort((a,b)=>b[1].total-a[1].total);
+  const labels  = entries.map(e=>e[0]);
+  const resVals = entries.map(e=>e[1].res);
+  const pendVals= entries.map(e=>e[1].total-e[1].res);
+
+  if (charts.canais) charts.canais.destroy();
+  charts.canais = new Chart(document.getElementById("chartCanais"),{
+    type:"bar",
+    data:{labels,datasets:[
+      {label:"Resolvido",      data:resVals,  backgroundColor:"#22c55e",borderRadius:[0,0,0,0],borderSkipped:false},
+      {label:"Pendente/Aberto",data:pendVals, backgroundColor:"#f97316",borderRadius:[4,4,0,0],borderSkipped:false},
+    ]},
+    options:{indexAxis:"y",responsive:true,
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}},
+               tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw}`}}},
+      scales:{
+        x:{stacked:true,beginAtZero:true,ticks:{precision:0},grid:{color:"#f1f5f9"}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}
+      }
+    }
+  });
+
+  document.getElementById("canal-cards").innerHTML = entries.map(([name,d])=>{
+    const pct = d.total ? Math.round(d.res/d.total*100) : 0;
+    return `<div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
+      <div class="text-xs text-slate-500 font-medium mb-1 truncate">${name}</div>
+      <div class="text-2xl font-bold text-slate-800">${d.total}</div>
+      <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+        <div class="h-full bg-green-500 rounded-full" style="width:${pct}%"></div>
+      </div>
+      <div class="text-xs text-slate-400 mt-1">${pct}% resolvido</div>
+    </div>`;
+  }).join("");
+}
+
+// ─── Categorias barras ────────────────────────────────────────────────────────
+function renderCat(T) {
+  const g = groupBy(T,"Categoria");
+  const max = g[0]?.[1] || 1;
+  document.getElementById("cat-bars").innerHTML = g.map(([name,val],i)=>{
+    const pct = Math.round(val/max*100);
+    const col = COLORS[i%COLORS.length];
+    return `<div class="bar-row">
+      <div class="bar-label" title="${name}">${name}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${Math.max(pct,4)}%;background:${col}">${val>2?val:""}</div>
+      </div>
+      <span style="font-size:.75rem;font-weight:700;color:#374151;width:24px">${val}</span>
+    </div>`;
+  }).join("");
+}
+
+// ─── Responsáveis chart + lista ───────────────────────────────────────────────
+function renderResp(T) {
+  const byR = {};
+  T.forEach(t=>{
+    const r = t.Responsável || "⚠️ Sem responsável";
+    if(!byR[r]) byR[r]={total:0,open:0};
+    byR[r].total++;
+    if(isOpen(t)) byR[r].open++;
+  });
+  const sorted = Object.entries(byR).sort((a,b)=>b[1].total-a[1].total).slice(0,12);
+  const labels = sorted.map(e=>e[0]);
+  const resVals= sorted.map(e=>e[1].total-e[1].open);
+  const abrVals= sorted.map(e=>e[1].open);
+
+  if (charts.resp) charts.resp.destroy();
+  charts.resp = new Chart(document.getElementById("chartResp"),{
+    type:"bar",
+    data:{labels,datasets:[
+      {label:"Resolvidos",          data:resVals,backgroundColor:"#22c55e",borderSkipped:false},
+      {label:"Abertos/Pendentes",   data:abrVals,backgroundColor:"#f97316",borderRadius:[4,4,0,0],borderSkipped:false},
+    ]},
+    options:{indexAxis:"y",responsive:true,
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{stacked:true,beginAtZero:true,ticks:{precision:0},grid:{color:"#f1f5f9"}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}
+      }
+    }
+  });
+
+  document.getElementById("resp-list").innerHTML = sorted.map(([name,d])=>{
+    const isSem = name.includes("⚠️");
+    return `<div class="flex items-center gap-4 rounded-xl px-4 py-3 border shadow-sm ${isSem?"bg-orange-50 border-orange-200":"bg-white border-slate-100"}">
+      <div class="flex-1 min-w-0">
+        <div class="text-sm font-semibold text-slate-800 truncate">${name}</div>
+      </div>
+      <div class="flex gap-4 text-xs font-medium shrink-0">
+        <span class="text-green-600">✅ ${d.total-d.open}</span>
+        <span class="text-orange-600">⏳ ${d.open}</span>
+        <span class="text-slate-700 font-bold">Total ${d.total}</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ─── Chamados tabela ──────────────────────────────────────────────────────────
 function renderChamados() {
-  const q = (document.getElementById('search-chamados').value||'').toLowerCase();
-  const data = getFiltered().filter(t =>
-    q === '' || Object.values(t).some(v => String(v||'').toLowerCase().includes(q))
-  );
-  document.getElementById('count-chamados').textContent = `(${data.length} chamados)`;
-  const tb = document.getElementById('tb-chamados');
-  if (!data.length) {
-    tb.innerHTML = ''; document.getElementById('no-chamados').style.display='block'; return;
-  }
-  document.getElementById('no-chamados').style.display='none';
-  tb.innerHTML = data.map(t =>
-    `<tr>
-       <td class="text-xs text-gray-400 whitespace-nowrap">${t.data}</td>
-       <td><span class="text-blue-600 font-semibold">#${t.canal}</span></td>
-       <td class="font-mono text-xs">${t.imovel}</td>
-       <td class="text-xs max-w-[140px] truncate" title="${t.categoria}">${t.categoria}</td>
-       <td>${urgBadge(t.urgencia)}</td>
-       <td>${statusBadge(t.status)}</td>
-       <td class="text-xs max-w-[120px] truncate" title="${t.responsavel}">${t.responsavel}</td>
-       <td class="text-xs text-center">${t.sla !== null ? t.sla+'h' : '—'}</td>
-       <td class="text-xs max-w-[180px] truncate text-gray-400" title="${t.obs}">${t.obs}</td>
-     </tr>`
-  ).join('');
+  const q  = document.getElementById("f-search").value.toLowerCase();
+  const fs = document.getElementById("f-status").value;
+  const fc = document.getElementById("f-canal").value;
+  const base = filtered();
+  const data = base.filter(t=>{
+    if(fs!=="Todos"&&t.Status!==fs) return false;
+    if(fc!=="Todos"&&cShort(t.Canal)!==fc) return false;
+    if(q) return Object.values(t).some(v=>String(v||"").toLowerCase().includes(q));
+    return true;
+  });
+  document.getElementById("f-count").textContent = data.length+" chamados";
+  const tb = document.getElementById("tb-chamados");
+  const emp= document.getElementById("tb-empty");
+  if(!data.length) { tb.innerHTML=""; emp.style.display="block"; return; }
+  emp.style.display="none";
+  tb.innerHTML = data.map(t=>{
+    const sc = STATUS_CFG[t.Status]||{bg:"#f1f5f9",fg:"#64748b"};
+    const uc = (URG_CFG[t.Urgência]||{color:"#94a3b8",label:t.Urgência});
+    const rowBg = t.Urgência==="Muito alta - Crise!"&&isOpen(t)?"background:#fff5f5":"";
+    return `<tr style="${rowBg}">
+      <td style="color:#94a3b8;font-size:.75rem;white-space:nowrap">${t.Data.slice(0,5)}</td>
+      <td style="color:#1d4ed8;font-weight:600;font-size:.75rem">${cShort(t.Canal)}</td>
+      <td style="font-family:monospace;font-size:.75rem">${t.Imóvel}</td>
+      <td style="font-size:.75rem;color:#475569">${t.Categoria}</td>
+      <td><span style="font-size:.72rem;font-weight:700;color:${uc.color}">${uc.label||t.Urgência}</span></td>
+      <td style="font-size:.75rem">${t.Responsável||'<span style="color:#ea580c;font-weight:600">⚠️ Sem resp.</span>'}</td>
+      <td><span style="background:${sc.bg};color:${sc.fg};padding:.15rem .55rem;border-radius:99px;font-size:.7rem;font-weight:700">${t.Status}</span></td>
+    </tr>`;
+  }).join("");
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Render principal
-// ─────────────────────────────────────────────────────────────────────────────
-function render() {
-  const tickets = getFiltered();
-  const m = computeMetrics(tickets);
-  updateKPIs(m);
-  updateCharts(m, tickets);
-  updateTbCat(m);
-  updateTbResp(tickets);
+// ─── Render geral ─────────────────────────────────────────────────────────────
+function renderAll() {
+  const T = filtered();
+  renderKPIs(T);
+  renderTrend();      // sempre mostra todos, destacando a data selecionada
+  renderStatus(T);
+  renderUrg(T);
+  renderCanais(T);
+  renderCat(T);
+  renderResp(T);
   renderChamados();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Date filter buttons
-// ─────────────────────────────────────────────────────────────────────────────
-function buildDateFilters() {
-  const container = document.getElementById('date-filters');
-  const dates = ['all', ...ALL_DATES];
-  container.innerHTML = dates.map(d => {
-    const lbl = d === 'all' ? `Todos (${ALL_TICKETS.length})` : d;
-    const cnt = d === 'all' ? '' : ` (${ALL_TICKETS.filter(t=>t.data===d).length})`;
-    return `<button class="date-btn${d==='all'?' active':''}" data-date="${d}">${lbl}${d!=='all'?cnt:''}</button>`;
-  }).join('');
-  container.addEventListener('click', e => {
-    const btn = e.target.closest('.date-btn');
-    if (!btn) return;
-    selectedDate = btn.dataset.date;
-    container.querySelectorAll('.date-btn').forEach(b => b.classList.toggle('active', b===btn));
-    render();
+// ─── Filtros de data ──────────────────────────────────────────────────────────
+function buildDates() {
+  const c = document.getElementById("date-btns");
+  const all = ["all", ...DATES];
+  c.innerHTML = all.map(d=>{
+    const cnt = d==="all" ? ALL.length : ALL.filter(t=>t.Data===d).length;
+    const lbl = d==="all" ? `Todos (${ALL.length})` : `${d.slice(0,5)} (${cnt})`;
+    return `<button class="date-btn${d==="all"?" active":""}" data-d="${d}">${lbl}</button>`;
+  }).join("");
+  c.addEventListener("click",e=>{
+    const btn=e.target.closest(".date-btn"); if(!btn)return;
+    selDate=btn.dataset.d;
+    c.querySelectorAll(".date-btn").forEach(b=>b.classList.toggle("active",b===btn));
+    renderAll();
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tabs
-// ─────────────────────────────────────────────────────────────────────────────
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-    // Re-render charts when tab becomes visible (Chart.js needs visible canvas)
-    const tickets = getFiltered();
-    const m = computeMetrics(tickets);
-    updateCharts(m, tickets);
+// ─── Tabs ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll(".tab-ul-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab-ul-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".tab-pane").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-"+btn.dataset.tab).classList.add("active");
+    // re-render charts quando a aba fica visível
+    const T=filtered();
+    renderTrend(); renderStatus(T); renderUrg(T); renderCanais(T); renderCat(T); renderResp(T);
   });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────────────────────────────────────────
-buildDateFilters();
-render();
+// ─── Filtros de chamados ──────────────────────────────────────────────────────
+document.getElementById("f-search").addEventListener("input",renderChamados);
+document.getElementById("f-status").addEventListener("change",renderChamados);
+document.getElementById("f-canal").addEventListener("change",renderChamados);
+
+// popula select de canais
+const fc = document.getElementById("f-canal");
+CANAIS_ALL.forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=cShort(c); fc.appendChild(o); });
+
+// ─── Tabs underline (via .tab-ul parent style) ────────────────────────────────
+document.querySelectorAll(".tab-ul-btn").forEach(b=>{
+  b.style.borderBottom="2px solid transparent";
+  b.style.padding=".75rem 1rem";
+  b.style.fontSize=".875rem";
+  b.style.fontWeight="500";
+  b.style.cursor="pointer";
+  b.style.background="none";
+  b.style.border="none";
+  b.style.borderBottom="2px solid transparent";
+  b.style.transition=".15s";
+});
+function styleActiveTabs(){
+  document.querySelectorAll(".tab-ul-btn").forEach(b=>{
+    if(b.classList.contains("active")){b.style.borderBottom="2px solid #2563eb";b.style.color="#2563eb";}
+    else{b.style.borderBottom="2px solid transparent";b.style.color="#64748b";}
+  });
+}
+document.querySelectorAll(".tab-ul-btn").forEach(b=>b.addEventListener("click",styleActiveTabs));
+styleActiveTabs();
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+buildDates();
+renderAll();
 </script>
 </body>
 </html>
