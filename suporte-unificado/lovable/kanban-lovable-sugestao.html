@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Suporte Unificado - Lovable | Seazone</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #161b22; --surface2: #1c2333; --border: #30363d;
+    --text: #e1e4e8; --text-muted: #8b949e; --text-dim: #6e7681;
+    --accent: #6c5ce7; --accent-bg: rgba(108,92,231,0.12);
+    --impl: #f0883e; --impl-bg: rgba(240,136,62,0.12);
+    --franq: #3fb950; --franq-bg: rgba(63,185,80,0.12);
+    --hosp: #58a6ff; --hosp-bg: rgba(88,166,255,0.12);
+    --prop: #d2a8ff; --prop-bg: rgba(210,168,255,0.12);
+    --danger: #f85149; --danger-bg: rgba(248,81,73,0.12);
+    --warning: #d29922; --warning-bg: rgba(210,153,34,0.12);
+    --success: #3fb950; --success-bg: rgba(63,185,80,0.12);
+    --ia: #ff79c6; --ia-bg: rgba(255,121,198,0.12);
+    --radius: 10px; --radius-sm: 6px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; overflow-x:hidden; }
+
+  /* TOP BAR */
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .topbar-left { display:flex; align-items:center; gap:16px; }
+  .logo { font-size:20px; font-weight:800; color:var(--accent); letter-spacing:-0.5px; }
+  .logo span { color:var(--text-muted); font-weight:400; font-size:14px; margin-left:8px; }
+  .topbar-right { display:flex; align-items:center; gap:12px; }
+
+  /* SEARCH */
+  .search-box { position:relative; }
+  .search-box input { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 12px 8px 36px; color:var(--text); font-size:13px; width:280px; outline:none; transition:border 0.2s; }
+  .search-box input:focus { border-color:var(--accent); }
+  .search-box::before { content:"🔍"; position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; }
+  .search-box input::placeholder { color:var(--text-dim); }
+
+  /* NOTIFICATION BELL */
+  .notif-btn { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; color:var(--text); cursor:pointer; position:relative; font-size:14px; }
+  .notif-btn .badge-count { position:absolute; top:-4px; right:-4px; background:var(--danger); color:#fff; font-size:10px; font-weight:700; padding:2px 5px; border-radius:10px; }
+
+  /* USER AVATAR */
+  .user-avatar { width:32px; height:32px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+
+  /* AREA TABS */
+  .area-tabs { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; display:flex; gap:0; overflow-x:auto; }
+  .area-tab { padding:14px 20px; cursor:pointer; font-size:13px; font-weight:600; color:var(--text-muted); border-bottom:3px solid transparent; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:8px; }
+  .area-tab:hover { color:var(--text); background:rgba(255,255,255,0.03); }
+  .area-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+  .area-tab .tab-dot { width:8px; height:8px; border-radius:50%; }
+  .area-tab .tab-count { background:var(--surface2); padding:2px 8px; border-radius:10px; font-size:11px; color:var(--text-muted); }
+  .tab-all .tab-dot { background:var(--accent); }
+  .tab-impl .tab-dot { background:var(--impl); }
+  .tab-franq .tab-dot { background:var(--franq); }
+  .tab-hosp .tab-dot { background:var(--hosp); }
+  .tab-prop .tab-dot { background:var(--prop); }
+
+  /* TOOLBAR */
+  .toolbar { padding:16px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .toolbar-left { display:flex; align-items:center; gap:10px; }
+  .toolbar-right { display:flex; align-items:center; gap:10px; }
+  .filter-btn { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:6px 14px; color:var(--text-muted); font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s; }
+  .filter-btn:hover { border-color:var(--accent); color:var(--text); }
+  .filter-btn.active { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
+  .view-toggle { display:flex; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; }
+  .view-toggle button { background:var(--surface); border:none; color:var(--text-muted); padding:6px 12px; font-size:12px; cursor:pointer; }
+  .view-toggle button.active { background:var(--accent); color:#fff; }
+
+  /* METRICS BAR */
+  .metrics-bar { padding:0 24px 16px; display:flex; gap:12px; overflow-x:auto; }
+  .metric { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; min-width:140px; flex-shrink:0; }
+  .metric .value { font-size:22px; font-weight:700; color:var(--accent); }
+  .metric .label { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .metric .change { font-size:11px; margin-top:4px; }
+  .metric .change.up { color:var(--success); }
+  .metric .change.down { color:var(--danger); }
+
+  /* KANBAN BOARD */
+  .kanban-board { display:flex; gap:16px; padding:0 24px 24px; overflow-x:auto; min-height:calc(100vh - 280px); align-items:flex-start; }
+  .kanban-col { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); min-width:280px; max-width:300px; flex:1; display:flex; flex-direction:column; max-height:calc(100vh - 280px); }
+  .kanban-col-header { padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--surface); border-radius:var(--radius) var(--radius) 0 0; z-index:1; }
+  .kanban-col-header h3 { font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .kanban-col-header .count { background:var(--surface2); color:var(--text-muted); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .col-novo .kanban-col-header { border-top:3px solid var(--accent); }
+  .col-andamento .kanban-col-header { border-top:3px solid var(--impl); }
+  .col-aguardando .kanban-col-header { border-top:3px solid var(--warning); }
+  .col-concluido .kanban-col-header { border-top:3px solid var(--success); }
+  .col-arquivado .kanban-col-header { border-top:3px solid var(--text-dim); }
+  .kanban-col-body { padding:12px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; }
+
+  /* KANBAN CARD */
+  .k-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; cursor:pointer; transition:all 0.15s; position:relative; }
+  .k-card:hover { border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+  .k-card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .k-card-code { font-size:14px; font-weight:800; color:var(--accent); letter-spacing:0.5px; }
+  .k-card-id { font-size:10px; color:var(--text-dim); }
+  .k-card-title { font-size:13px; color:var(--text); margin-bottom:10px; line-height:1.4; }
+  .k-card-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
+  .tag { display:inline-flex; align-items:center; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+  .tag-impl { background:var(--impl-bg); color:var(--impl); border:1px solid rgba(240,136,62,0.3); }
+  .tag-franq { background:var(--franq-bg); color:var(--franq); border:1px solid rgba(63,185,80,0.3); }
+  .tag-hosp { background:var(--hosp-bg); color:var(--hosp); border:1px solid rgba(88,166,255,0.3); }
+  .tag-prop { background:var(--prop-bg); color:var(--prop); border:1px solid rgba(210,168,255,0.3); }
+  .tag-ia { background:var(--ia-bg); color:var(--ia); border:1px solid rgba(255,121,198,0.3); }
+  .tag-urgencia-crise { background:var(--danger-bg); color:var(--danger); border:1px solid rgba(248,81,73,0.3); animation:pulse 2s infinite; }
+  .tag-urgencia-alta { background:var(--danger-bg); color:var(--danger); border:1px solid rgba(248,81,73,0.3); }
+  .tag-urgencia-media { background:var(--warning-bg); color:var(--warning); border:1px solid rgba(210,153,34,0.3); }
+  .tag-urgencia-baixa { background:var(--success-bg); color:var(--success); border:1px solid rgba(63,185,80,0.3); }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+  .k-card-meta { display:flex; align-items:center; justify-content:space-between; }
+  .k-card-meta-left { display:flex; align-items:center; gap:8px; }
+  .k-card-avatar { width:22px; height:22px; border-radius:50%; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; color:#fff; }
+  .k-card-person { font-size:11px; color:var(--text-muted); }
+  .k-card-sla { font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; }
+  .sla-ok { background:var(--success-bg); color:var(--success); }
+  .sla-warning { background:var(--warning-bg); color:var(--warning); }
+  .sla-danger { background:var(--danger-bg); color:var(--danger); }
+
+  /* IA BADGE ON CARD */
+  .k-card-ia { position:absolute; top:10px; right:10px; font-size:12px; cursor:help; }
+  .k-card-ia .tooltip { display:none; position:absolute; right:0; top:20px; background:var(--surface); border:1px solid var(--ia); border-radius:var(--radius-sm); padding:10px; font-size:11px; color:var(--text); width:220px; z-index:10; }
+  .k-card-ia:hover .tooltip { display:block; }
+
+  /* ADD CARD */
+  .add-card-btn { border:1px dashed var(--border); border-radius:var(--radius-sm); padding:10px; text-align:center; color:var(--text-dim); font-size:12px; cursor:pointer; transition:all 0.2s; }
+  .add-card-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
+
+  /* SIDEBAR DETAIL PANEL */
+  .detail-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:200; display:none; }
+  .detail-overlay.open { display:flex; justify-content:flex-end; }
+  .detail-panel { width:520px; max-width:90vw; background:var(--surface); border-left:1px solid var(--border); height:100vh; overflow-y:auto; padding:0; animation:slideIn 0.2s ease; }
+  @keyframes slideIn { from{transform:translateX(100%);} to{transform:translateX(0);} }
+  .detail-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--surface); z-index:1; }
+  .detail-header h2 { font-size:18px; color:var(--accent); }
+  .detail-close { background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; padding:4px 8px; border-radius:4px; }
+  .detail-close:hover { background:var(--surface2); color:var(--text); }
+  .detail-body { padding:24px; }
+  .detail-section { margin-bottom:20px; }
+  .detail-section h4 { font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+  .detail-field { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(48,54,61,0.5); font-size:13px; }
+  .detail-field .label { color:var(--text-muted); }
+  .detail-field .value { color:var(--text); font-weight:500; text-align:right; }
+  .ia-insight { background:var(--ia-bg); border:1px solid rgba(255,121,198,0.3); border-radius:var(--radius-sm); padding:14px; margin-bottom:16px; }
+  .ia-insight h4 { color:var(--ia); font-size:12px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .ia-insight p { font-size:12px; color:var(--text); line-height:1.5; }
+  .history-item { padding:10px 0; border-bottom:1px solid rgba(48,54,61,0.5); }
+  .history-item .time { font-size:11px; color:var(--text-dim); }
+  .history-item .action { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .history-item .action strong { color:var(--text); }
+
+  /* RESUMO DIARIO */
+  .daily-summary { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin:0 24px 24px; }
+  .daily-summary h3 { font-size:14px; color:var(--accent); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .summary-area { background:var(--surface2); border-radius:var(--radius-sm); padding:12px; text-align:center; }
+  .summary-area h4 { font-size:12px; margin-bottom:8px; }
+  .summary-area .stats { display:flex; justify-content:center; gap:12px; font-size:11px; }
+  .summary-area .stat { display:flex; flex-direction:column; align-items:center; }
+  .summary-area .stat .n { font-size:18px; font-weight:700; }
+
+  /* RESPONSIVE */
+  @media(max-width:768px) {
+    .kanban-board { padding:0 12px 12px; }
+    .kanban-col { min-width:260px; }
+    .summary-grid { grid-template-columns:1fr 1fr; }
+    .metrics-bar { padding:0 12px 12px; }
+    .toolbar { padding:12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">Seazone <span>Suporte Unificado</span></div>
+  </div>
+  <div class="topbar-right">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar por codigo do imovel, responsavel..." id="searchInput">
+    </div>
+    <button class="notif-btn" title="Notificacoes">
+      🔔 <span class="badge-count">3</span>
+    </button>
+    <div class="user-avatar" title="Iara Moraes">IM</div>
+  </div>
+</div>
+
+<!-- AREA TABS -->
+<div class="area-tabs">
+  <div class="area-tab tab-all active" onclick="switchTab('all',this)">
+    <span class="tab-dot"></span> Todas as Areas <span class="tab-count">23</span>
+  </div>
+  <div class="area-tab tab-impl" onclick="switchTab('impl',this)">
+    <span class="tab-dot"></span> Implantacao <span class="tab-count">5</span>
+  </div>
+  <div class="area-tab tab-franq" onclick="switchTab('franq',this)">
+    <span class="tab-dot"></span> Franquias <span class="tab-count">8</span>
+  </div>
+  <div class="area-tab tab-hosp" onclick="switchTab('hosp',this)">
+    <span class="tab-dot"></span> Hóspede <span class="tab-count">7</span>
+  </div>
+  <div class="area-tab tab-prop" onclick="switchTab('prop',this)">
+    <span class="tab-dot"></span> Proprietarios <span class="tab-count">3</span>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <button class="filter-btn" onclick="this.classList.toggle('active')">⚡ Urgencia</button>
+    <button class="filter-btn" onclick="this.classList.toggle('active')">👤 Responsavel</button>
+    <button class="filter-btn" onclick="this.classList.toggle('active')">🏷 Subtipo</button>
+    <button class="filter-btn" onclick="this.classList.toggle('active')">⏰ SLA Estourado</button>
+    <button class="filter-btn" onclick="this.classList.toggle('active')">🤖 Com IA</button>
+  </div>
+  <div class="toolbar-right">
+    <div class="view-toggle">
+      <button class="active">Kanban</button>
+      <button>Lista</button>
+      <button>Timeline</button>
+    </div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-bar">
+  <div class="metric">
+    <div class="value">23</div>
+    <div class="label">Cards Abertos</div>
+    <div class="change down">+4 vs ontem</div>
+  </div>
+  <div class="metric">
+    <div class="value">7</div>
+    <div class="label">Concluidos Hoje</div>
+    <div class="change up">+2 vs media</div>
+  </div>
+  <div class="metric">
+    <div class="value">2h 14m</div>
+    <div class="label">Tempo Medio Resposta</div>
+    <div class="change up">-18min vs semana</div>
+  </div>
+  <div class="metric">
+    <div class="value">18%</div>
+    <div class="label">Deflexao IA</div>
+    <div class="change up">Meta: 15-25%</div>
+  </div>
+  <div class="metric">
+    <div class="value" style="color:var(--danger)">3</div>
+    <div class="label">SLA Estourado</div>
+    <div class="change down">Acao urgente</div>
+  </div>
+</div>
+
+<!-- KANBAN BOARD -->
+<div class="kanban-board">
+
+  <!-- COL: NOVO -->
+  <div class="kanban-col col-novo">
+    <div class="kanban-col-header">
+      <h3>🆕 Novo <span class="count">6</span></h3>
+    </div>
+    <div class="kanban-col-body">
+
+      <div class="k-card" onclick="openDetail()">
+        <span class="k-card-ia" title="IA analisou">🤖
+          <div class="tooltip">
+            <strong>Analise IA:</strong><br>
+            Imovel com 3 suportes abertos em 30 dias. Proprietario em risco de churn. Recomendacao: priorizar.
+          </div>
+        </span>
+        <div class="k-card-top">
+          <span class="k-card-code">TXP0605</span>
+          <span class="k-card-id">#SUP-1247</span>
+        </div>
+        <div class="k-card-title">Enxoval deteriorado - cama casal e toalhas</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+          <span class="tag tag-urgencia-alta">🔴 Alta</span>
+          <span class="tag tag-ia">🤖 IA</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--franq)">LP</div>
+            <span class="k-card-person">Lari Pereira</span>
+          </div>
+          <span class="k-card-sla sla-ok">1h 20m</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <span class="k-card-ia" title="IA analisou">🤖
+          <div class="tooltip"><strong>Analise IA:</strong><br>Avaliacao 2 estrelas Airbnb. Veredito: contestavel (regra de review bombing). Sugestao de argumentacao gerada.</div>
+        </span>
+        <div class="k-card-top">
+          <span class="k-card-code">FLN3301</span>
+          <span class="k-card-id">#SUP-1248</span>
+        </div>
+        <div class="k-card-title">Contestacao avaliacao negativa - Airbnb 2 estrelas</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+          <span class="tag tag-ia">🤖 IA</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">VM</div>
+            <span class="k-card-person">Victoria Magri</span>
+          </div>
+          <span class="k-card-sla sla-ok">45m</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">BSB0312</span>
+          <span class="k-card-id">#SUP-1249</span>
+        </div>
+        <div class="k-card-title">Validacao comercial - visita anfitriao obrigatoria</div>
+        <div class="k-card-tags">
+          <span class="tag tag-impl">Implantacao</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--impl)">PS</div>
+            <span class="k-card-person">Paulinha Sacramento</span>
+          </div>
+          <span class="k-card-sla sla-ok">2h 10m</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <span class="k-card-ia" title="IA analisou">🤖
+          <div class="tooltip"><strong>Analise IA:</strong><br>Proprietario com 2 imoveis. Score churn: 72% (alto). Historico: 5 chamados ultimo trimestre. Sugestao: escalar para CS senior.</div>
+        </span>
+        <div class="k-card-top">
+          <span class="k-card-code">CWB1107</span>
+          <span class="k-card-id">#SUP-1250</span>
+        </div>
+        <div class="k-card-title">Proprietario insatisfeito com repasse - pedindo distrato</div>
+        <div class="k-card-tags">
+          <span class="tag tag-prop">Proprietarios</span>
+          <span class="tag tag-urgencia-crise">🔥 Crise!</span>
+          <span class="tag tag-ia">🤖 IA</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--prop)">LO</div>
+            <span class="k-card-person">Luana Ornelas</span>
+          </div>
+          <span class="k-card-sla sla-danger">28m (SLA 30m!)</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">REC0445</span>
+          <span class="k-card-id">#SUP-1251</span>
+        </div>
+        <div class="k-card-title">Solicitacao troca de codigo - venda de imovel</div>
+        <div class="k-card-tags">
+          <span class="tag tag-impl">Implantacao</span>
+          <span class="tag tag-urgencia-baixa">🟢 Baixa</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--impl)">LC</div>
+            <span class="k-card-person">Larissa Const.</span>
+          </div>
+          <span class="k-card-sla sla-ok">3h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">POA1234</span>
+          <span class="k-card-id">#SUP-1252</span>
+        </div>
+        <div class="k-card-title">Realocacao hospede - ar condicionado quebrou</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-urgencia-alta">🔴 Alta</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">CE</div>
+            <span class="k-card-person">Carolina Espindola</span>
+          </div>
+          <span class="k-card-sla sla-warning">1h 50m</span>
+        </div>
+      </div>
+
+      <div class="add-card-btn">+ Novo Suporte</div>
+    </div>
+  </div>
+
+  <!-- COL: EM ANDAMENTO -->
+  <div class="kanban-col col-andamento">
+    <div class="kanban-col-header">
+      <h3>⚡ Em Andamento <span class="count">5</span></h3>
+    </div>
+    <div class="kanban-col-body">
+
+      <div class="k-card">
+        <span class="k-card-ia" title="IA analisou">🤖
+          <div class="tooltip"><strong>Analise IA:</strong><br>Fornecedor "CleanMax" com 3 reclamacoes no trimestre. Score fornecedor: 2.1/5. Considerar substituicao.</div>
+        </span>
+        <div class="k-card-top">
+          <span class="k-card-code">FLN2201</span>
+          <span class="k-card-id">#SUP-1240</span>
+        </div>
+        <div class="k-card-title">Homologacao novo fornecedor limpeza - regiao norte Floripa</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--franq)">VA</div>
+            <span class="k-card-person">Vivianny Aguilera</span>
+          </div>
+          <span class="k-card-sla sla-ok">6h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">GRU0987</span>
+          <span class="k-card-id">#SUP-1238</span>
+        </div>
+        <div class="k-card-title">Alteracao anuncio - fotos atualizadas pos-reforma</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-urgencia-baixa">🟢 Baixa</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">TP</div>
+            <span class="k-card-person">Talyssa Pimentel</span>
+          </div>
+          <span class="k-card-sla sla-ok">1d 2h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">BSB0478</span>
+          <span class="k-card-id">#SUP-1235</span>
+        </div>
+        <div class="k-card-title">Vistoria de implantacao - pendencia enxoval</div>
+        <div class="k-card-tags">
+          <span class="tag tag-impl">Implantacao</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--impl)">GA</div>
+            <span class="k-card-person">Giovanna Araujo</span>
+          </div>
+          <span class="k-card-sla sla-warning">22h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">TXP0605</span>
+          <span class="k-card-id">#SUP-1232</span>
+        </div>
+        <div class="k-card-title">Avaliacao negativa - resposta em andamento</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+          <span class="tag tag-ia">🤖 IA</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">VM</div>
+            <span class="k-card-person">Victoria Magri</span>
+          </div>
+          <span class="k-card-sla sla-ok">8h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">NAT0756</span>
+          <span class="k-card-id">#SUP-1230</span>
+        </div>
+        <div class="k-card-title">Handover CS - proprietario novo solicita contato</div>
+        <div class="k-card-tags">
+          <span class="tag tag-prop">Proprietarios</span>
+          <span class="tag tag-urgencia-baixa">🟢 Baixa</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--prop)">LC</div>
+            <span class="k-card-person">Luiza Cechelero</span>
+          </div>
+          <span class="k-card-sla sla-ok">12h</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COL: AGUARDANDO -->
+  <div class="kanban-col col-aguardando">
+    <div class="kanban-col-header">
+      <h3>⏳ Aguardando <span class="count">4</span></h3>
+    </div>
+    <div class="kanban-col-body">
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">CWB0892</span>
+          <span class="k-card-id">#SUP-1225</span>
+        </div>
+        <div class="k-card-title">Reembolso parcial - hospede cancelou 2 dias antes</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">CE</div>
+            <span class="k-card-person">Carolina Espindola</span>
+          </div>
+          <span class="k-card-sla sla-warning">36h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">FLN1809</span>
+          <span class="k-card-id">#SUP-1220</span>
+        </div>
+        <div class="k-card-title">Registro ocorrencia - franquia nao atendeu manutencao</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+          <span class="tag tag-urgencia-alta">🔴 Alta</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--franq)">FA</div>
+            <span class="k-card-person">Fabi Azevedo</span>
+          </div>
+          <span class="k-card-sla sla-danger">SLA estourado! 28h</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">POA0567</span>
+          <span class="k-card-id">#SUP-1218</span>
+        </div>
+        <div class="k-card-title">Gestao contas - verificacao pagamento set/26</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+          <span class="tag tag-urgencia-baixa">🟢 Baixa</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--franq)">JF</div>
+            <span class="k-card-person">Julia Fontolan</span>
+          </div>
+          <span class="k-card-sla sla-ok">2d</span>
+        </div>
+      </div>
+
+      <div class="k-card">
+        <div class="k-card-top">
+          <span class="k-card-code">REC0334</span>
+          <span class="k-card-id">#SUP-1215</span>
+        </div>
+        <div class="k-card-title">Verificacao pendencias churn - aguardando juridico</div>
+        <div class="k-card-tags">
+          <span class="tag tag-prop">Proprietarios</span>
+          <span class="tag tag-urgencia-media">🟡 Media</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--prop)">JP</div>
+            <span class="k-card-person">Jessica Passos</span>
+          </div>
+          <span class="k-card-sla sla-warning">3d</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COL: CONCLUIDO -->
+  <div class="kanban-col col-concluido">
+    <div class="kanban-col-header">
+      <h3>✅ Concluido <span class="count">5</span></h3>
+    </div>
+    <div class="kanban-col-body">
+
+      <div class="k-card" style="opacity:0.85;">
+        <div class="k-card-top">
+          <span class="k-card-code">POA0890</span>
+          <span class="k-card-id">#SUP-1210</span>
+        </div>
+        <div class="k-card-title">Taxa de limpeza atualizada no Stays</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--franq)">LP</div>
+            <span class="k-card-person">Lari Pereira</span>
+          </div>
+          <span class="k-card-sla sla-ok">Resolvido 4h</span>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.85;">
+        <div class="k-card-top">
+          <span class="k-card-code">FLN4455</span>
+          <span class="k-card-id">#SUP-1208</span>
+        </div>
+        <div class="k-card-title">Contestacao avaliacao - aceita pela Booking</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-ia">🤖 IA</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--hosp)">VM</div>
+            <span class="k-card-person">Victoria Magri</span>
+          </div>
+          <span class="k-card-sla sla-ok">Resolvido 18h</span>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.85;">
+        <div class="k-card-top">
+          <span class="k-card-code">BSB0190</span>
+          <span class="k-card-id">#SUP-1205</span>
+        </div>
+        <div class="k-card-title">Implantacao fotos concluida - anuncios criados</div>
+        <div class="k-card-tags">
+          <span class="tag tag-impl">Implantacao</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--impl)">TP</div>
+            <span class="k-card-person">Talyssa Pimentel</span>
+          </div>
+          <span class="k-card-sla sla-ok">Resolvido 2d</span>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.85;">
+        <span class="k-card-ia" title="Deflexao IA">🤖
+          <div class="tooltip"><strong>Deflexao IA:</strong><br>Resolvido automaticamente! Hospede perguntou sobre checkin. IA respondeu com instrucoes do imovel + codigo da fechadura.</div>
+        </span>
+        <div class="k-card-top">
+          <span class="k-card-code">GRU0654</span>
+          <span class="k-card-id">#SUP-1203</span>
+        </div>
+        <div class="k-card-title">Duvida checkin - resolvido automaticamente pela IA</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+          <span class="tag tag-ia">🤖 Deflexao</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--ia)">IA</div>
+            <span class="k-card-person">Resolvido por IA</span>
+          </div>
+          <span class="k-card-sla sla-ok">Auto 2min</span>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.85;">
+        <div class="k-card-top">
+          <span class="k-card-code">NAT0412</span>
+          <span class="k-card-id">#SUP-1200</span>
+        </div>
+        <div class="k-card-title">Churn revertido - proprietario aceitou nova proposta</div>
+        <div class="k-card-tags">
+          <span class="tag tag-prop">Proprietarios</span>
+          <span class="tag" style="background:var(--success-bg);color:var(--success);border:1px solid rgba(63,185,80,0.3);">Revertido</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <div class="k-card-avatar" style="background:var(--prop)">LC</div>
+            <span class="k-card-person">Luiza Cechelero</span>
+          </div>
+          <span class="k-card-sla sla-ok">Resolvido 5d</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COL: ARQUIVADO -->
+  <div class="kanban-col col-arquivado">
+    <div class="kanban-col-header">
+      <h3>📦 Arquivado <span class="count">3</span></h3>
+    </div>
+    <div class="kanban-col-body">
+
+      <div class="k-card" style="opacity:0.5;">
+        <div class="k-card-top">
+          <span class="k-card-code">FLN0089</span>
+          <span class="k-card-id">#SUP-1180</span>
+        </div>
+        <div class="k-card-title">Boleto energia fev/26 - pago</div>
+        <div class="k-card-tags">
+          <span class="tag tag-franq">Franquias</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <span class="k-card-person" style="font-size:10px;">07/03/2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.5;">
+        <div class="k-card-top">
+          <span class="k-card-code">CWB0341</span>
+          <span class="k-card-id">#SUP-1175</span>
+        </div>
+        <div class="k-card-title">Recriacao anuncio Booking - concluido</div>
+        <div class="k-card-tags">
+          <span class="tag tag-hosp">Hóspede</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <span class="k-card-person" style="font-size:10px;">05/03/2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="k-card" style="opacity:0.5;">
+        <div class="k-card-top">
+          <span class="k-card-code">BSB0210</span>
+          <span class="k-card-id">#SUP-1170</span>
+        </div>
+        <div class="k-card-title">Validacao localizacao comercial - aprovada</div>
+        <div class="k-card-tags">
+          <span class="tag tag-impl">Implantacao</span>
+        </div>
+        <div class="k-card-meta">
+          <div class="k-card-meta-left">
+            <span class="k-card-person" style="font-size:10px;">03/03/2026</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- RESUMO DIARIO -->
+<div class="daily-summary">
+  <h3>📊 Resumo do Dia — 17/03/2026</h3>
+  <div class="summary-grid">
+    <div class="summary-area" style="border-top:3px solid var(--impl);">
+      <h4 style="color:var(--impl);">Implantacao</h4>
+      <div class="stats">
+        <div class="stat"><span class="n" style="color:var(--accent);">2</span>Novos</div>
+        <div class="stat"><span class="n" style="color:var(--impl);">1</span>Andamento</div>
+        <div class="stat"><span class="n" style="color:var(--success);">1</span>Concluido</div>
+        <div class="stat"><span class="n" style="color:var(--danger);">0</span>Estourado</div>
+      </div>
+    </div>
+    <div class="summary-area" style="border-top:3px solid var(--franq);">
+      <h4 style="color:var(--franq);">Franquias</h4>
+      <div class="stats">
+        <div class="stat"><span class="n" style="color:var(--accent);">1</span>Novos</div>
+        <div class="stat"><span class="n" style="color:var(--impl);">1</span>Andamento</div>
+        <div class="stat"><span class="n" style="color:var(--success);">1</span>Concluido</div>
+        <div class="stat"><span class="n" style="color:var(--danger);">1</span>Estourado</div>
+      </div>
+    </div>
+    <div class="summary-area" style="border-top:3px solid var(--hosp);">
+      <h4 style="color:var(--hosp);">Hóspede</h4>
+      <div class="stats">
+        <div class="stat"><span class="n" style="color:var(--accent);">2</span>Novos</div>
+        <div class="stat"><span class="n" style="color:var(--impl);">2</span>Andamento</div>
+        <div class="stat"><span class="n" style="color:var(--success);">3</span>Concluido</div>
+        <div class="stat"><span class="n" style="color:var(--danger);">0</span>Estourado</div>
+      </div>
+    </div>
+    <div class="summary-area" style="border-top:3px solid var(--prop);">
+      <h4 style="color:var(--prop);">Proprietarios</h4>
+      <div class="stats">
+        <div class="stat"><span class="n" style="color:var(--accent);">1</span>Novos</div>
+        <div class="stat"><span class="n" style="color:var(--impl);">1</span>Andamento</div>
+        <div class="stat"><span class="n" style="color:var(--success);">2</span>Concluido</div>
+        <div class="stat"><span class="n" style="color:var(--danger);">0</span>Estourado</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL (sidebar) -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="detail-panel" onclick="event.stopPropagation()">
+    <div class="detail-header">
+      <h2>TXP0605 — #SUP-1247</h2>
+      <button class="detail-close" onclick="closeDetail()">&times;</button>
+    </div>
+    <div class="detail-body">
+
+      <div class="ia-insight">
+        <h4>🤖 Insight da IA</h4>
+        <p><strong>Alerta:</strong> Este imovel tem <strong>3 suportes abertos</strong> em areas diferentes (Franquias, Hóspede, Proprietarios). Proprietario demonstrou insatisfacao e score de churn esta em 72%. <strong>Recomendacao:</strong> unificar tratativa e escalar para CS senior.</p>
+        <p style="margin-top:8px; color:var(--ia);"><strong>Casos similares:</strong> Imovel FLN1234 teve situacao identica em jan/26. Resolvido com visita presencial + reajuste contratual (reversao em 5 dias).</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Dados do Card</h4>
+        <div class="detail-field"><span class="label">Codigo Imovel</span><span class="value" style="color:var(--accent);font-weight:700;">TXP0605</span></div>
+        <div class="detail-field"><span class="label">Area</span><span class="value"><span class="tag tag-franq">Franquias</span></span></div>
+        <div class="detail-field"><span class="label">Subtipo</span><span class="value">Enxoval deteriorado</span></div>
+        <div class="detail-field"><span class="label">Urgencia</span><span class="value"><span class="tag tag-urgencia-alta">Alta</span></span></div>
+        <div class="detail-field"><span class="label">Responsavel</span><span class="value">Lari Pereira</span></div>
+        <div class="detail-field"><span class="label">Solicitante</span><span class="value">Naara Oliveira</span></div>
+        <div class="detail-field"><span class="label">Aberto em</span><span class="value">17/03/2026 09:14</span></div>
+        <div class="detail-field"><span class="label">SLA 1a Resposta</span><span class="value" style="color:var(--success);">OK (respondido 10:34)</span></div>
+        <div class="detail-field"><span class="label">SLA Resolucao</span><span class="value" style="color:var(--warning);">Restam 18h</span></div>
+        <div class="detail-field"><span class="label">Franquia</span><span class="value">Seazone Floripa Norte</span></div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Descricao</h4>
+        <p style="font-size:13px; color:var(--text); background:var(--surface2); padding:12px; border-radius:6px;">Enxoval do quarto principal esta deteriorado. Cama de casal com lencol manchado e 2 toalhas de banho rasgadas. Hospede reportou durante estadia. Necessita troca urgente antes do proximo checkin (19/03).</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Outros Suportes deste Imovel</h4>
+        <div style="background:var(--surface2); border-radius:6px; overflow:hidden;">
+          <div style="display:flex; justify-content:space-between; padding:10px 12px; border-bottom:1px solid var(--border); font-size:12px;">
+            <span><span class="tag tag-hosp" style="margin-right:6px;">Hospede</span> Avaliacao negativa</span>
+            <span class="tag" style="background:var(--impl-bg);color:var(--impl);border:1px solid rgba(240,136,62,0.3);">Em Andamento</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:10px 12px; border-bottom:1px solid var(--border); font-size:12px;">
+            <span><span class="tag tag-prop" style="margin-right:6px;">Prop</span> Pediu distrato</span>
+            <span class="tag tag-urgencia-crise">Crise!</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:10px 12px; font-size:12px;">
+            <span><span class="tag tag-impl" style="margin-right:6px;">Impl</span> Fotos atualizacao</span>
+            <span class="tag" style="background:var(--success-bg);color:var(--success);border:1px solid rgba(63,185,80,0.3);">Concluido</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Historico / Timeline</h4>
+        <div class="history-item">
+          <span class="time">17/03 10:34</span>
+          <div class="action"><strong>Lari Pereira</strong> respondeu na thread: "Acionando fornecedor para troca antes de 19/03"</div>
+        </div>
+        <div class="history-item">
+          <span class="time">17/03 09:15</span>
+          <div class="action"><strong>N8N</strong> notificou Vivianny Aguilera (lider Franquias)</div>
+        </div>
+        <div class="history-item">
+          <span class="time">17/03 09:14</span>
+          <div class="action"><strong>IA</strong> analisou: historico do imovel puxado (Nekt), 3 suportes correlatos encontrados. Card qualificado.</div>
+        </div>
+        <div class="history-item">
+          <span class="time">17/03 09:14</span>
+          <div class="action"><strong>Naara Oliveira</strong> abriu suporte via #suporte-operacao</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        <button style="flex:1; background:var(--accent); color:#fff; border:none; padding:10px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px;">Mover para Em Andamento</button>
+        <button style="background:var(--surface2); color:var(--text-muted); border:1px solid var(--border); padding:10px 16px; border-radius:6px; cursor:pointer; font-size:13px;">Abrir no Slack</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(area, el) {
+  document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // In a real app, this would filter cards by area
+  const cards = document.querySelectorAll('.k-card');
+  cards.forEach(card => {
+    if (area === 'all') {
+      card.style.display = '';
+      return;
+    }
+    const tags = card.querySelectorAll('.tag');
+    let match = false;
+    const areaMap = { impl:'Implantacao', franq:'Franquias', hosp:'Hóspede', prop:'Proprietarios' };
+    tags.forEach(tag => {
+      if (tag.textContent.trim() === areaMap[area]) match = true;
+    });
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+function openDetail() {
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(e) {
+  if (!e || e.target === document.getElementById('detailOverlay')) {
+    document.getElementById('detailOverlay').classList.remove('open');
+  }
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.k-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(q) ? '' : 'none';
+  });
+});
+</script>
+
+</body>
+</html>

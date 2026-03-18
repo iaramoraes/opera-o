@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Execucao - Construcao Suporte Unificado Seazone</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-card: #161b22;
+    --bg-card-hover: #1c2129;
+    --border: #30363d;
+    --text: #e1e4e8;
+    --text-dim: #8b949e;
+    --accent: #6c5ce7;
+    --accent-light: #a29bfe;
+    --green: #2ea043;
+    --green-dim: #1a7f37;
+    --yellow: #d29922;
+    --yellow-dim: #9e6a03;
+    --red: #f85149;
+    --red-dim: #da3633;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --orange: #f0883e;
+    --cyan: #39d2c0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    padding: 24px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 1rem;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 40px 0 20px 0;
+    color: var(--accent-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 .icon { font-size: 1.2rem; }
+
+  h3 {
+    font-size: 1.15rem;
+    margin: 24px 0 12px 0;
+    color: var(--text);
+  }
+
+  /* Week Section */
+  .week-section {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .week-header {
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--accent) 0%, #4834d4 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .week-header h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.3rem;
+  }
+
+  .week-header .dates {
+    background: rgba(255,255,255,0.15);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #fff;
+  }
+
+  .week-body { padding: 24px; }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--accent); }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-number {
+    background: var(--accent);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-effort-low { background: var(--green-dim); color: #7ee787; }
+  .badge-effort-med { background: var(--yellow-dim); color: #e3b341; }
+  .badge-effort-high { background: var(--red-dim); color: #ffa198; }
+  .badge-resp-iara { background: #1f2937; color: var(--cyan); border: 1px solid var(--cyan); }
+  .badge-resp-bizops { background: #1f2937; color: var(--orange); border: 1px solid var(--orange); }
+  .badge-resp-dev { background: #1f2937; color: var(--purple); border: 1px solid var(--purple); }
+  .badge-tool {
+    background: rgba(108,92,231,0.15);
+    color: var(--accent-light);
+    border: 1px solid rgba(108,92,231,0.3);
+  }
+
+  .card-desc {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .card-deps {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .card-deps strong { color: var(--accent-light); }
+
+  .checklist { list-style: none; padding: 0; }
+
+  .checklist li {
+    padding: 6px 0 6px 28px;
+    position: relative;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+  }
+
+  /* Sequence Flow */
+  .sequence-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+  }
+
+  .seq-item {
+    display: flex;
+    align-items: stretch;
+    min-height: 48px;
+  }
+
+  .seq-line-col {
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .seq-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--accent-light);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .seq-dot.phase-github { background: #333; border-color: #e1e4e8; }
+  .seq-dot.phase-lovable { background: #f85149; border-color: #ffa198; }
+  .seq-dot.phase-slack { background: #4a154b; border-color: #e01e5a; }
+  .seq-dot.phase-n8n { background: #ff6d5a; border-color: #ffb4a2; }
+  .seq-dot.phase-ia { background: #6c5ce7; border-color: #a29bfe; }
+  .seq-dot.phase-ops { background: #2ea043; border-color: #7ee787; }
+
+  .seq-connector {
+    width: 2px;
+    flex-grow: 1;
+    background: var(--border);
+    min-height: 12px;
+  }
+
+  .seq-content {
+    padding: 4px 0 12px 12px;
+    flex-grow: 1;
+  }
+
+  .seq-content .seq-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .seq-content .seq-detail {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  /* Risks */
+  .risk-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+
+  .risk-card.risk-medium { border-left-color: var(--yellow); }
+  .risk-card.risk-low { border-left-color: var(--green); }
+
+  .risk-title { font-weight: 600; margin-bottom: 4px; }
+  .risk-mitigation { font-size: 0.9rem; color: var(--text-dim); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 24px;
+  }
+
+  .legend-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  /* Summary Table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+
+  .summary-table th, .summary-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .summary-table th {
+    background: var(--bg-card);
+    color: var(--accent-light);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .summary-table tr:hover td { background: rgba(108,92,231,0.05); }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  /* Dependency Graph */
+  .dep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .dep-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .dep-box-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: var(--accent-light);
+  }
+
+  .dep-arrow {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding: 2px 0;
+  }
+
+  .dep-arrow::before {
+    content: '\2192 ';
+    color: var(--accent);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { padding: 12px; }
+    h1 { font-size: 1.5rem; }
+    .card-header { flex-direction: column; }
+    .legend { flex-direction: column; gap: 8px; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .card { border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<h1>Plano de Execucao: Fase de Construcao</h1>
+<p class="subtitle">
+  Projeto Suporte Unificado Seazone &mdash; 18 canais &rarr; 1 canal com Kanban, IA e automacao<br>
+  Gerado em: 17/03/2026 &middot; Responsavel geral: Iara Moraes &middot; Fase atual: Descoberta (quase concluida)
+</p>
+
+<!-- LEGENDA -->
+<div class="legend">
+  <div class="legend-group"><span class="badge badge-effort-low">Baixo</span> Esforco baixo</div>
+  <div class="legend-group"><span class="badge badge-effort-med">Medio</span> Esforco medio</div>
+  <div class="legend-group"><span class="badge badge-effort-high">Alto</span> Esforco alto</div>
+  <div class="legend-group"><span class="badge badge-resp-iara">Iara</span></div>
+  <div class="legend-group"><span class="badge badge-resp-bizops">BizOps/Gabriel</span></div>
+  <div class="legend-group"><span class="badge badge-resp-dev">Dev</span></div>
+  <div class="legend-group"><span class="badge badge-tool">Ferramenta</span></div>
+</div>
+
+<!-- RESUMO GERAL -->
+<h2>Visao Geral do Cronograma</h2>
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>Fase</th>
+      <th>Periodo</th>
+      <th>Foco</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Descoberta</td>
+      <td>16-20 Mar</td>
+      <td>Mapear canais, decisoes, formularios, integracao</td>
+      <td style="color: var(--green);">Quase concluida</td>
+    </tr>
+    <tr>
+      <td><strong>Construcao</strong></td>
+      <td><strong>23-27 Mar</strong></td>
+      <td><strong>Criar TUDO: repo, Lovable, Slack, N8N, IA basica</strong></td>
+      <td style="color: var(--yellow);">Proxima</td>
+    </tr>
+    <tr>
+      <td>Piloto Implantacao</td>
+      <td>30 Mar - 3 Abr</td>
+      <td>Go live com area Implantacao (2 canais)</td>
+      <td style="color: var(--text-dim);">Planejada</td>
+    </tr>
+    <tr>
+      <td>Expansao</td>
+      <td>6-10 Abr</td>
+      <td>Franquias (7 canais) + Hospede (5 canais)</td>
+      <td style="color: var(--text-dim);">Planejada</td>
+    </tr>
+    <tr>
+      <td>Conclusao</td>
+      <td>13-17 Abr</td>
+      <td>Proprietarios (2 canais) + estabilizacao</td>
+      <td style="color: var(--text-dim);">Planejada</td>
+    </tr>
+    <tr>
+      <td>Otimizacao IA</td>
+      <td>Abr-Mai</td>
+      <td>IA preditiva, score churn, RAG</td>
+      <td style="color: var(--text-dim);">Planejada</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- ORDEM DE CRIACAO (SEQUENCIA VISUAL)          -->
+<!-- ============================================ -->
+<h2>Ordem Exata de Criacao (Respeitar Dependencias)</h2>
+<p style="color: var(--text-dim); margin-bottom: 16px;">Cada item so pode comecar quando suas dependencias estiverem prontas. A sequencia abaixo e a ordem correta.</p>
+
+<div class="sequence-container">
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-github"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">1. GitHub &mdash; Repositorio do projeto</span><br><span class="seq-detail">Sem dependencia. Primeiro passo: versionamento de tudo.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-lovable"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">2. Lovable &mdash; Estrutura base (banco, auth, modelo de dados)</span><br><span class="seq-detail">Depende: #1 (repo). Fundacao de toda a aplicacao.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-lovable"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">3. Lovable &mdash; Painel de controle de fluxos + config areas/processos</span><br><span class="seq-detail">Depende: #2. Gerente edita processos, campos, SLAs por area.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-lovable"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">4. Lovable &mdash; Kanban (4 boards) + cards + 3 visoes</span><br><span class="seq-detail">Depende: #3. Kanban usa as configs de area/processo.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-lovable"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">5. Lovable &mdash; Resumo por imovel + Dashboard + Relatorios</span><br><span class="seq-detail">Depende: #4. Precisa de cards no Kanban para gerar metricas.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-slack"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">6. Canal Slack #suporte-operacao</span><br><span class="seq-detail">Depende: nenhum (pode ser paralelo). Mas formulario depende da Lovable.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-slack"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">7. Slack &mdash; Formulario bot (campos condicionais da Lovable)</span><br><span class="seq-detail">Depende: #3 (config areas) + #6 (canal). Puxa campos dinamicamente.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">8. N8N &mdash; Webhook Slack &rarr; cria card Lovable</span><br><span class="seq-detail">Depende: #4 (Kanban) + #7 (formulario). Fluxo principal.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">9. N8N &mdash; Lovable &rarr; atualiza Slack (status + threads)</span><br><span class="seq-detail">Depende: #8. Fluxo reverso: mudanca na Lovable reflete no Slack.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">10. N8N &mdash; DM automatica pro solicitante</span><br><span class="seq-detail">Depende: #8 + #9. Notifica abertura, atualizacao, conclusao.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">11. N8N &mdash; Monitoramento SLA + alertas</span><br><span class="seq-detail">Depende: #8. Verifica SLA de cada card e alerta quando estoura.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">12. N8N &mdash; Resumo diario 18h no canal</span><br><span class="seq-detail">Depende: #8. Leitura dos cards do dia + formatacao + post no canal.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-n8n"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">13. N8N &mdash; Sync comentarios Slack &harr; Lovable</span><br><span class="seq-detail">Depende: #9. Bidirecional: comentario no Slack aparece no card e vice-versa.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ia"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">14. IA &mdash; Integracao basica (historico imovel + duplicidade)</span><br><span class="seq-detail">Depende: #8. IA consulta Nekt antes de abrir card.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ia"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">15. IA &mdash; Deflexao + sugestao de area correta</span><br><span class="seq-detail">Depende: #14. IA resolve sozinha ou sugere reclassificacao.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ia"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">16. IA &mdash; Avancada (preditiva, score churn)</span><br><span class="seq-detail">Depende: #15 + dados acumulados. Fase Otimizacao (Abr-Mai).</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ops"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">17. Testes + Canvas no canal + itens fixados</span><br><span class="seq-detail">Depende: #1-#13 prontos. Testar fluxo completo end-to-end.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ops"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">18. Migracao &mdash; Mensagem nos canais antigos</span><br><span class="seq-detail">Depende: #17. Redirecionar usuarios para #suporte-operacao.</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ops"></div><div class="seq-connector"></div></div>
+    <div class="seq-content"><span class="seq-title">19. Treinamento &mdash; Guia + video + apresentacao</span><br><span class="seq-detail">Depende: #17. Material por perfil (solicitante, resp. fluxo, gerente).</span></div>
+  </div>
+
+  <div class="seq-item">
+    <div class="seq-line-col"><div class="seq-dot phase-ops"></div><div class="seq-connector" style="background: transparent;"></div></div>
+    <div class="seq-content"><span class="seq-title">20. GO LIVE Piloto (Implantacao)</span><br><span class="seq-detail">Depende: TUDO acima. 30 de marco.</span></div>
+  </div>
+
+</div>
+
+<!-- LEGENDA DA SEQUENCIA -->
+<div class="legend" style="margin-top: 8px;">
+  <div class="legend-group"><div class="legend-dot" style="background: #333; border: 2px solid #e1e4e8;"></div> GitHub</div>
+  <div class="legend-group"><div class="legend-dot" style="background: #f85149; border: 2px solid #ffa198;"></div> Lovable</div>
+  <div class="legend-group"><div class="legend-dot" style="background: #4a154b; border: 2px solid #e01e5a;"></div> Slack</div>
+  <div class="legend-group"><div class="legend-dot" style="background: #ff6d5a; border: 2px solid #ffb4a2;"></div> N8N</div>
+  <div class="legend-group"><div class="legend-dot" style="background: #6c5ce7; border: 2px solid #a29bfe;"></div> IA</div>
+  <div class="legend-group"><div class="legend-dot" style="background: #2ea043; border: 2px solid #7ee787;"></div> Operacional</div>
+</div>
+
+<!-- ============================================ -->
+<!-- MAPA DE DEPENDENCIAS                         -->
+<!-- ============================================ -->
+<h2>Mapa de Dependencias</h2>
+<div class="dep-grid">
+  <div class="dep-box">
+    <div class="dep-box-title">GitHub Repo (#1)</div>
+    <div class="dep-arrow">Lovable base (#2)</div>
+    <div class="dep-arrow">Tudo versiona aqui</div>
+  </div>
+  <div class="dep-box">
+    <div class="dep-box-title">Lovable Config (#3)</div>
+    <div class="dep-arrow">Kanban (#4)</div>
+    <div class="dep-arrow">Formulario Slack (#7)</div>
+    <div class="dep-arrow">Dashboard (#5)</div>
+  </div>
+  <div class="dep-box">
+    <div class="dep-box-title">Kanban + Formulario (#4 + #7)</div>
+    <div class="dep-arrow">Webhook N8N (#8)</div>
+    <div class="dep-arrow">Todos os fluxos N8N</div>
+  </div>
+  <div class="dep-box">
+    <div class="dep-box-title">Webhook N8N (#8)</div>
+    <div class="dep-arrow">Status updates (#9)</div>
+    <div class="dep-arrow">DM automatica (#10)</div>
+    <div class="dep-arrow">SLA monitor (#11)</div>
+    <div class="dep-arrow">Resumo diario (#12)</div>
+    <div class="dep-arrow">Sync comentarios (#13)</div>
+    <div class="dep-arrow">IA basica (#14)</div>
+  </div>
+  <div class="dep-box">
+    <div class="dep-box-title">IA Basica (#14)</div>
+    <div class="dep-arrow">Deflexao (#15)</div>
+    <div class="dep-arrow">IA Avancada (#16)</div>
+  </div>
+  <div class="dep-box">
+    <div class="dep-box-title">Tudo (#1-#13)</div>
+    <div class="dep-arrow">Testes (#17)</div>
+    <div class="dep-arrow">Migracao (#18)</div>
+    <div class="dep-arrow">Treinamento (#19)</div>
+    <div class="dep-arrow">GO LIVE (#20)</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SEMANA 1: CONSTRUCAO BASE (23-27 Mar)        -->
+<!-- ============================================ -->
+<div class="week-section">
+  <div class="week-header">
+    <h2>Semana 1: Construcao Base</h2>
+    <span class="dates">23-27 Mar 2026</span>
+  </div>
+  <div class="week-body">
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Foco: criar toda a infraestrutura &mdash; repositorio, aplicacao Lovable completa, canal Slack, formulario, e todos os fluxos N8N. Tudo precisa estar funcional ate sexta-feira para o piloto na semana seguinte.</p>
+
+    <!-- CARD 1: GitHub -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">1</span> GitHub &mdash; Repositorio do Projeto</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">GitHub</span>
+          <span class="badge badge-effort-low">Baixo</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-desc">Criar repositorio para versionar toda a configuracao, codigo N8N, schemas, docs. Ponto zero do projeto.</div>
+      <div class="card-deps"><strong>Depende de:</strong> Nada (primeiro passo)</div>
+      <ul class="checklist">
+        <li>Criar repo <code>seazone/suporte-unificado</code> no GitHub (privado)</li>
+        <li>Estrutura de pastas: <code>/lovable</code>, <code>/n8n-flows</code>, <code>/docs</code>, <code>/scripts</code>, <code>/config</code></li>
+        <li>README com visao geral do projeto, stack e links</li>
+        <li>Branch <code>main</code> protegida + branch <code>develop</code></li>
+        <li>.gitignore configurado (node_modules, .env, etc.)</li>
+        <li>Adicionar colaboradores (Gabriel BizOps, devs necessarios)</li>
+        <li>Criar issues para cada item deste plano</li>
+      </ul>
+    </div>
+
+    <!-- CARD 2: Lovable Base -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">2</span> Lovable &mdash; Estrutura Base</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Lovable</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-dev">Dev</span>
+        </div>
+      </div>
+      <div class="card-desc">Criar aplicacao Lovable com banco de dados, autenticacao, modelo de dados completo. Fundacao de tudo.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #1 (GitHub repo criado)</div>
+      <ul class="checklist">
+        <li>Criar projeto Lovable (conectar ao repo GitHub)</li>
+        <li>Configurar autenticacao (Slack SSO ou email Seazone)</li>
+        <li>Modelo de dados &mdash; Tabelas:
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;"><code>areas</code> (id, nome, gerente_id, config_json)</li>
+            <li style="border: none; padding: 2px 0;"><code>processos</code> (id, area_id, nome, campos_json, sla_config, ativo)</li>
+            <li style="border: none; padding: 2px 0;"><code>cards</code> (id, area_id, processo_id, imovel_codigo, solicitante_id, responsavel_id, status, urgencia, descricao, slack_thread_ts, created_at, resolved_at)</li>
+            <li style="border: none; padding: 2px 0;"><code>comentarios</code> (id, card_id, autor_id, texto, slack_synced)</li>
+            <li style="border: none; padding: 2px 0;"><code>historico_status</code> (id, card_id, status_anterior, status_novo, changed_by, timestamp)</li>
+            <li style="border: none; padding: 2px 0;"><code>usuarios</code> (id, slack_id, nome, email, role, areas_acesso)</li>
+            <li style="border: none; padding: 2px 0;"><code>imoveis</code> (codigo, franquia, proprietario, dados_nekt_json)</li>
+            <li style="border: none; padding: 2px 0;"><code>sla_config</code> (id, area_id, urgencia, tempo_limite_horas)</li>
+          </ul>
+        </li>
+        <li>Sistema de permissoes (3 niveis):
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;"><strong>Visualizador:</strong> ve Kanban, abre suporte, comenta</li>
+            <li style="border: none; padding: 2px 0;"><strong>Resp. fluxo:</strong> + move card, transfere, edita card</li>
+            <li style="border: none; padding: 2px 0;"><strong>Gerente/Coord:</strong> + edita processos, SLAs, responsaveis da sua area</li>
+            <li style="border: none; padding: 2px 0;"><strong>Admin (Iara):</strong> tudo em todas as areas</li>
+          </ul>
+        </li>
+        <li>API REST para integracao com N8N (endpoints: cards CRUD, processos, areas, comentarios, status)</li>
+        <li>Webhook outgoing (evento: card criado, status mudou, comentario adicionado)</li>
+        <li>Layout base responsivo (sidebar + area principal)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 3: Lovable Painel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">3</span> Lovable &mdash; Painel de Controle de Fluxos</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Lovable</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-dev">Dev</span>
+        </div>
+      </div>
+      <div class="card-desc">Interface onde gerente/coord edita processos, campos do formulario, SLAs, responsaveis. Ativa/desativa processos sem reconstruir. Coracaoo configuravel do sistema.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #2 (banco + auth + modelo de dados)</div>
+      <ul class="checklist">
+        <li>Tela de configuracao por area (4 areas, cada uma editavel pelo seu gerente)</li>
+        <li>CRUD de processos: nome, campos personalizados (JSON builder), SLA, responsavel, ativo/inativo</li>
+        <li>Toggle liga/desliga processo (reflete no formulario Slack via N8N)</li>
+        <li>Config de SLA por urgencia por area (padrao: Crise 4h, Alta 12h, Media 24h, Baixa 24h)</li>
+        <li>Gerenciamento de responsaveis por fluxo (gerente designa/troca)</li>
+        <li>Campos condicionais: area selecionada &rarr; mostra processos ativos &rarr; mostra campos do processo</li>
+        <li>Endpoint API: <code>GET /api/areas/:id/config</code> (N8N consulta para montar formulario Slack)</li>
+        <li>Log de alteracoes (quem mudou o que, quando)</li>
+        <li>Populacao inicial das 4 areas com todos os processos mapeados na Descoberta:
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;"><strong>Implantacao:</strong> Troca de codigo, Implantacao novo imovel, etc.</li>
+            <li style="border: none; padding: 2px 0;"><strong>Franquias:</strong> Fornecedores, Gestao de contas, Ocorrencias, Validacoes, Qualidade/Treinamento, Comunicados</li>
+            <li style="border: none; padding: 2px 0;"><strong>Hospede:</strong> Avaliacoes, Anuncios, Atendimento, Realocacoes, Reclame Aqui, Indicacao parceria, Reserva Seazone (temp)</li>
+            <li style="border: none; padding: 2px 0;"><strong>Proprietarios:</strong> CS Proprietarios, Processo Churn</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CARD 4: Lovable Kanban -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">4</span> Lovable &mdash; Kanban + Cards + 3 Visoes</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Lovable</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-dev">Dev</span>
+        </div>
+      </div>
+      <div class="card-desc">4 boards de Kanban (1 por area) com cards arrastáveis, 3 visoes de acesso, sistema de filtros e busca.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #3 (painel de controle + config de areas/processos)</div>
+      <ul class="checklist">
+        <li>4 boards separados: Implantacao, Franquias, Hospede, Proprietarios</li>
+        <li>Colunas padrao: Aberto &rarr; Em Andamento &rarr; Aguardando &rarr; Resolvido &rarr; Arquivado</li>
+        <li>Card exibe: codigo imovel, processo, urgencia (cor), responsavel, SLA restante, data abertura</li>
+        <li>Drag &amp; drop para mover entre colunas (resp. fluxo + gerente)</li>
+        <li>Transferencia entre areas (gerente autoriza, SLA NAO reinicia)</li>
+        <li>Detalhe do card: descricao, historico completo, comentarios (sync Slack), anexos, timeline de status</li>
+        <li>Indicador visual de SLA: verde (ok), amarelo (proximo), vermelho (estourado)</li>
+        <li>3 Visoes implementadas:
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;"><strong>"Meus Suportes":</strong> Qualquer colaborador ve os suportes que abriu, com status e link Slack</li>
+            <li style="border: none; padding: 2px 0;"><strong>"Minha Area":</strong> Resp. fluxo ve todos os cards da sua area</li>
+            <li style="border: none; padding: 2px 0;"><strong>"Visao Geral":</strong> Gerente/Iara ve todas as areas simultaneamente</li>
+          </ul>
+        </li>
+        <li>Filtros: por urgencia, processo, responsavel, status, data, codigo imovel</li>
+        <li>Busca rapida: ate 6 meses, depois arquivo (ainda acessivel)</li>
+        <li>Botao "IA errou" no card (feedback loop para melhorar classificacao)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 5: Lovable Dashboard -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">5</span> Lovable &mdash; Resumo por Imovel + Dashboard + Relatorios</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Lovable</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-dev">Dev</span>
+        </div>
+      </div>
+      <div class="card-desc">Ficha completa por imovel, dashboard de metricas em tempo real, relatorios consolidados semanal/mensal.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #4 (Kanban com cards para gerar dados)</div>
+      <ul class="checklist">
+        <li>Resumo geral por imovel (busca por codigo):
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;">Todos os suportes (abertos + concluidos) do imovel</li>
+            <li style="border: none; padding: 2px 0;">Franquia e proprietario vinculados</li>
+            <li style="border: none; padding: 2px 0;">Insight da IA (score churn, alertas, correlacoes entre areas) &mdash; placeholder ate fase IA</li>
+          </ul>
+        </li>
+        <li>Dashboard de metricas (tempo real):
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;">Volume total / por area / por processo</li>
+            <li style="border: none; padding: 2px 0;">Tempo medio de resolucao</li>
+            <li style="border: none; padding: 2px 0;">SLA cumprido vs estourado (%)</li>
+            <li style="border: none; padding: 2px 0;">Taxa de deflexao IA</li>
+            <li style="border: none; padding: 2px 0;">Ranking imoveis (mais suportes)</li>
+            <li style="border: none; padding: 2px 0;">Ranking processos (mais demandados)</li>
+            <li style="border: none; padding: 2px 0;">Transferencias entre areas</li>
+          </ul>
+        </li>
+        <li>Relatorios consolidados: semanal e mensal, exportaveis (PDF/CSV)</li>
+        <li>Botao "Importar historico do Pipefy" (puxa dados de uma vez):
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;">Conectar com tabelas Nekt: <code>kpi_suporte_fornecedores</code>, <code>pipefy_szs_all_cards_303024105_anuncios</code>, <code>dados_churn</code></li>
+            <li style="border: none; padding: 2px 0;">Mapear campos Pipefy &rarr; modelo Lovable</li>
+            <li style="border: none; padding: 2px 0;">Importar como cards arquivados (historico)</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CARD 6: Canal Slack -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">6</span> Canal Slack #suporte-operacao</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Slack</span>
+          <span class="badge badge-effort-low">Baixo</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-desc">Criar o canal unico de entrada. Configurar descricao, proposito, e estrutura basica.</div>
+      <div class="card-deps"><strong>Depende de:</strong> Nada (pode ser paralelo ao Lovable)</div>
+      <ul class="checklist">
+        <li>Criar canal #suporte-operacao no Slack Seazone</li>
+        <li>Definir descricao: "Canal unico para suporte da operacao Seazone. Use o formulario para abrir solicitacoes."</li>
+        <li>Adicionar todos os membros relevantes (gerentes, coords, resp. de fluxo, solicitantes frequentes)</li>
+        <li>Configurar como canal publico (qualquer colaborador pode entrar)</li>
+        <li>Preparar Canvas do canal (sera fixado na etapa #17)</li>
+        <li>Desativar permissao de mensagem solta (tudo em thread) &mdash; ou orientar via Canvas</li>
+      </ul>
+    </div>
+
+    <!-- CARD 7: Formulario Slack -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">7</span> Slack &mdash; Formulario Bot (Campos Condicionais)</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">Slack + N8N</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Formulario unico integrado ao Slack. Campos condicionais puxados dinamicamente da config de cada area na Lovable. Um so formulario que se adapta.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #3 (config areas na Lovable) + #6 (canal Slack criado)</div>
+      <ul class="checklist">
+        <li>Slack Bot/App com comando ou botao para abrir formulario (Workflow Builder ou custom app)</li>
+        <li>Campo 1: Solicitante (automatico via Slack)</li>
+        <li>Campo 2: Codigo do imovel (input texto + opcao "Sem codigo de imovel")</li>
+        <li>Campo 3: Area (dropdown: Implantacao, Franquias, Hospede, Proprietarios, "Nao sei")</li>
+        <li>Campo 4: Processo (dropdown condicional &mdash; puxa processos ATIVOS da area selecionada via API Lovable)</li>
+        <li>Campos extras: condicionais por processo (campos_json do painel Lovable)</li>
+        <li>Campo: Urgencia (Crise, Alta, Media, Baixa)</li>
+        <li>Campo: Descricao (texto livre)</li>
+        <li>Opcao "Nao sei qual area" &rarr; so pede descricao, IA roteia automaticamente</li>
+        <li>N8N: flow que consulta <code>GET /api/areas/:id/config</code> e monta o formulario dinamicamente</li>
+        <li>Quando gerente edita processos na Lovable, formulario atualiza automaticamente (sem rebuild)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 8: N8N Webhook -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">8</span> N8N &mdash; Webhook Slack &rarr; Cria Card Lovable</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Fluxo principal do sistema. Recebe formulario do Slack, processa com IA, verifica duplicidade, cria card na Lovable, abre thread no Slack, notifica responsavel.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #4 (Kanban Lovable) + #7 (formulario Slack)</div>
+      <ul class="checklist">
+        <li>Webhook que recebe payload do formulario Slack</li>
+        <li>Verificacao de duplicidade: mesmo imovel + mesmo processo aberto? Se sim: retorna link do existente + permite comentar</li>
+        <li>Se "Nao sei a area": IA analisa descricao e determina area + processo</li>
+        <li>Consulta historico do imovel (Nekt) para enriquecer card</li>
+        <li>Cria card na Lovable via API (<code>POST /api/cards</code>)</li>
+        <li>Cria thread no #suporte-operacao com resumo do card (formatado)</li>
+        <li>Armazena <code>slack_thread_ts</code> no card (vinculo bidirecional)</li>
+        <li>Notifica responsavel do fluxo via mention na thread</li>
+        <li>DM pro solicitante: "Seu suporte foi aberto! Card #XXX, area: Implantacao, responsavel: Fulano"</li>
+        <li>Error handling: se falhar, notifica Iara via DM + loga erro</li>
+      </ul>
+    </div>
+
+    <!-- CARD 9: N8N Status -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">9</span> N8N &mdash; Lovable &rarr; Atualiza Slack (Status + Threads)</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Quando status muda na Lovable, atualiza a thread correspondente no Slack automaticamente.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #8 (webhook principal criando cards com thread_ts)</div>
+      <ul class="checklist">
+        <li>Escuta webhook da Lovable (evento: status_changed)</li>
+        <li>Busca thread_ts do card</li>
+        <li>Posta mensagem na thread: "Status atualizado: Em Andamento &rarr; Resolvido por @fulano"</li>
+        <li>Se status = Resolvido: mensagem de conclusao + tempo de resolucao + SLA cumprido?</li>
+        <li>Se status = Aguardando: menciona solicitante pedindo info adicional</li>
+      </ul>
+    </div>
+
+    <!-- CARD 10: N8N DM -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">10</span> N8N &mdash; DM Automatica pro Solicitante</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Bot envia DM para o solicitante em 3 momentos: abertura (confirmacao + links), mudanca de status, e conclusao (devolutiva).</div>
+      <div class="card-deps"><strong>Depende de:</strong> #8 (webhook) + #9 (status updates)</div>
+      <ul class="checklist">
+        <li>DM na abertura: "Suporte #XXX aberto com sucesso! Area: X, Processo: Y, Responsavel: Z. Acompanhe: [link thread] [link Lovable]"</li>
+        <li>DM em mudanca de status: "Seu suporte #XXX foi atualizado: Aberto &rarr; Em Andamento"</li>
+        <li>DM na conclusao: "Seu suporte #XXX foi resolvido! Tempo: Xh. Feedback? [link]"</li>
+        <li>Pessoa nunca precisa procurar no canal &mdash; tudo chega na DM</li>
+        <li>Usar Slack user_id do solicitante (ja vem no formulario)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 11: N8N SLA -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">11</span> N8N &mdash; Monitoramento SLA + Alertas</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Monitora todos os cards abertos, verifica tempo vs SLA configurado, alerta antes e depois de estourar.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #8 (cards criados com SLA)</div>
+      <ul class="checklist">
+        <li>Cron job a cada 30 min: consulta cards abertos na Lovable</li>
+        <li>Compara tempo aberto vs SLA da urgencia (Crise 4h, Alta 12h, Media/Baixa 24h)</li>
+        <li>Alerta 1 (80% do SLA): DM pro responsavel "SLA proximo de estourar: Card #XXX"</li>
+        <li>Alerta 2 (SLA estourado): mencao na thread + DM pro gerente da area</li>
+        <li>Alerta 3 (2x SLA): DM pra Iara (escalacao automatica)</li>
+        <li>Atualiza indicador visual no card Lovable (verde &rarr; amarelo &rarr; vermelho)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 12: N8N Resumo -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">12</span> N8N &mdash; Resumo Diario 18h</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Todos os dias as 18h, posta resumo formatado no #suporte-operacao com metricas do dia.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #8 (cards existentes para sumarizar)</div>
+      <ul class="checklist">
+        <li>Cron trigger: 18:00 BRT (dias uteis)</li>
+        <li>Consulta Lovable: cards abertos hoje, resolvidos hoje, estourados, pendentes</li>
+        <li>Formato da mensagem:
+          <ul style="list-style: disc; padding-left: 20px; margin-top: 4px;">
+            <li style="border: none; padding: 2px 0;">Novos hoje: X | Resolvidos: Y | Pendentes: Z</li>
+            <li style="border: none; padding: 2px 0;">SLA estourado: N cards (lista)</li>
+            <li style="border: none; padding: 2px 0;">Por area: Implantacao X, Franquias Y, Hospede Z, Proprietarios W</li>
+            <li style="border: none; padding: 2px 0;">Deflexao IA: N% (quando implementado)</li>
+          </ul>
+        </li>
+        <li>Posta como mensagem nova (nao thread) no #suporte-operacao</li>
+        <li>Link para dashboard completo na Lovable</li>
+      </ul>
+    </div>
+
+    <!-- CARD 13: N8N Sync -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">13</span> N8N &mdash; Sync Comentarios Slack &harr; Lovable</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Sincronizacao bidirecional: comentario na thread do Slack aparece no card da Lovable, e vice-versa.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #9 (vinculo thread &harr; card ja estabelecido)</div>
+      <ul class="checklist">
+        <li>Slack &rarr; Lovable: escuta novas mensagens em threads vinculadas, cria comentario no card</li>
+        <li>Lovable &rarr; Slack: webhook de novo comentario no card, posta na thread vinculada</li>
+        <li>Prevenir loop infinito: flag <code>slack_synced</code> no comentario (nao sync de volta)</li>
+        <li>Incluir nome do autor + timestamp</li>
+        <li>Suportar anexos basicos (imagens, links)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 14: IA Basica -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">14</span> IA &mdash; Integracao Basica (Historico + Duplicidade)</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N + Nekt</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">IA consulta historico do imovel antes de abrir card. Detecta duplicidade. Enriquece card com contexto.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #8 (webhook funcional)</div>
+      <ul class="checklist">
+        <li>Pre-abertura: consulta Nekt por codigo do imovel (suportes anteriores, dados do imovel)</li>
+        <li>Se imovel tem card aberto com mesmo processo: bloqueia abertura, retorna link existente</li>
+        <li>Adiciona no card: "Historico do imovel: X suportes anteriores, ultimo ha Y dias"</li>
+        <li>Consulta tabelas Nekt: <code>kpi_suporte_fornecedores</code>, <code>dados_churn</code>, Pipefy anuncios</li>
+        <li>Nivel de confianca nas sugestoes da IA (baixo/medio/alto)</li>
+      </ul>
+    </div>
+
+    <!-- CARD 15: IA Deflexao -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">15</span> IA &mdash; Deflexao + Sugestao Area Correta</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">N8N + LLM</span>
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">IA analisa descricao e tenta resolver sem humano (meta: 15-25% deflexao). Tambem sugere area correta se solicitante errar.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #14 (IA basica funcionando)</div>
+      <ul class="checklist">
+        <li>Analise de texto da descricao: classificacao automatica de area + processo</li>
+        <li>Se area selecionada difere da sugerida: "Voce selecionou Franquias, mas parece ser Hospede. Deseja corrigir?"</li>
+        <li>Deflexao: se o problema tem solucao conhecida, IA responde direto no Slack com a solucao</li>
+        <li>Se deflexao: pergunta "Isso resolveu?" &mdash; se nao, abre card normalmente</li>
+        <li>Feedback loop: botao "IA errou" no card atualiza base de conhecimento</li>
+        <li>Meta de deflexao: 15-25% sem interacao humana</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SEMANA 2: PILOTO IMPLANTACAO (30 Mar-3 Abr)  -->
+<!-- ============================================ -->
+<div class="week-section">
+  <div class="week-header">
+    <h2>Semana 2: Piloto Implantacao</h2>
+    <span class="dates">30 Mar - 3 Abr 2026</span>
+  </div>
+  <div class="week-body">
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Foco: testar o sistema completo com a area de Implantacao (2 canais, menor volume). Ajustar tudo que precisar antes da expansao.</p>
+
+    <!-- CARD 17: Testes -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">17</span> Testes End-to-End + Canvas + Itens Fixados</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-iara">Iara</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+        </div>
+      </div>
+      <div class="card-desc">Testar o fluxo completo de ponta a ponta antes do go-live. Configurar canal com Canvas e itens fixados.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #1 a #13 prontos (toda a construcao)</div>
+      <ul class="checklist">
+        <li>Teste 1: Abrir suporte via formulario Slack &rarr; verificar card criado na Lovable</li>
+        <li>Teste 2: Mover card na Lovable &rarr; verificar thread atualizada no Slack</li>
+        <li>Teste 3: Comentar no Slack &rarr; verificar sync na Lovable (e vice-versa)</li>
+        <li>Teste 4: Verificar DM automatica (abertura, atualizacao, conclusao)</li>
+        <li>Teste 5: Testar SLA &mdash; simular estouro e verificar alertas</li>
+        <li>Teste 6: Testar duplicidade (mesmo imovel + processo)</li>
+        <li>Teste 7: Testar "Nao sei qual area" &rarr; IA roteia corretamente?</li>
+        <li>Teste 8: Resumo diario as 18h</li>
+        <li>Teste 9: Dashboard com dados de teste</li>
+        <li>Teste 10: Permissoes (visualizador vs resp. fluxo vs gerente)</li>
+        <li>Canvas no canal: "Como funciona o #suporte-operacao" (guia visual)</li>
+        <li>Itens fixados (pin): "Como abrir suporte" + "Acompanhar meus suportes" + "Dashboard"</li>
+        <li>Corrigir todos os bugs encontrados antes do go-live</li>
+      </ul>
+    </div>
+
+    <!-- CARD 18: Migracao -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">18</span> Migracao &mdash; Mensagem nos Canais Antigos</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-low">Baixo</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-desc">Postar mensagem de redirecionamento nos 2 canais de Implantacao. Iniciar periodo de transicao (2 semanas).</div>
+      <div class="card-deps"><strong>Depende de:</strong> #17 (testes concluidos com sucesso)</div>
+      <ul class="checklist">
+        <li>Mensagem em #suporte-implantacao: "Este canal esta sendo unificado. Use #suporte-operacao para novas solicitacoes."</li>
+        <li>Mensagem em #solicitacao-troca-de-codigo: idem</li>
+        <li>Fixar (pin) mensagem de redirecionamento nesses canais</li>
+        <li>Manter canais ativos por 2 semanas (periodo de transicao)</li>
+        <li>Apos 2 semanas: arquivar os canais antigos</li>
+      </ul>
+    </div>
+
+    <!-- CARD 19: Treinamento -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number">19</span> Treinamento &mdash; Guia + Video + Apresentacao</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-desc">Material de treinamento por perfil. Guia rapido escrito, roteiro para video, apresentacao para reuniao por area.</div>
+      <div class="card-deps"><strong>Depende de:</strong> #17 (sistema testado e funcional)</div>
+      <ul class="checklist">
+        <li>Guia rapido &mdash; Perfil Solicitante: como abrir suporte, acompanhar, receber DMs</li>
+        <li>Guia rapido &mdash; Perfil Resp. Fluxo: como gerenciar cards, mover, transferir, SLA</li>
+        <li>Guia rapido &mdash; Perfil Gerente/Coord: como editar processos, SLAs, responsaveis na Lovable</li>
+        <li>Roteiro para video curto (3-5 min) mostrando fluxo completo</li>
+        <li>Apresentacao (slides) para reuniao por area &mdash; comecar com Implantacao</li>
+        <li>Agendar reuniao com equipe Implantacao (Larissa Constantino) para 30 Mar</li>
+      </ul>
+    </div>
+
+    <!-- CARD 20: GO LIVE -->
+    <div class="card" style="border: 2px solid var(--green);">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number" style="background: var(--green);">20</span> GO LIVE &mdash; Piloto Implantacao</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-low">Baixo</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-desc">Ativar o sistema para a area de Implantacao. Monitorar de perto a primeira semana. Ajustar conforme necessario.</div>
+      <div class="card-deps"><strong>Depende de:</strong> TUDO acima (#1 a #19)</div>
+      <ul class="checklist">
+        <li>Comunicar go-live no #suporte-operacao: mensagem de lancamento</li>
+        <li>Ativar apenas processos de Implantacao no formulario (2 canais &rarr; 1)</li>
+        <li>Monitorar primeiras 24h de perto (Iara + Gabriel)</li>
+        <li>Coletar feedback da equipe Implantacao (Larissa)</li>
+        <li>Ajustar formulario/fluxos conforme problemas encontrados</li>
+        <li>Documentar licoes aprendidas para expansao</li>
+        <li>Criterio de sucesso: 3 dias sem bugs criticos &rarr; expandir</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SEMANA 3: EXPANSAO (6-10 Abr)                -->
+<!-- ============================================ -->
+<div class="week-section">
+  <div class="week-header">
+    <h2>Semana 3: Expansao Franquias + Hospede</h2>
+    <span class="dates">6-10 Abr 2026</span>
+  </div>
+  <div class="week-body">
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Com o piloto validado, ativar Franquias (7 canais) e Hospede (5 canais). Maior volume &mdash; testar escalabilidade.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Expansao &mdash; Franquias (7 canais)</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Ativar processos de Franquias no painel Lovable (Vivianny Aguilera valida)</li>
+        <li>Treinamento com equipe Franquias</li>
+        <li>Mensagem de redirecionamento nos 7 canais: #suporte-franquias, #suporte-fornecedores, #suporte-gestao-de-contas, #registro-ocorrencias, #validacao-comunicados-franquias, #suporte-qualidade-treinamento-franquias, #validacoes-solicitadas</li>
+        <li>Monitorar volume (maior area &mdash; ~7 canais)</li>
+        <li>Validar SLAs com Vivianny</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Expansao &mdash; Hospede (5 canais)</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Ativar processos de Hospede no painel Lovable (Carolina Espindola valida)</li>
+        <li>Treinamento com equipe Hospede</li>
+        <li>Mensagem de redirecionamento nos 5 canais: #suporte-avaliacoes-de-hospedes, #suporte-anuncios, #suporte-atendimento, #realocacoes-devolucao-credito, #respostas-reclame-aqui</li>
+        <li>Verificar processo "Reserva Seazone" (temporario, desativavel)</li>
+        <li>Validar IA de contestacao integrada em Hospede</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SEMANA 4: CONCLUSAO (13-17 Abr)              -->
+<!-- ============================================ -->
+<div class="week-section">
+  <div class="week-header">
+    <h2>Semana 4: Conclusao Proprietarios + Estabilizacao</h2>
+    <span class="dates">13-17 Abr 2026</span>
+  </div>
+  <div class="week-body">
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Ultima area: Proprietarios (2 canais). Apos ativar, focar em estabilizar todo o sistema e arquivar canais antigos.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Conclusao &mdash; Proprietarios (2 canais)</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-low">Baixo</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Ativar processos de Proprietarios no painel Lovable (Luiza Cechelero valida)</li>
+        <li>Treinamento com equipe Proprietarios</li>
+        <li>Mensagem de redirecionamento: #suporte-cs-proprietarios, #suporte-processo-churn</li>
+        <li>Verificar integracao com dados_churn (Nekt)</li>
+        <li>Reclame Aqui: confirmar que tudo entra em Hospede (mesmo sendo proprietario)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Estabilizacao + Arquivamento</div>
+        <div class="card-meta">
+          <span class="badge badge-effort-med">Medio</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Todas as 4 areas ativas &mdash; monitorar volume total</li>
+        <li>Arquivar canais antigos apos 2 semanas de transicao</li>
+        <li>Arquivar #suporte-ocorrencias-franquias (substituido)</li>
+        <li>Confirmar #suporte-upsell &rarr; CSI (sai da operacao)</li>
+        <li>Revisar metricas: tempo resolucao, SLA, deflexao, volume por area</li>
+        <li>Ajustar SLAs se necessario com base em dados reais</li>
+        <li>Importar historico do Pipefy (botao na Lovable)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SEMANA 5+: OTIMIZACAO IA (Abr-Mai)           -->
+<!-- ============================================ -->
+<div class="week-section">
+  <div class="week-header" style="background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);">
+    <h2>Fase Final: Otimizacao IA</h2>
+    <span class="dates">Abr - Mai 2026</span>
+  </div>
+  <div class="week-body">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-number" style="background: #6c5ce7;">16</span> IA Avancada &mdash; Preditiva + Score Churn</div>
+        <div class="card-meta">
+          <span class="badge badge-tool">IA + Nekt</span>
+          <span class="badge badge-effort-high">Alto</span>
+          <span class="badge badge-resp-bizops">BizOps/Gabriel</span>
+          <span class="badge badge-resp-iara">Iara</span>
+        </div>
+      </div>
+      <div class="card-deps"><strong>Depende de:</strong> #15 + dados acumulados do sistema em producao</div>
+      <ul class="checklist">
+        <li>Score de churn por imovel (baseado em volume + tipo de suportes)</li>
+        <li>Correlacoes entre areas (imovel com problema em Hospede + Franquias = alerta)</li>
+        <li>Predicao: imoveis que provavelmente vao gerar suporte nas proximas semanas</li>
+        <li>Base de conhecimento RAG conectada na Lovable</li>
+        <li>Feedback loop maduro: "IA errou" alimenta retreino continuo</li>
+        <li>Meta: deflexao 25%+ estavel</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- RESUMO DE ESFORCO POR FERRAMENTA              -->
+<!-- ============================================ -->
+<h2>Resumo de Esforco por Ferramenta</h2>
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>Ferramenta</th>
+      <th>Itens</th>
+      <th>Esforco Agregado</th>
+      <th>Responsavel Principal</th>
+      <th>Prazo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GitHub</td>
+      <td>#1</td>
+      <td><span class="badge badge-effort-low">Baixo</span></td>
+      <td>Iara</td>
+      <td>Seg 23 Mar (1h)</td>
+    </tr>
+    <tr>
+      <td>Lovable</td>
+      <td>#2, #3, #4, #5</td>
+      <td><span class="badge badge-effort-high">Alto</span></td>
+      <td>Dev</td>
+      <td>Seg-Qui 23-26 Mar</td>
+    </tr>
+    <tr>
+      <td>Slack</td>
+      <td>#6, #7</td>
+      <td><span class="badge badge-effort-med">Medio</span></td>
+      <td>Iara + BizOps</td>
+      <td>Ter-Qua 24-25 Mar</td>
+    </tr>
+    <tr>
+      <td>N8N</td>
+      <td>#8, #9, #10, #11, #12, #13</td>
+      <td><span class="badge badge-effort-high">Alto</span></td>
+      <td>BizOps/Gabriel</td>
+      <td>Qua-Sex 25-27 Mar</td>
+    </tr>
+    <tr>
+      <td>IA</td>
+      <td>#14, #15, #16</td>
+      <td><span class="badge badge-effort-high">Alto</span></td>
+      <td>BizOps/Gabriel</td>
+      <td>#14-15: Sem 1 | #16: Abr-Mai</td>
+    </tr>
+    <tr>
+      <td>Operacional</td>
+      <td>#17, #18, #19, #20</td>
+      <td><span class="badge badge-effort-med">Medio</span></td>
+      <td>Iara</td>
+      <td>Sem 2 (30 Mar - 3 Abr)</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- CRONOGRAMA DIARIO SEMANA 1                   -->
+<!-- ============================================ -->
+<h2>Cronograma Diario &mdash; Semana de Construcao (23-27 Mar)</h2>
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>Dia</th>
+      <th>Manha (9h-12h)</th>
+      <th>Tarde (14h-18h)</th>
+      <th>Entregavel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="font-weight:600; color: var(--accent-light);">Seg 23</td>
+      <td>#1 GitHub repo + #2 Lovable base (banco, auth, modelo)</td>
+      <td>#2 Lovable base (API REST, webhooks) + #6 Canal Slack</td>
+      <td>Repo criado, Lovable com auth + banco, canal Slack aberto</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600; color: var(--accent-light);">Ter 24</td>
+      <td>#3 Painel de controle (CRUD processos, config areas)</td>
+      <td>#3 Painel de controle (popular 4 areas) + #7 inicio formulario Slack</td>
+      <td>Painel funcional com 4 areas populadas, formulario Slack iniciado</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600; color: var(--accent-light);">Qua 25</td>
+      <td>#4 Kanban (boards, cards, drag&amp;drop, 3 visoes)</td>
+      <td>#7 Formulario Slack (campos condicionais) + #8 Webhook N8N</td>
+      <td>Kanban funcional, formulario dinamo, webhook conectando Slack &rarr; Lovable</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600; color: var(--accent-light);">Qui 26</td>
+      <td>#5 Dashboard + resumo imovel + #9 Status updates Slack</td>
+      <td>#10 DM automatica + #11 SLA monitor + #12 Resumo diario</td>
+      <td>Dashboard, DMs, SLA, resumo diario &mdash; fluxos N8N completos</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600; color: var(--accent-light);">Sex 27</td>
+      <td>#13 Sync comentarios + #14 IA basica + #15 IA deflexao</td>
+      <td>Testes integrados (pre-#17) + fix bugs criticos</td>
+      <td>Sistema completo funcional, pronto para testes formais na Sem 2</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- RISCOS DA CONSTRUCAO                         -->
+<!-- ============================================ -->
+<h2>Riscos da Construcao</h2>
+
+<div class="risk-card">
+  <div class="risk-title">ALTO: Prazo apertado para Lovable (4 dias para app completa)</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Priorizar MVP funcional (Kanban + formulario + API). Dashboard e relatorios podem ser simplificados na Sem 1 e refinados depois. Definir escopo minimo viavel para o piloto: criar card, mover, visualizar.</div>
+</div>
+
+<div class="risk-card">
+  <div class="risk-title">ALTO: Formulario Slack com campos condicionais dinamicos e complexo</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Comecar com formulario simples (campos fixos por area) e iterar. Se Slack Workflow Builder nao suportar, usar modal via Slack API custom. Ter plano B: formulario na Lovable com link no Slack.</div>
+</div>
+
+<div class="risk-card">
+  <div class="risk-title">ALTO: Integracao N8N &harr; Lovable depende de API estavel</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Definir contrato de API (endpoints, payloads) no dia 1. Dev e BizOps alinham na segunda-feira. Usar mock de API enquanto Lovable nao esta pronta.</div>
+</div>
+
+<div class="risk-card risk-medium">
+  <div class="risk-title">MEDIO: Sync bidirecional Slack &harr; Lovable pode gerar loops/duplicatas</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Flag <code>slack_synced</code> em cada comentario. Testar exaustivamente antes do piloto. Se necessario, sync unidirecional no piloto e bidirecional depois.</div>
+</div>
+
+<div class="risk-card risk-medium">
+  <div class="risk-title">MEDIO: IA de classificacao pode errar na fase inicial (poucos dados)</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> IA apenas sugere, nao decide sozinha no piloto. Botao "IA errou" sempre disponivel. Deflexao desativada no piloto (ativar apos dados suficientes). Nivel de confianca visivel.</div>
+</div>
+
+<div class="risk-card risk-medium">
+  <div class="risk-title">MEDIO: Resistencia da equipe a mudanca de 18 canais para 1</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Comecar pelo menor (Implantacao, 2 canais). Mostrar beneficios concretos (DM automatica, SLA, visao cruzada). Treinamento por perfil. Periodo de transicao de 2 semanas com canais antigos ainda ativos.</div>
+</div>
+
+<div class="risk-card risk-low">
+  <div class="risk-title">BAIXO: Pipefy como backend existente pode conflitar</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Decisao #20 ja definida: Pipefy mantem execucao dos existentes, novos entram pela Lovable. Importacao de historico e separada (botao). Nao ha integracao em tempo real com Pipefy.</div>
+</div>
+
+<div class="risk-card risk-low">
+  <div class="risk-title">BAIXO: Victoria Magri como single point of failure em avaliacoes + ocorrencias</div>
+  <div class="risk-mitigation"><strong>Mitigacao:</strong> Decisao #14: gerente define substituto quando necessario. Sistema de permissoes permite trocar responsavel rapidamente. Nao depende de pessoa especifica para funcionar.</div>
+</div>
+
+<!-- ============================================ -->
+<!-- CONEXOES ENTRE SISTEMAS                      -->
+<!-- ============================================ -->
+<h2>Conexoes Entre Sistemas</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin: 16px 0; font-family: monospace; font-size: 0.9rem; line-height: 2;">
+<pre style="color: var(--text); overflow-x: auto;">
+  SLACK                    N8N                     LOVABLE                 EXTERNO
+  ─────                    ───                     ───────                 ───────
+  #suporte-operacao   ──&gt;  Webhook recebe     ──&gt;  Cria card (API)
+  (formulario bot)         formulario
+
+  Thread atualizada   &lt;──  Escuta status      &lt;──  Card mudou status
+                           changed                 (webhook out)
+
+  DM pro solicitante  &lt;──  Notifica DM        &lt;──  Card criado/atualizado
+
+  Thread comentario   &lt;─&gt; Sync comentarios   &lt;─&gt;  Card comentario
+                           (bidirecional)
+
+  Resumo 18h          &lt;──  Cron 18h BRT       &lt;──  Query cards do dia
+
+  Alerta SLA          &lt;──  Cron 30min         &lt;──  Query cards abertos
+
+  Formulario          &lt;──  Puxa config        &lt;──  GET /api/areas/config
+  (campos dinamicos)       atualizada
+
+                           IA pre-abertura     &lt;──                         NEKT (historico)
+                           IA classificacao                                LLM (analise texto)
+                           IA duplicidade      &lt;──  Query cards abertos
+                           IA deflexao                                     Base conhecimento (RAG)
+
+                                                    Importar historico &lt;── PIPEFY (via Nekt)
+                                                    Dados imovel       &lt;── NEKT (tabelas)
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- CHECKLIST PRE-CONSTRUCAO                     -->
+<!-- ============================================ -->
+<h2>Checklist Pre-Construcao (fazer ate 21 Mar)</h2>
+<div class="card">
+  <ul class="checklist">
+    <li>Finalizar mapeamento de TODOS os processos por area (Descoberta)</li>
+    <li>Validar campos do formulario com cada gerente de area</li>
+    <li>Definir contrato de API Lovable (endpoints, payloads, auth)</li>
+    <li>Garantir acesso ao N8N (automation.seazone.com.br) para Gabriel</li>
+    <li>Garantir conta Lovable com plano que suporte API + webhooks</li>
+    <li>Confirmar que Nekt tem as tabelas necessarias acessiveis</li>
+    <li>Alinhar com Bruno Bill Benetti (gestor) sobre go-live 30 Mar</li>
+    <li>Reservar agenda de Gabriel/BizOps para semana 23-27 Mar (dedicacao full)</li>
+    <li>Preparar ambiente de teste (dados fictivos de imoveis, usuarios)</li>
+  </ul>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; text-align: center;">
+  Plano de Execucao &mdash; Suporte Unificado Seazone &mdash; Gerado em 17/03/2026<br>
+  Responsavel: Iara Moraes (iara.moraes@seazone.com.br) &middot; Projeto: Suporte Operacao Unificado<br>
+  Documento auto-contido, sem dependencias externas
+</div>
+
+</div>
+</body>
+</html>

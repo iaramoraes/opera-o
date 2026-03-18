@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte Unificado - Documento Completo A-Z | Seazone</title>
+<style>
+  :root { --primary:#1a56db; --primary-light:#e8edfb; --success:#059669; --success-light:#ecfdf5; --warning:#d97706; --warning-light:#fffbeb; --danger:#dc2626; --danger-light:#fef2f2; --purple:#7c3aed; --purple-light:#f5f3ff; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-600:#4b5563; --gray-800:#1f2937; --gray-900:#111827; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--gray-50); color:var(--gray-800); line-height:1.6; }
+  .container { max-width:1200px; margin:0 auto; padding:20px; }
+  .header { background:linear-gradient(135deg,#1e3a5f 0%,#1a56db 100%); color:white; padding:40px 30px; border-radius:16px; margin-bottom:30px; }
+  .header h1 { font-size:28px; margin-bottom:8px; }
+  .header p { opacity:0.85; font-size:15px; }
+  .header .meta { display:flex; gap:20px; margin-top:16px; flex-wrap:wrap; }
+  .header .meta span { background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:20px; font-size:13px; }
+  .toc { background:white; border-radius:12px; padding:24px; margin-bottom:30px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .toc h2 { font-size:18px; margin-bottom:12px; }
+  .toc ol { padding-left:20px; columns:2; column-gap:30px; }
+  .toc li { margin-bottom:6px; break-inside:avoid; }
+  .toc a { color:var(--primary); text-decoration:none; }
+  .toc a:hover { text-decoration:underline; }
+  .section { background:white; border-radius:12px; padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .section h2 { font-size:20px; color:var(--gray-900); margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--gray-200); }
+  .section h3 { font-size:16px; color:var(--primary); margin:18px 0 10px 0; }
+  .section h4 { font-size:14px; color:var(--gray-600); margin:12px 0 8px 0; text-transform:uppercase; letter-spacing:0.5px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; }
+  th { background:var(--gray-100); text-align:left; padding:10px 12px; font-weight:600; border-bottom:2px solid var(--gray-200); }
+  td { padding:10px 12px; border-bottom:1px solid var(--gray-200); vertical-align:top; }
+  tr:hover { background:var(--gray-50); }
+  tr.row-archive { background:#fef2f2; }
+  tr.row-archive:hover { background:#fee2e2; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+  .badge-blue { background:var(--primary-light); color:var(--primary); }
+  .badge-green { background:var(--success-light); color:var(--success); }
+  .badge-yellow { background:var(--warning-light); color:var(--warning); }
+  .badge-red { background:var(--danger-light); color:var(--danger); }
+  .badge-purple { background:var(--purple-light); color:var(--purple); }
+  .badge-gray { background:var(--gray-100); color:var(--gray-600); }
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:16px 0; }
+  .card { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:10px; padding:18px; text-align:center; }
+  .card h4 { margin:0 0 8px 0; font-size:15px; color:var(--gray-900); text-transform:none; letter-spacing:0; }
+  .card .number { font-size:32px; font-weight:700; color:var(--primary); }
+  .card .label { font-size:12px; color:var(--gray-600); margin-top:4px; }
+  .flow-diagram { background:var(--gray-100); border-radius:10px; padding:20px; margin:12px 0; overflow-x:auto; }
+  .flow-steps { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .flow-step { background:white; border:2px solid var(--primary); color:var(--primary); padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; white-space:nowrap; }
+  .flow-step.active { background:var(--primary); color:white; }
+  .flow-step.ia { background:#7c3aed; color:white; border-color:#7c3aed; }
+  .flow-step.success { background:var(--success); color:white; border-color:var(--success); }
+  .flow-step.warning { background:var(--warning); color:white; border-color:var(--warning); }
+  .flow-arrow { color:var(--gray-300); font-size:20px; }
+  .alert { padding:14px 18px; border-radius:8px; margin:12px 0; font-size:14px; }
+  .alert-warning { background:var(--warning-light); border-left:4px solid var(--warning); }
+  .alert-danger { background:var(--danger-light); border-left:4px solid var(--danger); }
+  .alert-info { background:var(--primary-light); border-left:4px solid var(--primary); }
+  .alert-success { background:var(--success-light); border-left:4px solid var(--success); }
+  .channel-detail { border-left:4px solid var(--primary); padding:16px; margin:16px 0; background:var(--gray-50); border-radius:0 8px 8px 0; }
+  .channel-detail h4 { color:var(--gray-900); margin:0 0 8px 0; text-transform:none; letter-spacing:0; font-size:15px; }
+  .channel-detail.impl { border-left-color:var(--warning); }
+  .channel-detail.franq { border-left-color:var(--primary); }
+  .channel-detail.hosp { border-left-color:var(--success); }
+  .channel-detail.prop { border-left-color:var(--purple); }
+  .decision-box { background:var(--success-light); border:2px solid var(--success); border-radius:10px; padding:16px; margin:12px 0; }
+  .decision-box h4 { color:var(--success); margin:0 0 8px 0; text-transform:none; letter-spacing:0; }
+  .area-card { border-radius:12px; padding:20px; margin:16px 0; }
+  .area-card.impl { background:var(--warning-light); border:2px solid var(--warning); }
+  .area-card.franq { background:var(--primary-light); border:2px solid var(--primary); }
+  .area-card.hosp { background:var(--success-light); border:2px solid var(--success); }
+  .area-card.prop { background:var(--purple-light); border:2px solid var(--purple); }
+  .area-card h3 { margin-top:0; }
+  ul.check { list-style:none; padding:0; }
+  ul.check li { padding:4px 0 4px 22px; position:relative; }
+  ul.check li::before { content:""; position:absolute; left:0; top:8px; width:14px; height:14px; border-radius:3px; background:var(--success); }
+  .timeline-item { display:flex; gap:16px; margin:12px 0; }
+  .timeline-dot { min-width:40px; text-align:center; }
+  .timeline-dot .dot { width:16px; height:16px; border-radius:50%; background:var(--primary); display:inline-block; }
+  .timeline-dot .dot.active { background:var(--success); box-shadow:0 0 0 4px var(--success-light); }
+  .timeline-content { flex:1; background:var(--gray-50); border-radius:8px; padding:14px; }
+  .perm-table td:first-child { font-weight:600; white-space:nowrap; }
+  .field-list { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  .field-tag { background:white; border:1px solid var(--gray-300); padding:3px 10px; border-radius:6px; font-size:12px; }
+  .process-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin:12px 0; }
+  .process-item { background:white; border:1px solid var(--gray-200); border-radius:8px; padding:12px; font-size:13px; }
+  .stat-row { display:flex; gap:12px; flex-wrap:wrap; margin:12px 0; }
+  .stat-box { flex:1; min-width:120px; padding:14px; border-radius:8px; text-align:center; }
+  .stat-box .stat-val { font-size:24px; font-weight:700; }
+  .stat-box .stat-lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+  @media print { .container{max-width:100%;} .section{break-inside:avoid;} }
+  @media (max-width:768px) { .card-grid{grid-template-columns:1fr;} .toc ol{columns:1;} }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Suporte Unificado Seazone - Documento Completo A-Z</h1>
+  <p>Unificar 18 canais de suporte em 1 canal Slack com 4 areas, Kanban Lovable, N8N e IA integrada</p>
+  <div class="meta">
+    <span>Data: 17/03/2026</span>
+    <span>Responsavel: Iara Moraes</span>
+    <span>Gestor: Bruno Bill Benetti</span>
+    <span>Fase: Descoberta</span>
+    <span>Canal: #suporte-operacao</span>
+  </div>
+</div>
+
+<!-- INDICE -->
+<div class="toc" id="indice">
+  <h2>Indice</h2>
+  <ol>
+    <li><a href="#sec1">Visao Geral</a></li>
+    <li><a href="#sec2">18 Canais Mapeados</a></li>
+    <li><a href="#sec3">Formularios de Entrada (por canal)</a></li>
+    <li><a href="#sec4">Formulario Unificado (novo)</a></li>
+    <li><a href="#sec5">4 Areas Consolidadas</a></li>
+    <li><a href="#sec6">Roteamento e Triagem</a></li>
+    <li><a href="#sec7">SLAs e Escalonamento</a></li>
+    <li><a href="#sec8">Duplicidade</a></li>
+    <li><a href="#sec9">Visao Cruzada por Imovel</a></li>
+    <li><a href="#sec10">IA Integrada</a></li>
+    <li><a href="#sec11">Atualizacao Bidirecional Slack / Lovable</a></li>
+    <li><a href="#sec12">Permissoes</a></li>
+    <li><a href="#sec13">Metricas e Dashboard</a></li>
+    <li><a href="#sec14">Historico e Arquivo</a></li>
+    <li><a href="#sec15">Integracoes Tecnicas</a></li>
+    <li><a href="#sec16">Migracao</a></li>
+    <li><a href="#sec17">Pessoas e Responsabilidades</a></li>
+    <li><a href="#sec18">Timeline</a></li>
+    <li><a href="#sec19">Change Management</a></li>
+    <li><a href="#sec20">Organizacao do Canal Slack</a></li>
+    <li><a href="#sec21">35 Decisoes Tomadas</a></li>
+    <li><a href="#sec22">Riscos e Mitigacoes</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 1: VISAO GERAL -->
+<!-- ============================================================ -->
+<div class="section" id="sec1">
+  <h2>1. Visao Geral</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="number">18</div>
+      <div class="label">Canais mapeados</div>
+    </div>
+    <div class="card">
+      <div class="number">16</div>
+      <div class="label">Entram no unificado</div>
+    </div>
+    <div class="card">
+      <div class="number">4</div>
+      <div class="label">Areas consolidadas</div>
+    </div>
+    <div class="card">
+      <div class="number" style="color:var(--success)">1</div>
+      <div class="label">Canal unico: #suporte-operacao</div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning"><strong>1 canal arquivado:</strong> #suporte-ocorrencias-franquias (substituido por #registro-ocorrencias)</div>
+  <div class="alert alert-danger"><strong>1 canal sai da operacao:</strong> #suporte-upsell &rarr; transferido para CSI</div>
+
+  <h3>Distribuicao por Area</h3>
+  <table>
+    <tr><th>Area</th><th>Canais</th><th>Responsavel</th><th>Cor</th></tr>
+    <tr><td><span class="badge badge-yellow">Implantacao</span></td><td>2</td><td>Larissa Constantino</td><td style="background:var(--warning-light);width:40px;"></td></tr>
+    <tr><td><span class="badge badge-blue">Franquias</span></td><td>7</td><td>Vivianny Aguilera</td><td style="background:var(--primary-light);width:40px;"></td></tr>
+    <tr><td><span class="badge badge-green">Hospede</span></td><td>5</td><td>Carolina Espindola</td><td style="background:var(--success-light);width:40px;"></td></tr>
+    <tr><td><span class="badge badge-purple">Proprietarios</span></td><td>2</td><td>Luiza Cechelero</td><td style="background:var(--purple-light);width:40px;"></td></tr>
+  </table>
+
+  <h3>Fluxo Macro</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Slack #suporte-operacao</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step ia">IA Analisa</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">N8N Roteia</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step warning">Kanban Lovable</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step success">Resolucao + Notificacao</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 2: 18 CANAIS MAPEADOS -->
+<!-- ============================================================ -->
+<div class="section" id="sec2">
+  <h2>2. 18 Canais Mapeados</h2>
+
+  <table>
+    <tr><th>Canal</th><th>Slack ID</th><th>Mecanismo</th><th>Area</th><th>Status</th></tr>
+    <!-- IMPLANTACAO -->
+    <tr><td>#suporte-implantacao</td><td>C06A64DRK5Y</td><td>Slack Workflow</td><td><span class="badge badge-yellow">Implantacao</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#solicitacao-troca-de-codigo</td><td>C06PJ8A9V27</td><td>Slack Workflow + Pipefy</td><td><span class="badge badge-yellow">Implantacao</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <!-- FRANQUIAS -->
+    <tr><td>#suporte-franquias</td><td>C06CYQB7TPA</td><td>Slack Workflow</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-fornecedores</td><td>C09EX8PRRC7</td><td>Pipefy</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-gestao-de-contas</td><td>C08SD04U6CR</td><td>Make Bot</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#registro-ocorrencias</td><td>C0A67P29PFD</td><td>Pipefy</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#validacao-comunicados-franquias</td><td>C07C83YAKT3</td><td>Manual</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-qualidade-treinamento-franquias</td><td>C0A8KL9FYKX</td><td>Pipefy PIPE 26</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#validacoes-solicitadas</td><td>C06BFC72H1A</td><td>Slack Workflow</td><td><span class="badge badge-blue">Franquias</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <!-- HOSPEDE -->
+    <tr><td>#suporte-avaliacoes-de-hospedes</td><td>C06U06D6BBR</td><td>Slack Workflow + IA</td><td><span class="badge badge-green">Hospede</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-anuncios</td><td>C06F3PJE19P</td><td>Pipefy Form</td><td><span class="badge badge-green">Hospede</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-atendimento</td><td>C06CG9YT0VD</td><td>Slack Workflow + Lovable</td><td><span class="badge badge-green">Hospede</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#realocacoes-devolucao-credito</td><td>C0318327ZQC</td><td>Slack Workflow + N8N</td><td><span class="badge badge-green">Hospede</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#respostas-reclame-aqui</td><td>C071XGMDFEE</td><td>Manual</td><td><span class="badge badge-green">Hospede</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <!-- PROPRIETARIOS -->
+    <tr><td>#suporte-cs-proprietarios</td><td>C06AQMADV4M</td><td>Slack Workflow + Pipefy</td><td><span class="badge badge-purple">Proprietarios</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <tr><td>#suporte-processo-churn</td><td>C08008E0YDS</td><td>Pipefy Block Kit</td><td><span class="badge badge-purple">Proprietarios</span></td><td><span class="badge badge-green">Entra</span></td></tr>
+    <!-- AUXILIAR -->
+    <tr><td>#resumo-suporte-operacao</td><td>C0AJANM5399</td><td>Automatico</td><td><span class="badge badge-gray">Auxiliar</span></td><td><span class="badge badge-gray">Resumo diario</span></td></tr>
+    <!-- SAI / ARQUIVA -->
+    <tr class="row-archive"><td>#suporte-ocorrencias-franquias</td><td>C06NLUMU004</td><td>-</td><td><span class="badge badge-red">Franquias</span></td><td><span class="badge badge-red">ARQUIVAR</span></td></tr>
+    <tr class="row-archive"><td>#suporte-upsell</td><td>-</td><td>-</td><td><span class="badge badge-red">-</span></td><td><span class="badge badge-red">SAI &rarr; CSI</span></td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 3: FORMULARIOS DE ENTRADA -->
+<!-- ============================================================ -->
+<div class="section" id="sec3">
+  <h2>3. Formularios de Entrada (por canal)</h2>
+  <p style="margin-bottom:16px;color:var(--gray-600);">Mapeamento completo dos formularios existentes em cada canal, baseado nos prints reais analisados.</p>
+
+  <!-- IMPLANTACAO -->
+  <h3 style="color:var(--warning);">IMPLANTACAO (2 canais)</h3>
+
+  <div class="channel-detail impl">
+    <h4>#suporte-implantacao &mdash; "Solicitar Suporte"</h4>
+    <div class="field-list">
+      <span class="field-tag">Codigo Imovel</span>
+      <span class="field-tag">Setor Solicitante</span>
+      <span class="field-tag">Fase da Implantacao</span>
+      <span class="field-tag">Descricao do Problema</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Fases: Criacao Anuncios / Precificacao / Vistorias / Fotos / Geral</p>
+  </div>
+
+  <div class="channel-detail impl">
+    <h4>#suporte-implantacao &mdash; "Novas Fotos Pro"</h4>
+    <div class="field-list">
+      <span class="field-tag">Codigo Imovel</span>
+      <span class="field-tag">Nome Proprietario</span>
+      <span class="field-tag">Nome Franquia</span>
+      <span class="field-tag">Endereco</span>
+      <span class="field-tag">Tipo Solicitacao</span>
+      <span class="field-tag">Motivo</span>
+    </div>
+  </div>
+
+  <div class="channel-detail impl">
+    <h4>#solicitacao-troca-de-codigo</h4>
+    <div class="field-list">
+      <span class="field-tag">Codigo antigo</span>
+      <span class="field-tag">Novo codigo</span>
+      <span class="field-tag">Quem solicitou</span>
+      <span class="field-tag">Observacao</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Notificacao multi-time: Comercial, OTA, CS Prop, Atendimento, Franquias, GO, GC, Implantacao, RM</p>
+  </div>
+
+  <div class="channel-detail impl">
+    <h4>[CSZ] PIPE 3 &mdash; CS Troca de Proprietario por Venda</h4>
+    <div class="field-list">
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Proprietario antigo</span>
+      <span class="field-tag">Proprietario novo</span>
+      <span class="field-tag">Links Pipedrive</span>
+      <span class="field-tag">Data mudanca</span>
+      <span class="field-tag">Vistoria/enxoval</span>
+      <span class="field-tag">Motivo</span>
+    </div>
+  </div>
+
+  <!-- FRANQUIAS -->
+  <h3 style="color:var(--primary);">FRANQUIAS (7 canais)</h3>
+
+  <div class="channel-detail franq">
+    <h4>#suporte-franquias &mdash; "Solicitar Suporte"</h4>
+    <div class="field-list">
+      <span class="field-tag">Setor</span>
+      <span class="field-tag">Assunto</span>
+      <span class="field-tag">Problema</span>
+      <span class="field-tag">Consultor</span>
+    </div>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#suporte-fornecedores &mdash; via Pipefy</h4>
+    <div class="field-list">
+      <span class="field-tag">Quem solicita</span>
+      <span class="field-tag">Tipo (Homologar/Recompra/Pesquisa/Problema/Abertura Nova Regiao)</span>
+      <span class="field-tag">Setor</span>
+    </div>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#suporte-gestao-de-contas &mdash; Make Bot</h4>
+    <div class="field-list">
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Assunto</span>
+      <span class="field-tag">Descricao</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Assuntos: Cadastro contas / Envio boleto / Verificacao pagamento / Envio fatura</p>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#registro-ocorrencias &mdash; Pipefy</h4>
+    <div class="field-list">
+      <span class="field-tag">Categoria</span>
+      <span class="field-tag">Descricao</span>
+      <span class="field-tag">Evidencia (anexo)</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Categorias: Atendimento ao Hospede, Implantacao, Caca Ocorrencias, Comentarios, Suporte Franquias, Gestor Regional, Danos, Despesas, Manutencoes, Treinamento, Cancelamento vistorias</p>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#validacao-comunicados-franquias</h4>
+    <p style="font-size:13px;color:var(--gray-600);">Sem formulario &mdash; posts manuais no canal</p>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#suporte-qualidade-treinamento-franquias &mdash; [FRA] PIPE 26</h4>
+    <div class="field-list">
+      <span class="field-tag">Email Seazone</span>
+      <span class="field-tag">Setor</span>
+      <span class="field-tag">Area da solicitacao</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Cards mostram "Novo suporte para o time de Qualidade" com botao "Suporte Finalizado"</p>
+  </div>
+
+  <div class="channel-detail franq">
+    <h4>#validacoes-solicitadas &mdash; "Validacao Comercial"</h4>
+    <div class="field-list">
+      <span class="field-tag">O que fazer</span>
+      <span class="field-tag">Link Pipedrive</span>
+      <span class="field-tag">Cidade</span>
+      <span class="field-tag">Endereco</span>
+      <span class="field-tag">Descricao</span>
+      <span class="field-tag">Criticidade</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Opcoes: Validar Localizacao / Imovel / Roupa de Cama / Visita Anfitriao</p>
+  </div>
+
+  <!-- HOSPEDE -->
+  <h3 style="color:var(--success);">HOSPEDE (5 canais)</h3>
+
+  <div class="channel-detail hosp">
+    <h4>#suporte-atendimento &mdash; "Suporte Hospedes"</h4>
+    <div class="field-list">
+      <span class="field-tag">Departamento</span>
+      <span class="field-tag">Sub area</span>
+      <span class="field-tag">Onde prestar suporte</span>
+      <span class="field-tag">Problema</span>
+      <span class="field-tag">Codigo reserva</span>
+      <span class="field-tag">Links</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Sub area: Hospede ou Franquias. Onde: Planilha / formulario / ferramenta</p>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#suporte-atendimento &mdash; "Solicitar Reserva Interna"</h4>
+    <div class="field-list">
+      <span class="field-tag">Imovel/regiao</span>
+      <span class="field-tag">Orcamento</span>
+      <span class="field-tag">N. hospedes</span>
+      <span class="field-tag">Data check-in/out</span>
+      <span class="field-tag">Nome titular</span>
+      <span class="field-tag">CPF</span>
+      <span class="field-tag">Telefone</span>
+      <span class="field-tag">Email</span>
+    </div>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#suporte-atendimento &mdash; "Solicitacao de Realocacao/Cancelamento" (Lovable relocate-magic)</h4>
+    <div class="field-list">
+      <span class="field-tag">Codigo imovel</span>
+      <span class="field-tag">Codigo reserva (Stays 5-7 chars)</span>
+      <span class="field-tag">Motivo</span>
+      <span class="field-tag">Detalhe problema</span>
+      <span class="field-tag">Bloqueio?</span>
+      <span class="field-tag">Solicitante email</span>
+    </div>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#suporte-anuncios &mdash; [IMP] PIPE 5.1</h4>
+    <div class="field-list">
+      <span class="field-tag">Codigo Imovel</span>
+      <span class="field-tag">Solicitante</span>
+      <span class="field-tag">Vinculo</span>
+      <span class="field-tag">Alteracao temp/permanente</span>
+      <span class="field-tag">Descricao</span>
+      <span class="field-tag">Link anexos</span>
+      <span class="field-tag">Anexos</span>
+      <span class="field-tag">Reclamacao hospede?</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;"><strong>Recriacao:</strong> Plataforma (Airbnb/Booking/Stays), Pedidos, Motivo (Nota ruim/Baixo desempenho/Anuncio suspenso/Outro), Setor</p>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#suporte-avaliacoes-de-hospedes &mdash; "Suporte Avaliacoes OTAs"</h4>
+    <div class="field-list">
+      <span class="field-tag">Setor</span>
+      <span class="field-tag">Tipo suporte (Contestar/Responder)</span>
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Hospede</span>
+      <span class="field-tag">Data checkout</span>
+      <span class="field-tag">OTA (plataforma)</span>
+      <span class="field-tag">Codigo reserva</span>
+      <span class="field-tag">Texto comentario na integra</span>
+      <span class="field-tag">Descricao</span>
+    </div>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#realocacoes-devolucao-credito &mdash; "Pedido de Devolucao"</h4>
+    <div class="field-list">
+      <span class="field-tag">Email solicitante</span>
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Reserva</span>
+      <span class="field-tag">Check-in/out</span>
+      <span class="field-tag">Tipo reembolso</span>
+      <span class="field-tag">Observacao</span>
+    </div>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#realocacoes-devolucao-credito &mdash; "Pedido de Credito"</h4>
+    <div class="field-list">
+      <span class="field-tag">Status</span>
+      <span class="field-tag">Valor reserva</span>
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Reserva Stays</span>
+      <span class="field-tag">ID Nova reserva</span>
+      <span class="field-tag">Contratante</span>
+      <span class="field-tag">Data</span>
+    </div>
+  </div>
+
+  <div class="channel-detail hosp">
+    <h4>#respostas-reclame-aqui</h4>
+    <p style="font-size:13px;color:var(--gray-600);">Sem formulario &mdash; fluxo manual (Leandro Shimanuki). Hospede &rarr; Carolina/Vivih. Proprietario &rarr; Luiza. Thread com contexto.</p>
+  </div>
+
+  <!-- PROPRIETARIOS -->
+  <h3 style="color:var(--purple);">PROPRIETARIOS (2 canais)</h3>
+
+  <div class="channel-detail prop">
+    <h4>#suporte-cs-proprietarios &mdash; "Suporte Proprietarios"</h4>
+    <div class="field-list">
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Categoria</span>
+      <span class="field-tag">Urgencia</span>
+      <span class="field-tag">Descricao</span>
+      <span class="field-tag">Responsavel CS</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Categorias: Handover CS / Contato CS / Preco Minimo / Adequacao-Manutencao. Urgencia: Baixa/Media/Alta/Crise</p>
+  </div>
+
+  <div class="channel-detail prop">
+    <h4>#suporte-cs-proprietarios &mdash; [CSZ] PIPE 11 - Analises de Performance</h4>
+    <div class="field-list">
+      <span class="field-tag">Nome solicitante</span>
+      <span class="field-tag">Email</span>
+      <span class="field-tag">Categoria da Analise</span>
+      <span class="field-tag">Urgencia</span>
+      <span class="field-tag">Codigo Imovel</span>
+    </div>
+  </div>
+
+  <div class="channel-detail prop">
+    <h4>#suporte-processo-churn &mdash; [CSZ] PIPE 2.4 - Suporte Churn</h4>
+    <div class="field-list">
+      <span class="field-tag">Email</span>
+      <span class="field-tag">Imovel</span>
+      <span class="field-tag">Assunto</span>
+      <span class="field-tag">Suporte necessario</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:6px;">Assuntos: Assinatura Distratos / Verificacao Pendencias / Outros</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 4: FORMULARIO UNIFICADO -->
+<!-- ============================================================ -->
+<div class="section" id="sec4">
+  <h2>4. Formulario Unificado (novo)</h2>
+
+  <div class="alert alert-info"><strong>Entrada simplificada em 2 cliques:</strong> Botao "Abrir Suporte" fixo no #suporte-operacao</div>
+
+  <h3>Campos do Formulario</h3>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Detalhe</th></tr>
+    <tr><td><strong>Solicitante</strong></td><td>Automatico</td><td>Capturado do perfil Slack</td></tr>
+    <tr><td><strong>Codigo imovel</strong></td><td>Texto + opcao</td><td>Com opcao "Sem codigo de imovel"</td></tr>
+    <tr><td><strong>Area</strong></td><td>Dropdown</td><td>Implantacao / Franquias / Hospede / Proprietarios + "Nao sei qual area"</td></tr>
+    <tr><td><strong>Processo</strong></td><td>Dropdown condicional</td><td>Muda conforme area selecionada (editavel pelo gerente)</td></tr>
+    <tr><td><strong>Urgencia</strong></td><td>Dropdown</td><td>Crise / Alta / Media / Baixa</td></tr>
+    <tr><td><strong>Descricao</strong></td><td>Texto livre</td><td>Detalhamento do problema</td></tr>
+  </table>
+
+  <div class="alert alert-success"><strong>"Nao sei qual area"</strong> &rarr; IA le a descricao e roteia automaticamente para a area correta.</div>
+
+  <h3>Processos por Area (editaveis, ativaveis/desativaveis na Lovable)</h3>
+
+  <div class="area-card impl">
+    <h3 style="color:var(--warning);">Implantacao</h3>
+    <div class="field-list">
+      <span class="field-tag">Suporte Implantacao (por fase)</span>
+      <span class="field-tag">Troca de Codigo</span>
+      <span class="field-tag">Venda de Imovel</span>
+    </div>
+  </div>
+
+  <div class="area-card franq">
+    <h3 style="color:var(--primary);">Franquias</h3>
+    <div class="field-list">
+      <span class="field-tag">Suporte Franquia</span>
+      <span class="field-tag">Fornecedores</span>
+      <span class="field-tag">Gestao de Contas</span>
+      <span class="field-tag">Registro Ocorrencia</span>
+      <span class="field-tag">Comunicado</span>
+      <span class="field-tag">Qualidade/Treinamento</span>
+      <span class="field-tag">Validacao Comercial</span>
+    </div>
+  </div>
+
+  <div class="area-card hosp">
+    <h3 style="color:var(--success);">Hospede</h3>
+    <div class="field-list">
+      <span class="field-tag">Contestacao Avaliacao</span>
+      <span class="field-tag">Resposta Avaliacao</span>
+      <span class="field-tag">Alteracao Anuncio</span>
+      <span class="field-tag">Recriacao Anuncio</span>
+      <span class="field-tag">Realocacao/Cancelamento</span>
+      <span class="field-tag">Reserva Interna</span>
+      <span class="field-tag">Reembolso/Devolucao</span>
+      <span class="field-tag">Reclame Aqui</span>
+    </div>
+  </div>
+
+  <div class="area-card prop">
+    <h3 style="color:var(--purple);">Proprietarios</h3>
+    <div class="field-list">
+      <span class="field-tag">Handover CS</span>
+      <span class="field-tag">Contato CS</span>
+      <span class="field-tag">Preco Minimo</span>
+      <span class="field-tag">Adequacao/Manutencao</span>
+      <span class="field-tag">Analise CS Ops</span>
+      <span class="field-tag">Distrato</span>
+      <span class="field-tag">Verificacao Pendencias Churn</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 5: 4 AREAS CONSOLIDADAS -->
+<!-- ============================================================ -->
+<div class="section" id="sec5">
+  <h2>5. 4 Areas Consolidadas</h2>
+
+  <!-- IMPLANTACAO -->
+  <div class="area-card impl">
+    <h3 style="color:var(--warning);">Implantacao</h3>
+    <p><strong>Responsavel:</strong> Larissa Constantino &nbsp;|&nbsp; <strong>Canais absorvidos:</strong> 2</p>
+    <p style="margin-top:6px;font-size:14px;">#suporte-implantacao, #solicitacao-troca-de-codigo</p>
+    <div class="flow-diagram" style="background:rgba(255,255,255,0.6);">
+      <div class="flow-steps">
+        <div class="flow-step" style="border-color:var(--warning);color:var(--warning);">Entrada</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step ia">IA Analisa</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="border-color:var(--warning);color:var(--warning);">Triagem</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="background:var(--warning);color:white;border-color:var(--warning);">Em Andamento</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Aguardando</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step success">Concluido</div>
+      </div>
+    </div>
+    <p style="font-size:13px;"><strong>Processos:</strong> Suporte Implantacao (por fase), Troca de Codigo, Venda de Imovel</p>
+  </div>
+
+  <!-- FRANQUIAS -->
+  <div class="area-card franq">
+    <h3 style="color:var(--primary);">Franquias</h3>
+    <p><strong>Responsavel:</strong> Vivianny Aguilera &nbsp;|&nbsp; <strong>Canais absorvidos:</strong> 7</p>
+    <p style="margin-top:6px;font-size:14px;">#suporte-franquias, #suporte-fornecedores, #suporte-gestao-de-contas, #registro-ocorrencias, #validacao-comunicados-franquias, #suporte-qualidade-treinamento-franquias, #validacoes-solicitadas</p>
+    <div class="flow-diagram" style="background:rgba(255,255,255,0.6);">
+      <div class="flow-steps">
+        <div class="flow-step active">Entrada</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step ia">IA Analisa</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Triagem</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step active">Em Andamento</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Aguardando</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step success">Concluido</div>
+      </div>
+    </div>
+    <p style="font-size:13px;"><strong>Processos:</strong> Suporte Franquia, Fornecedores, Gestao de Contas, Registro Ocorrencia, Comunicado, Qualidade/Treinamento, Validacao Comercial</p>
+  </div>
+
+  <!-- HOSPEDE -->
+  <div class="area-card hosp">
+    <h3 style="color:var(--success);">Hospede</h3>
+    <p><strong>Responsavel:</strong> Carolina Espindola &nbsp;|&nbsp; <strong>Canais absorvidos:</strong> 5</p>
+    <p style="margin-top:6px;font-size:14px;">#suporte-avaliacoes-de-hospedes, #suporte-anuncios, #suporte-atendimento, #realocacoes-devolucao-credito, #respostas-reclame-aqui</p>
+    <div class="flow-diagram" style="background:rgba(255,255,255,0.6);">
+      <div class="flow-steps">
+        <div class="flow-step" style="border-color:var(--success);color:var(--success);">Entrada</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step ia">IA Analisa</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="border-color:var(--success);color:var(--success);">Triagem</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="background:var(--success);color:white;border-color:var(--success);">Em Andamento</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Aguardando</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step success">Concluido</div>
+      </div>
+    </div>
+    <p style="font-size:13px;"><strong>Processos:</strong> Contestacao Avaliacao, Resposta Avaliacao, Alteracao Anuncio, Recriacao Anuncio, Realocacao/Cancelamento, Reserva Interna, Reembolso/Devolucao, Reclame Aqui</p>
+  </div>
+
+  <!-- PROPRIETARIOS -->
+  <div class="area-card prop">
+    <h3 style="color:var(--purple);">Proprietarios</h3>
+    <p><strong>Responsavel:</strong> Luiza Cechelero &nbsp;|&nbsp; <strong>Canais absorvidos:</strong> 2</p>
+    <p style="margin-top:6px;font-size:14px;">#suporte-cs-proprietarios, #suporte-processo-churn</p>
+    <div class="flow-diagram" style="background:rgba(255,255,255,0.6);">
+      <div class="flow-steps">
+        <div class="flow-step" style="border-color:var(--purple);color:var(--purple);">Entrada</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step ia">IA Analisa</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="border-color:var(--purple);color:var(--purple);">Triagem</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="background:var(--purple);color:white;border-color:var(--purple);">Em Andamento</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Aguardando</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step success">Concluido</div>
+      </div>
+    </div>
+    <p style="font-size:13px;"><strong>Processos:</strong> Handover CS, Contato CS, Preco Minimo, Adequacao/Manutencao, Analise CS Ops, Distrato, Verificacao Pendencias Churn</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 6: ROTEAMENTO E TRIAGEM -->
+<!-- ============================================================ -->
+<div class="section" id="sec6">
+  <h2>6. Roteamento e Triagem</h2>
+
+  <h3>Fluxo de Roteamento</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Solicitante abre suporte</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step ia">IA valida area + detecta duplicidade</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">N8N roteia pelo campo "Area"</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step success">Card criado no Kanban da area</div>
+    </div>
+  </div>
+
+  <h3>Regras de Roteamento</h3>
+  <table>
+    <tr><th>Cenario</th><th>Acao</th></tr>
+    <tr><td>Solicitante seleciona area correta</td><td>Roteamento direto via N8N para o Kanban da area</td></tr>
+    <tr><td>Solicitante marca "Nao sei qual area"</td><td>IA le descricao e roteia automaticamente</td></tr>
+    <tr><td>IA detecta area possivelmente errada</td><td>Sugere correcao antes de abrir (FAQ/base de conhecimento)</td></tr>
+    <tr><td>Card aberto na area errada</td><td>Responsavel pode transferir entre areas</td></tr>
+    <tr><td>Transferencia entre areas</td><td><strong>SLA NAO reinicia</strong> &mdash; conta desde a abertura original</td></tr>
+  </table>
+
+  <div class="alert alert-info"><strong>Campos comuns a todos os suportes:</strong> Codigo Imovel, Area, Processo, Urgencia, Descricao</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 7: SLAs E ESCALONAMENTO -->
+<!-- ============================================================ -->
+<div class="section" id="sec7">
+  <h2>7. SLAs e Escalonamento</h2>
+
+  <h3>Tabela de SLA</h3>
+  <div class="stat-row">
+    <div class="stat-box" style="background:var(--danger-light);">
+      <div class="stat-val" style="color:var(--danger);">4h</div>
+      <div class="stat-lbl">Crise</div>
+    </div>
+    <div class="stat-box" style="background:var(--warning-light);">
+      <div class="stat-val" style="color:var(--warning);">12h</div>
+      <div class="stat-lbl">Alta</div>
+    </div>
+    <div class="stat-box" style="background:var(--primary-light);">
+      <div class="stat-val" style="color:var(--primary);">24h</div>
+      <div class="stat-lbl">Media</div>
+    </div>
+    <div class="stat-box" style="background:var(--gray-100);">
+      <div class="stat-val" style="color:var(--gray-600);">24h</div>
+      <div class="stat-lbl">Baixa</div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning"><strong>1a resposta = resolucao por padrao.</strong> Campos ajustaveis pelos gerentes de area.</div>
+
+  <h3>Fluxo de Escalonamento</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step">SLA estoura</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step warning">Notifica Responsavel do Fluxo</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:var(--danger);color:white;border-color:var(--danger);">Escala para Gerente da Area</div>
+    </div>
+  </div>
+
+  <div class="alert alert-info"><strong>Gerente cobra, nao resolve.</strong> Iara e gestora do projeto, nao resolve suportes.</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 8: DUPLICIDADE -->
+<!-- ============================================================ -->
+<div class="section" id="sec8">
+  <h2>8. Duplicidade</h2>
+
+  <div class="decision-box">
+    <h4>Decisao: Duplicidade bloqueada</h4>
+    <p>Nao abre novo card se ja existe um para o mesmo <strong>imovel + processo</strong>.</p>
+  </div>
+
+  <h3>Fluxo de Deteccao</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Solicitante abre suporte</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step ia">IA verifica duplicidade</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step warning">Duplicado detectado?</div>
+    </div>
+  </div>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step success">SIM: Envia link do card existente</div>
+      <div class="flow-arrow">&nbsp;&nbsp;</div>
+      <div class="flow-step">NAO: Abre novo card normalmente</div>
+    </div>
+  </div>
+
+  <h3>O que o solicitante pode fazer</h3>
+  <ul class="check">
+    <li>Recebe o link do card existente automaticamente</li>
+    <li>Pode comentar/cobrar via Slack</li>
+    <li>Comentario reflete no card da Lovable</li>
+    <li>Nao precisa abrir outro suporte</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 9: VISAO CRUZADA POR IMOVEL -->
+<!-- ============================================================ -->
+<div class="section" id="sec9">
+  <h2>9. Visao Cruzada por Imovel</h2>
+
+  <div class="decision-box">
+    <h4>Decisao: Visao cruzada automatica + buscavel</h4>
+    <p>Na abertura de qualquer suporte, a IA mostra automaticamente todos os suportes abertos para aquele imovel em todas as areas. Tambem e buscavel no Kanban.</p>
+  </div>
+
+  <h3>Exemplo Visual</h3>
+  <div style="background:var(--gray-100);border-radius:10px;padding:20px;margin:12px 0;">
+    <p style="font-weight:700;font-size:16px;margin-bottom:12px;">Imovel TXP0605 &mdash; 4 suportes ativos</p>
+    <div class="card-grid" style="grid-template-columns:repeat(4,1fr);">
+      <div class="card" style="border-left:4px solid var(--warning);">
+        <div class="label">Implantacao</div>
+        <div style="font-weight:600;font-size:13px;margin-top:4px;">Troca de Codigo</div>
+        <span class="badge badge-yellow">Em andamento</span>
+      </div>
+      <div class="card" style="border-left:4px solid var(--primary);">
+        <div class="label">Franquias</div>
+        <div style="font-weight:600;font-size:13px;margin-top:4px;">Gestao de Contas</div>
+        <span class="badge badge-blue">Aguardando</span>
+      </div>
+      <div class="card" style="border-left:4px solid var(--success);">
+        <div class="label">Hospede</div>
+        <div style="font-weight:600;font-size:13px;margin-top:4px;">Alteracao Anuncio</div>
+        <span class="badge badge-green">Triagem</span>
+      </div>
+      <div class="card" style="border-left:4px solid var(--purple);">
+        <div class="label">Proprietarios</div>
+        <div style="font-weight:600;font-size:13px;margin-top:4px;">Contato CS</div>
+        <span class="badge badge-purple">Em andamento</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 10: IA INTEGRADA -->
+<!-- ============================================================ -->
+<div class="section" id="sec10">
+  <h2>10. IA Integrada</h2>
+
+  <div class="alert alert-success"><strong>TODOS os fluxos tem IA.</strong> A IA atua em pre-abertura, durante e pos-resolucao.</div>
+
+  <h3>Capacidades da IA</h3>
+  <table>
+    <tr><th>Funcao</th><th>Descricao</th><th>Fase</th></tr>
+    <tr><td><strong>Pre-abertura (historico imovel)</strong></td><td>Mostra historico do imovel antes de abrir novo suporte</td><td>Piloto</td></tr>
+    <tr><td><strong>Analise de texto</strong></td><td>Le descricao e sugere encaminhamento/area correta</td><td>Piloto</td></tr>
+    <tr><td><strong>Deflexao (15-25%)</strong></td><td>Resolve sem interacao humana usando base de conhecimento</td><td>Avancado</td></tr>
+    <tr><td><strong>Card qualificado</strong></td><td>Preenche campos adicionais automaticamente</td><td>Expansao</td></tr>
+    <tr><td><strong>Deteccao de duplicidade</strong></td><td>Identifica suporte existente antes de abrir novo</td><td>Piloto</td></tr>
+    <tr><td><strong>Correcao de area</strong></td><td>Sugere area correta se solicitante errou</td><td>Piloto</td></tr>
+    <tr><td><strong>Nivel de confianca</strong></td><td>Sinaliza grau de certeza em cada sugestao</td><td>Expansao</td></tr>
+  </table>
+
+  <h3>Fontes de Dados da IA</h3>
+  <div class="field-list">
+    <span class="field-tag">Nekt (dados estruturados)</span>
+    <span class="field-tag">Slack (historico mensagens)</span>
+    <span class="field-tag">Sapron</span>
+    <span class="field-tag">Stays</span>
+    <span class="field-tag">Pipedrive</span>
+    <span class="field-tag">RAG via Lovable (base de conhecimento)</span>
+  </div>
+
+  <h3>Feedback Loop</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step ia">IA sugere acao</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Responsavel avalia</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step warning">Marca "IA errou" se necessario</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step success">Base de conhecimento atualizada</div>
+    </div>
+  </div>
+
+  <h3>Fases de Implantacao da IA</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="card" style="border-top:4px solid var(--primary);">
+      <h4>Fase 1 &mdash; Piloto</h4>
+      <div class="label">30 Mar</div>
+      <p style="font-size:13px;margin-top:8px;">Historico imovel, deteccao duplicidade, sugestao area</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--warning);">
+      <h4>Fase 2 &mdash; Expansao</h4>
+      <div class="label">6 Abr</div>
+      <p style="font-size:13px;margin-top:8px;">Card qualificado, nivel de confianca, todas as areas</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--success);">
+      <h4>Fase 3 &mdash; Avancado</h4>
+      <div class="label">Abr-Mai</div>
+      <p style="font-size:13px;margin-top:8px;">Deflexao 15-25%, RAG completo, auto-resolucao</p>
+    </div>
+  </div>
+
+  <h3>Exemplos de IA em Acao por Area</h3>
+  <div class="area-card impl">
+    <h3 style="color:var(--warning);">Implantacao</h3>
+    <p style="font-size:13px;">"Imovel TXP0605 ja tem suporte de Troca de Codigo aberto (card #142). Deseja comentar no existente?" &mdash; IA detecta duplicidade e sugere vinculacao.</p>
+  </div>
+  <div class="area-card franq">
+    <h3 style="color:var(--primary);">Franquias</h3>
+    <p style="font-size:13px;">"Sua descricao menciona 'boleto'. Sugerimos o processo Gestao de Contas (area Franquias). Confirma?" &mdash; IA corrige area e processo.</p>
+  </div>
+  <div class="area-card hosp">
+    <h3 style="color:var(--success);">Hospede</h3>
+    <p style="font-size:13px;">"Imovel FLN1203 tem nota 3.2 no Airbnb e 2 contestacoes em aberto. Historico carregado automaticamente." &mdash; IA qualifica o card.</p>
+  </div>
+  <div class="area-card prop">
+    <h3 style="color:var(--purple);">Proprietarios</h3>
+    <p style="font-size:13px;">"Este imovel esta em processo de churn (PIPE 2.4). Vinculando automaticamente ao card existente." &mdash; IA conecta suportes relacionados.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 11: ATUALIZACAO BIDIRECIONAL -->
+<!-- ============================================================ -->
+<div class="section" id="sec11">
+  <h2>11. Atualizacao Bidirecional Slack / Lovable</h2>
+
+  <h3>Fluxo de Sincronizacao</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Slack (thread)</div>
+      <div class="flow-arrow">&harr;</div>
+      <div class="flow-step">N8N</div>
+      <div class="flow-arrow">&harr;</div>
+      <div class="flow-step warning">Lovable (card)</div>
+    </div>
+  </div>
+
+  <h3>Regras de Sincronizacao</h3>
+  <table>
+    <tr><th>Evento</th><th>Acao</th></tr>
+    <tr><td>Card muda de status na Lovable</td><td>Thread do Slack atualizada com novo status + texto</td></tr>
+    <tr><td>Comentario no Slack (thread)</td><td>Reflete como comentario no card da Lovable</td></tr>
+    <tr><td>Card finalizado na Lovable</td><td>Solicitante recebe notificacao na thread + DM</td></tr>
+  </table>
+
+  <h3>DM Automatica pro Solicitante (via bot N8N)</h3>
+  <table>
+    <tr><th>Momento</th><th>Conteudo da DM</th></tr>
+    <tr><td>Ao abrir</td><td>Confirmacao + link do card + link da thread</td></tr>
+    <tr><td>Mudanca de status</td><td>Atualizacao do progresso com novo status</td></tr>
+    <tr><td>Ao finalizar</td><td>Devolutiva completa com resolucao</td></tr>
+  </table>
+
+  <div class="alert alert-success"><strong>Beneficio:</strong> O solicitante nunca precisa procurar no canal. Tudo chega via DM.</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 12: PERMISSOES -->
+<!-- ============================================================ -->
+<div class="section" id="sec12">
+  <h2>12. Permissoes</h2>
+
+  <table class="perm-table">
+    <tr><th>Acao</th><th>Quem</th></tr>
+    <tr><td>Abrir suporte</td><td>Qualquer colaborador (via Slack)</td></tr>
+    <tr><td>Visualizar Kanban (todas areas)</td><td>Qualquer colaborador (visualizador)</td></tr>
+    <tr><td>Comentar/cobrar em card</td><td>Qualquer colaborador</td></tr>
+    <tr><td>Mover card de status</td><td>Responsavel do fluxo</td></tr>
+    <tr><td>Transferir card entre areas</td><td>Responsavel do fluxo + Gerente</td></tr>
+    <tr><td>Editar responsavel do fluxo</td><td>Gerente da area</td></tr>
+    <tr><td>Editar SLAs e processos</td><td>Gerentes</td></tr>
+    <tr><td>Ativar/desativar processos</td><td>Gerentes (via Lovable)</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 13: METRICAS E DASHBOARD -->
+<!-- ============================================================ -->
+<div class="section" id="sec13">
+  <h2>13. Metricas e Dashboard</h2>
+
+  <h3>Dashboard na Lovable</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
+    <div class="card"><div class="label">Tempo medio resolucao</div></div>
+    <div class="card"><div class="label">Volume por area</div></div>
+    <div class="card"><div class="label">SLA cumprido vs estourado</div></div>
+    <div class="card"><div class="label">Deflexao IA (%)</div></div>
+    <div class="card"><div class="label">Ranking imoveis</div></div>
+    <div class="card"><div class="label">Ranking processos</div></div>
+    <div class="card"><div class="label">Transferencias entre areas</div></div>
+  </div>
+
+  <h3>3 Visoes</h3>
+  <table>
+    <tr><th>Visao</th><th>Quem acessa</th><th>O que ve</th></tr>
+    <tr><td><strong>Meus Suportes</strong></td><td>Qualquer colaborador</td><td>Suportes que ele abriu, com status e link Slack</td></tr>
+    <tr><td><strong>Minha Area</strong></td><td>Responsavel do fluxo</td><td>Todos os cards da sua area</td></tr>
+    <tr><td><strong>Visao Geral</strong></td><td>Gerente / Iara</td><td>Todas as areas, metricas consolidadas</td></tr>
+  </table>
+
+  <h3>Relatorio Diario no Slack (18h)</h3>
+  <div class="alert alert-info" style="font-family:monospace;font-size:13px;">
+    <strong>Resumo do dia &mdash; #suporte-operacao</strong><br>
+    Hoje: X novos | Y concluidos | Z SLA estourado<br>
+    Implantacao: A novos, B concluidos<br>
+    Franquias: C novos, D concluidos<br>
+    Hospede: E novos, F concluidos<br>
+    Proprietarios: G novos, H concluidos
+  </div>
+
+  <p style="margin-top:12px;font-size:14px;"><strong>Relatorios consolidados</strong> (semanal/mensal) disponiveis na Lovable.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 14: HISTORICO E ARQUIVO -->
+<!-- ============================================================ -->
+<div class="section" id="sec14">
+  <h2>14. Historico e Arquivo</h2>
+
+  <table>
+    <tr><th>Periodo</th><th>Acesso</th><th>Onde</th></tr>
+    <tr><td>Ate 6 meses</td><td>Busca rapida</td><td>Kanban Lovable (filtros + busca)</td></tr>
+    <tr><td>Mais de 6 meses</td><td>Arquivo (ainda acessivel)</td><td>Lovable &rarr; secao Arquivo</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 15: INTEGRACOES TECNICAS -->
+<!-- ============================================================ -->
+<div class="section" id="sec15">
+  <h2>15. Integracoes Tecnicas</h2>
+
+  <h3>Fluxo Tecnico Principal</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Slack</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Webhook</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:var(--warning);color:white;border-color:var(--warning);">N8N + IA</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step ia">Lovable (Kanban)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step success">Slack (thread + DM)</div>
+    </div>
+  </div>
+
+  <h3>Stack Tecnico</h3>
+  <table>
+    <tr><th>Componente</th><th>Funcao</th><th>Detalhes</th></tr>
+    <tr><td><strong>Slack</strong></td><td>Entrada + notificacoes + resumo diario</td><td>#suporte-operacao (canal unico)</td></tr>
+    <tr><td><strong>N8N</strong></td><td>Orquestrador</td><td>automation.seazone.com.br &mdash; Webhook Slack &rarr; IA &rarr; Lovable &rarr; Slack</td></tr>
+    <tr><td><strong>Lovable</strong></td><td>Kanban + dashboard + base conhecimento</td><td>4 boards (1 por area) + painel de controle dos fluxos</td></tr>
+    <tr><td><strong>IA</strong></td><td>Integrada em todos os fluxos</td><td>Pre-abertura, deflexao, card qualificado, duplicidade, correcao area</td></tr>
+    <tr><td><strong>Pipefy</strong></td><td>Backend existente</td><td>Mantido para execucao dos existentes, novos pela Lovable</td></tr>
+    <tr><td><strong>Nekt</strong></td><td>Dados estruturados</td><td>nekt-mcp.seazone.com.br &mdash; tabelas Pipefy mapeadas</td></tr>
+  </table>
+
+  <h3>Tabelas Pipefy na Nekt</h3>
+  <table>
+    <tr><th>Area</th><th>Tabela</th><th>Volume</th></tr>
+    <tr><td>Fornecedores</td><td>nekt_silver.kpi_suporte_fornecedores</td><td>~20 cards/mes</td></tr>
+    <tr><td>Anuncios</td><td>nekt_silver.pipefy_szs_all_cards_303024105_anuncios</td><td>~150-300 cards/mes (178 colunas)</td></tr>
+    <tr><td>Churn</td><td>nekt_silver.dados_churn</td><td>~100-160 registros/mes</td></tr>
+  </table>
+
+  <h3>Lovable como Painel de Controle</h3>
+  <ul class="check">
+    <li>Processos ativaveis/desativaveis sem reconstruir</li>
+    <li>Liga/desliga com conexao automatica ao Slack</li>
+    <li>Base de conhecimento RAG (conectar depois &mdash; Iara)</li>
+    <li>Botao para importar historico do Pipefy</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 16: MIGRACAO -->
+<!-- ============================================================ -->
+<div class="section" id="sec16">
+  <h2>16. Migracao</h2>
+
+  <h3>Migracao de Canais Slack</h3>
+  <div class="flow-diagram">
+    <div class="flow-steps">
+      <div class="flow-step active">Lancamento #suporte-operacao</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step warning">2 semanas transicao (mensagem redirecionamento)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:var(--danger);color:white;border-color:var(--danger);">Arquiva canais antigos</div>
+    </div>
+  </div>
+
+  <h3>Migracao Pipefy</h3>
+  <table>
+    <tr><th>Tipo</th><th>Acao</th></tr>
+    <tr><td>Suportes existentes (em andamento)</td><td>Mantem no Pipefy ate conclusao</td></tr>
+    <tr><td>Novos suportes</td><td>Entram pela Lovable</td></tr>
+    <tr><td>Historico</td><td>Botao na Lovable para importar historico do Pipefy (puxar tudo de uma vez)</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 17: PESSOAS E RESPONSABILIDADES -->
+<!-- ============================================================ -->
+<div class="section" id="sec17">
+  <h2>17. Pessoas e Responsabilidades</h2>
+
+  <table>
+    <tr><th>Pessoa</th><th>Papel</th><th>O que faz</th><th>O que NAO faz</th></tr>
+    <tr><td><strong>Iara Moraes</strong></td><td>Gestora do Projeto</td><td>Define estrategia, acompanha metricas, toma decisoes de projeto</td><td>Nao resolve suportes</td></tr>
+    <tr><td><strong>Bruno Bill Benetti</strong></td><td>Gestor</td><td>Escalonamento final, aprovacoes estrategicas</td><td>&mdash;</td></tr>
+    <tr><td><strong>Larissa Constantino</strong></td><td>Resp. Implantacao</td><td>Resolve suportes, move cards, transfere</td><td>&mdash;</td></tr>
+    <tr><td><strong>Vivianny Aguilera</strong></td><td>Resp. Franquias</td><td>Resolve suportes, move cards, transfere</td><td>&mdash;</td></tr>
+    <tr><td><strong>Carolina Espindola</strong></td><td>Resp. Hospede</td><td>Resolve suportes, move cards, transfere</td><td>&mdash;</td></tr>
+    <tr><td><strong>Luiza Cechelero</strong></td><td>Resp. Proprietarios</td><td>Resolve suportes, move cards, transfere</td><td>&mdash;</td></tr>
+    <tr><td><strong>Gerentes de area</strong></td><td>Gerente</td><td>Definem responsaveis, editam SLAs/processos, cobram</td><td>Nao resolvem suportes</td></tr>
+  </table>
+
+  <div class="alert alert-warning"><strong>Sem backup fixo.</strong> Gerente reatribui responsavel quando necessario (ferias, ausencia).</div>
+
+  <div class="alert alert-danger"><strong>Ponto critico:</strong> Victoria Magri e single point of failure (avaliacoes + ocorrencias). Gerente define substituto quando necessario.</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 18: TIMELINE -->
+<!-- ============================================================ -->
+<div class="section" id="sec18">
+  <h2>18. Timeline</h2>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot active"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 1 &mdash; Descoberta</strong> <span class="badge badge-green">ATUAL</span><br>
+      <span style="color:var(--gray-600);font-size:13px;">16-20 Mar 2026</span><br>
+      Mapeamento de 18 canais, formularios, decisoes, documento A-Z
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 2 &mdash; Construcao</strong><br>
+      <span style="color:var(--gray-600);font-size:13px;">23-27 Mar 2026</span><br>
+      Configuracao N8N, Lovable Kanban, formulario unificado, bot Slack
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 3 &mdash; Piloto Implantacao</strong><br>
+      <span style="color:var(--gray-600);font-size:13px;">30 Mar - 3 Abr 2026</span><br>
+      2 canais de Implantacao migram, IA Fase 1 ativa, testes com equipe
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 4 &mdash; Expansao Franquias + Hospede</strong><br>
+      <span style="color:var(--gray-600);font-size:13px;">6-10 Abr 2026</span><br>
+      12 canais adicionais migram, IA Fase 2, treinamento por area
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 5 &mdash; Conclusao Proprietarios</strong><br>
+      <span style="color:var(--gray-600);font-size:13px;">13-17 Abr 2026</span><br>
+      2 canais finais migram, sistema completo, arquivamento canais antigos
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"><span class="dot"></span></div>
+    <div class="timeline-content">
+      <strong>Fase 6 &mdash; Otimizacao IA</strong><br>
+      <span style="color:var(--gray-600);font-size:13px;">Abr-Mai 2026</span><br>
+      IA Fase 3 (deflexao 15-25%), RAG completo, ajustes finos, relatorios consolidados
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 19: CHANGE MANAGEMENT -->
+<!-- ============================================================ -->
+<div class="section" id="sec19">
+  <h2>19. Change Management</h2>
+
+  <h3>Treinamento</h3>
+  <table>
+    <tr><th>Material</th><th>Publico</th><th>Formato</th></tr>
+    <tr><td>Guia rapido &mdash; Solicitante</td><td>Todos os colaboradores</td><td>Documento escrito (pin no canal)</td></tr>
+    <tr><td>Guia rapido &mdash; Responsavel</td><td>Responsaveis de fluxo</td><td>Documento escrito + video</td></tr>
+    <tr><td>Guia rapido &mdash; Gerente</td><td>Gerentes de area</td><td>Documento escrito + video</td></tr>
+    <tr><td>Roteiro video</td><td>Todos</td><td>Video curto (gravacao de tela)</td></tr>
+    <tr><td>Apresentacao reuniao por area</td><td>Cada area separadamente</td><td>Reuniao ao vivo + slides</td></tr>
+  </table>
+
+  <h3>Comunicacao</h3>
+  <ul class="check">
+    <li>Mensagem de lancamento no Slack (geral + por area)</li>
+    <li>Comunicado nos canais antigos (redirecionamento)</li>
+    <li>Pin no #suporte-operacao: "Como abrir suporte" + "Acompanhar meus suportes" + "Dashboard"</li>
+    <li>Tudo em thread no Slack (nenhuma mensagem solta)</li>
+    <li>DM automatica ao solicitante a cada atualizacao</li>
+  </ul>
+
+  <h3>Itens Fixados no #suporte-operacao</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="card" style="border-top:3px solid var(--primary);">
+      <h4>Como abrir suporte</h4>
+      <p style="font-size:12px;color:var(--gray-600);">Passo a passo para qualquer colaborador</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4>Acompanhar meus suportes</h4>
+      <p style="font-size:12px;color:var(--gray-600);">Link direto para Lovable (visao "Meus Suportes")</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warning);">
+      <h4>Dashboard</h4>
+      <p style="font-size:12px;color:var(--gray-600);">Link para metricas e relatorios</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 20: ORGANIZACAO DO CANAL SLACK -->
+<!-- ============================================================ -->
+<div class="section" id="sec20">
+  <h2>20. Organizacao do Canal Slack</h2>
+
+  <h3>Regras do Canal #suporte-operacao</h3>
+  <table>
+    <tr><th>Regra</th><th>Descricao</th></tr>
+    <tr><td><strong>Cada suporte = 1 thread</strong></td><td>Nunca mensagem solta no canal</td></tr>
+    <tr><td><strong>Thread atualizada automaticamente</strong></td><td>Status muda &rarr; thread recebe atualizacao</td></tr>
+    <tr><td><strong>Bot compacto</strong></td><td>Mensagens curtas, nao polui o canal</td></tr>
+    <tr><td><strong>Itens fixados (pin)</strong></td><td>Guia rapido, link Lovable, dashboard</td></tr>
+    <tr><td><strong>Resumo diario 18h</strong></td><td>"Hoje: X novos, Y concluidos, Z SLA estourado"</td></tr>
+    <tr><td><strong>DM automatica</strong></td><td>Solicitante recebe DM a cada atualizacao</td></tr>
+    <tr><td><strong>"Nao sei qual area"</strong></td><td>IA roteia automaticamente pela descricao</td></tr>
+  </table>
+
+  <h3>Estrutura Visual de uma Thread</h3>
+  <div style="background:var(--gray-100);border-radius:10px;padding:20px;margin:12px 0;font-size:13px;font-family:monospace;">
+    <p><strong>[BOT] Novo suporte aberto</strong></p>
+    <p style="color:var(--gray-600);">Area: Hospede | Processo: Alteracao Anuncio | Urgencia: Media</p>
+    <p style="color:var(--gray-600);">Imovel: TXP0605 | Solicitante: @maria.silva</p>
+    <p style="color:var(--gray-600);">Card: [link Lovable]</p>
+    <br>
+    <p style="color:var(--primary);">--- Atualizacao ---</p>
+    <p style="color:var(--gray-600);">Status: Triagem &rarr; Em Andamento (por @carolina.espindola)</p>
+    <br>
+    <p style="color:var(--success);">--- Concluido ---</p>
+    <p style="color:var(--gray-600);">Resolvido em 4h32min. SLA cumprido.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 21: 35 DECISOES TOMADAS -->
+<!-- ============================================================ -->
+<div class="section" id="sec21">
+  <h2>21. 35 Decisoes Tomadas</h2>
+
+  <table>
+    <tr><th>#</th><th>Decisao</th><th>Contexto</th></tr>
+    <tr><td>1</td><td>#solicitacao-troca-de-codigo &rarr; Implantacao</td><td>Canal absorvido pela area de Implantacao</td></tr>
+    <tr><td>2</td><td>#suporte-ocorrencias-franquias &rarr; Arquivar</td><td>Substituido por #registro-ocorrencias</td></tr>
+    <tr><td>3</td><td>Reservas Internas &rarr; Hospede</td><td>Processo pertence a area Hospede</td></tr>
+    <tr><td>4</td><td>Analise CS Ops &rarr; Proprietarios (Kethrin)</td><td>Processo de analise pertence a Proprietarios</td></tr>
+    <tr><td>5</td><td>IA Contestacao &rarr; Hospede com IA integrada</td><td>IA auxilia contestacoes de avaliacoes</td></tr>
+    <tr><td>6</td><td>#resumo-suporte-operacao &rarr; Apenas resumo diario automatico</td><td>Canal auxiliar, nao recebe suportes</td></tr>
+    <tr><td>7</td><td>SLA unificado: Crise 4h | Alta 12h | Media 24h | Baixa 24h</td><td>1a resposta = resolucao, campos ajustaveis</td></tr>
+    <tr><td>8</td><td>Escalonamento: Resp. fluxo &rarr; Gerente da area</td><td>Gerente cobra, nao resolve</td></tr>
+    <tr><td>9</td><td>Iara e gestora do projeto, nao resolve suportes</td><td>Separacao clara de papeis</td></tr>
+    <tr><td>10</td><td>Visao cruzada por codigo do imovel</td><td>Automatica na abertura (IA) + buscavel no Kanban</td></tr>
+    <tr><td>11</td><td>Formulario com campos condicionais</td><td>Solicitante | Codigo imovel | Area | Processo | Urgencia | Descricao</td></tr>
+    <tr><td>12</td><td>Duplicidade bloqueada</td><td>Nao abre novo card se ja existe para mesmo imovel + processo</td></tr>
+    <tr><td>13</td><td>Reclassificacao com SLA que NAO reinicia</td><td>IA detecta area errada, responsavel pode transferir</td></tr>
+    <tr><td>14</td><td>Sem backup fixo</td><td>Gerente da area define e troca responsavel conforme necessario</td></tr>
+    <tr><td>15</td><td>Permissoes por nivel</td><td>Colaborador (visualizar/abrir/comentar), Resp. fluxo (mover/transferir), Gerente (editar)</td></tr>
+    <tr><td>16</td><td>Metricas: dashboard Lovable + resumo Slack</td><td>Tempo, volume, SLA, deflexao IA, ranking imoveis/processos, transferencias</td></tr>
+    <tr><td>17</td><td>Relatorios consolidados na Lovable (nao no Slack)</td><td>Semanal e mensal</td></tr>
+    <tr><td>18</td><td>Historico: 6 meses busca rapida, depois arquivo</td><td>Arquivo ainda acessivel</td></tr>
+    <tr><td>19</td><td>Migracao canais: 2 semanas transicao + arquivamento</td><td>Mensagem de redirecionamento nos canais antigos</td></tr>
+    <tr><td>20</td><td>Pipefy: existentes ficam, novos pela Lovable</td><td>Manter Pipefy para execucao dos em andamento</td></tr>
+    <tr><td>21</td><td>Base de conhecimento RAG via Lovable</td><td>Projeto de gestao da operacao, conectado posteriormente pela Iara</td></tr>
+    <tr><td>22</td><td>Feedback loop IA: "IA errou" no card</td><td>Atualiza base de conhecimento, IA sinaliza nivel de confianca</td></tr>
+    <tr><td>23</td><td>Treinamento por perfil</td><td>Guia rapido escrito + roteiro video + apresentacao reuniao por area</td></tr>
+    <tr><td>24</td><td>Comunicacao da mudanca</td><td>Lancamento Slack (geral + area) + comunicado canais antigos + pin</td></tr>
+    <tr><td>25</td><td>"Nao sei qual area" no formulario</td><td>IA le descricao e roteia automaticamente</td></tr>
+    <tr><td>26</td><td>Filtro "Meus Suportes" na Lovable</td><td>Solicitante ve so os que ele abriu, com status e link Slack</td></tr>
+    <tr><td>27</td><td>3 visoes na Lovable</td><td>"Meus Suportes" | "Minha Area" | "Visao Geral"</td></tr>
+    <tr><td>28</td><td>Tudo em thread no Slack</td><td>Nenhuma mensagem solta, canal limpo, atualizacao automatica</td></tr>
+    <tr><td>29</td><td>Itens fixados (pin) no #suporte-operacao</td><td>"Como abrir suporte" + "Acompanhar meus suportes" + "Dashboard"</td></tr>
+    <tr><td>30</td><td>#validacoes-solicitadas &rarr; Franquias; #respostas-reclame-aqui &rarr; Hospede</td><td>Reclassificacao de canais apos analise</td></tr>
+    <tr><td>31</td><td>Reclame Aqui: tudo entra em Hospede</td><td>Mesmo proprietario. Responsavel escala para outra area via card</td></tr>
+    <tr><td>32</td><td>Processos ativaveis/desativaveis na Lovable</td><td>Liga/desliga sem reconstruir, conexao automatica ao Slack</td></tr>
+    <tr><td>33</td><td>Reservas Internas Seazone: processo separado</td><td>Verificar se esta em uso; se sim, ativar como processo de Hospede</td></tr>
+    <tr><td>34</td><td>Migracao Pipefy: novos pela Lovable + botao importar historico</td><td>Puxar tudo de uma vez do Pipefy</td></tr>
+    <tr><td>35</td><td>DM automatica pro solicitante via bot (N8N)</td><td>Ao abrir (confirmacao), mudanca de status (atualizacao), ao finalizar (devolutiva)</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECAO 22: RISCOS E MITIGACOES -->
+<!-- ============================================================ -->
+<div class="section" id="sec22">
+  <h2>22. Riscos e Mitigacoes</h2>
+
+  <table>
+    <tr><th>Risco</th><th>Impacto</th><th>Probabilidade</th><th>Mitigacao</th></tr>
+    <tr>
+      <td><strong>Victoria Magri como single point of failure</strong></td>
+      <td><span class="badge badge-red">Alto</span></td>
+      <td><span class="badge badge-yellow">Media</span></td>
+      <td>Gerente define substituto quando necessario; sistema permite reatribuicao rapida</td>
+    </tr>
+    <tr>
+      <td><strong>Resistencia a mudanca dos colaboradores</strong></td>
+      <td><span class="badge badge-yellow">Medio</span></td>
+      <td><span class="badge badge-yellow">Media</span></td>
+      <td>Treinamento por perfil, comunicacao por area, DM automatica facilita adesao</td>
+    </tr>
+    <tr>
+      <td><strong>IA com baixa precisao inicial</strong></td>
+      <td><span class="badge badge-yellow">Medio</span></td>
+      <td><span class="badge badge-yellow">Media</span></td>
+      <td>Feedback loop "IA errou", nivel de confianca, implantacao gradual em 3 fases</td>
+    </tr>
+    <tr>
+      <td><strong>Pipe anuncios com 178 colunas (complexidade)</strong></td>
+      <td><span class="badge badge-yellow">Medio</span></td>
+      <td><span class="badge badge-green">Baixa</span></td>
+      <td>Manter Pipefy para execucao dos existentes, novos entram simplificados pela Lovable</td>
+    </tr>
+    <tr>
+      <td><strong>N8N ou Lovable fora do ar</strong></td>
+      <td><span class="badge badge-red">Alto</span></td>
+      <td><span class="badge badge-green">Baixa</span></td>
+      <td>Monitoramento de uptime; fallback: suporte direto no Slack com triagem manual</td>
+    </tr>
+    <tr>
+      <td><strong>Base de conhecimento RAG nao conectada a tempo</strong></td>
+      <td><span class="badge badge-green">Baixo</span></td>
+      <td><span class="badge badge-yellow">Media</span></td>
+      <td>IA funciona sem RAG nas fases 1 e 2; RAG e Fase 3 (Abr-Mai)</td></tr>
+    <tr>
+      <td><strong>Volume alto no piloto gera sobrecarga</strong></td>
+      <td><span class="badge badge-yellow">Medio</span></td>
+      <td><span class="badge badge-green">Baixa</span></td>
+      <td>Piloto comeca com Implantacao (apenas 2 canais, menor volume)</td>
+    </tr>
+    <tr>
+      <td><strong>Perda de historico na migracao</strong></td>
+      <td><span class="badge badge-yellow">Medio</span></td>
+      <td><span class="badge badge-green">Baixa</span></td>
+      <td>Botao na Lovable para importar historico Pipefy; canais Slack preservados 2 semanas</td>
+    </tr>
+    <tr>
+      <td><strong>Lari Pereira navegando 5+ canais/dia (transicao)</strong></td>
+      <td><span class="badge badge-green">Baixo</span></td>
+      <td><span class="badge badge-red">Alta</span></td>
+      <td>Unificacao resolve o problema &mdash; durante transicao, comunicacao clara de qual canal usar</td>
+    </tr>
+    <tr>
+      <td><strong>Duplicidade nao detectada pela IA</strong></td>
+      <td><span class="badge badge-green">Baixo</span></td>
+      <td><span class="badge badge-yellow">Media</span></td>
+      <td>Responsavel pode fechar duplicado manualmente + feedback para IA melhorar</td>
+    </tr>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:30px;color:var(--gray-600);font-size:13px;">
+  <p><strong>Suporte Unificado Seazone</strong> &mdash; Documento Completo A-Z</p>
+  <p>Responsavel: Iara Moraes | Gestor: Bruno Bill Benetti | Data: 17/03/2026</p>
+  <p>Gerado automaticamente &mdash; Todas as 35 decisoes documentadas</p>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
